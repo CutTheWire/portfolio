@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} - 포트폴리오</title>
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-color: #181a1b;
+            color: #e0e0e0;
+        }
+        a {
+            color: #87CEEB; /* 하늘색 */
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        a:hover {
+            text-decoration: underline;
+            color: #5CACEE; /* hover 시 더 진한 하늘색 */
+        }
+        .content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 50px 120px;
+            background-color: #23272b;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            min-height: 100vh;
+            color: #e0e0e0;
+        }
+        
+        /* 반응형 디자인 */
+        @media (max-width: 1400px) {
+            .content {
+                padding: 100px 150px;
+            }
+        }
+        
+        @media (max-width: 1200px) {
+            .content {
+                padding: 100px 100px;
+            }
+        }
+        
+        @media (max-width: 1000px) {
+            .content {
+                padding: 80px 60px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                padding: 60px 40px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .content {
+                padding: 40px 20px;
+            }
+        }
+        
+        h1, h2, h3 {
+            color: #e0e0e0;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 20px 0;
+        }
+        blockquote {
+            margin: 16px 0;
+            padding: 12px 16px;
+            background-color: #2a2f35;
+            border-left: 4px solid #87CEEB;
+            color: #c9d1d9;
+            font-style: italic;
+            border-radius: 0 4px 4px 0;
+        }
+        blockquote p {
+            margin: 0;
+        }
+        ul, ol {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+        li {
+            margin: 8px 0;
+            line-height: 1.6;
+            color: #e0e0e0;
+        }
+        ul li::marker {
+            color: #87CEEB;
+        }
+        ol li::marker {
+            color: #87CEEB;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: #23272b;
+            color: #e0e0e0;
+        }
+        th, td {
+            border: 1px solid #444;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #2c3136;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #24282c;
+        }
+        tr:hover {
+            background-color: #31363b;
+        }
+    </style>
+</head>
+<body>
+    <main class="content">
+        {{ content|safe }}
+    </main>
+</body>
+</html>
