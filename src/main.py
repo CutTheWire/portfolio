@@ -111,5 +111,4 @@ async def read_markdown(request: Request, filename: str):
     )
 
 if __name__ == "__main__":
-    # 로그 레벨을 warning으로 설정하여 404 로그 최소화
-    uvicorn.run("main:app", host="0.0.0.0", port=8010, reload=True, log_level="warning")
+    uvicorn.run("main:app", host="0.0.0.0", port=8010, reload=True)
