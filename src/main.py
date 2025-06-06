@@ -66,6 +66,16 @@ async def custom_404_handler(request: Request, exc: StarletteHTTPException):
         status_code=exc.status_code
     )
 
+@app.get("/favicon.ico")
+async def favicon():
+    from fastapi.responses import FileResponse
+    favicon_path = os.path.join("static", "favicon.ico")
+    if os.path.exists(favicon_path):
+        return FileResponse(favicon_path)
+    else:
+        # 파일이 없으면 빈 응답 반환
+        return HTMLResponse(status_code=204, content="")
+
 @app.get("/", response_class=HTMLResponse)
 async def read_index(request: Request):
     # main.md 파일을 읽어와서 HTML로 변환
