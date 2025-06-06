@@ -1,0 +1,18 @@
+:root {
+    --bg-primary: #0a0a0a;
+    --bg-secondary: #111111;
+    --bg-card: #1a1a1a;
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0a0;
+    --text-muted: #666666;
+    --accent-primary: #00ff88;
+    --accent-secondary: #0099ff;
+    --accent-tertiary: #ff6b6b;
+    --border-color: #333333;
+    --gradient-primary: linear-gradient(135deg, #00ff88 0%, #0099ff 100%);
+    --gradient-card: linear-gradient(145deg, #1a1a1a 0%, #252525 100%);
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 8px 16px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 16px 32px rgba(0, 0, 0, 0.5);
+    --shadow-glow: 0 0 20px rgba(0, 255, 136, 0.3);
+}

@@ -1,0 +1,70 @@
+/* 소셜 링크 섹션 */
+.social-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-top: 2rem;
+    max-width: 400px;
+}
+
+.link-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: var(--bg-card);
+    padding: 0.8rem 1.2rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: var(--text-secondary);
+}
+
+.link-item:hover {
+    transform: translateY(-2px);
+    background: var(--accent-primary);
+    color: var(--bg-primary);
+    box-shadow: var(--shadow-md);
+}
+
+.link-icon {
+    font-size: 1.2rem;
+    color: var(--accent-primary);
+    min-width: 20px;
+    transition: all 0.3s ease;
+}
+
+.link-item:hover .link-icon {
+    color: var(--bg-primary);
+}
+
+.link-title {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    font-family: 'JetBrains Mono', monospace;
+    min-width: 100px;
+}
+
+.link-item:hover .link-title {
+    color: var(--bg-primary);
+}
+
+.link-separator {
+    color: var(--text-muted);
+    font-weight: 300;
+}
+
+.link-item:hover .link-separator {
+    color: var(--bg-primary);
+}
+
+.link-description {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    flex: 1;
+}
+
+.link-item:hover .link-description {
+    color: var(--bg-primary);
+}

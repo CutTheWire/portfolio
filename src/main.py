@@ -1,13 +1,33 @@
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse
-from fastapi.exceptions import RequestValidationError
+from fastapi.responses import HTMLResponse, FileResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
+from starlette.types import Scope, Receive, Send
 
 import os
 import uvicorn
 import markdown as md
+
+class CachedStaticFiles(StaticFiles):
+    def __init__(self, *args, **kwargs):
+        self.cache_max_age = kwargs.pop('cache_max_age', 86400)  # 1일 기본값
+        super().__init__(*args, **kwargs)
+    
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        # 원본 응답 처리
+        response = await super().__call__(scope, receive, send)
+        
+        # 정적 파일에 대한 캐시 헤더 추가
+        if scope["type"] == "http" and scope["method"] == "GET":
+            path = scope["path"]
+            if any(path.endswith(ext) for ext in ['.css', '.js', '.png', '.jpg', '.jpeg', '.gif', '.webp', '.ico', '.woff', '.woff2']):
+                # Cache-Control 헤더 설정
+                headers = dict(scope.get("headers", []))
+                headers[b"cache-control"] = f"public, max-age={self.cache_max_age}".encode()
+                scope["headers"] = [(k, v) for k, v in headers.items()]
+        
+        return response
 
 app = FastAPI(
     title="서정훈 포트폴리오",
@@ -15,9 +35,10 @@ app = FastAPI(
     redoc_url=None,
 )
 
+# 기존 StaticFiles를 CachedStaticFiles로 교체
 app.mount(
     path="/static",
-    app=StaticFiles(directory="static"),
+    app=CachedStaticFiles(directory="static", cache_max_age=2592000),  # 30일 캐시
     name="static"
 )
 
@@ -27,7 +48,7 @@ if not os.path.exists("images"):
 
 app.mount(
     path="/images",
-    app=StaticFiles(directory="images"),
+    app=CachedStaticFiles(directory="images", cache_max_age=2592000),  # 30일 캐시
     name="images"
 )
 
@@ -112,13 +133,24 @@ async def read_markdown(request: Request, filename: str):
     html_content = md.markdown(md_content, extensions=["fenced_code", "tables"])
     
     return templates.TemplateResponse(
-        "index.html",
+        "portfolio.html",
         {
             "request": request,
             "title": safe_filename.replace(".md", ""),
             "content": html_content,
         }
     )
+
+@app.get("/images/{img:path}")
+async def get_image(img: str):
+    # 경로 보호: ../ 등 우회 방지
+    safe_img = os.path.normpath(img).replace("\\", "/")
+    if ".." in safe_img or safe_img.startswith("/"):
+        raise HTTPException(status_code=400, detail="잘못된 이미지 경로입니다.")
+    image_path = os.path.join("images", safe_img)
+    if not os.path.exists(image_path):
+        raise HTTPException(status_code=404, detail="이미지 파일이 존재하지 않습니다.")
+    return FileResponse(image_path)
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8010, reload=True)
