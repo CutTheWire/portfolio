@@ -291,3 +291,30 @@
     border-radius: 1px;
     animation: expandHorizontal 1s ease-out forwards;
 }
+
+/* 외부 링크 아이콘 스타일링 */
+h3 a .fa-external-link-alt {
+    font-size: 0.5em;
+    margin-left: 0.3em;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+h3 a:hover .fa-external-link-alt {
+    opacity: 1;
+}
+
+/* 외부 링크 텍스트 스타일링 */
+h3 span {
+    font-size: 0.5em;
+    margin-left: 0.2em;
+    opacity: 0.7;
+    font-weight: 400;
+    color: inherit;
+    transition: opacity 0.3s ease;
+}
+
+h3 a:hover + span,
+h3:hover span {
+    opacity: 1;
+}
