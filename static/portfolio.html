@@ -38,90 +38,164 @@
     <!-- 복사 기능 플러그인 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
     
-    <script>
-        // 페이지 로드 후 코드 블록 처리
-        document.addEventListener('DOMContentLoaded', function() {
-            // 코드 블록에 언어 라벨 추가
-            document.querySelectorAll('pre code').forEach((block) => {
-                const pre = block.parentElement;
-                const className = block.className;
-                const language = className.replace('language-', '').replace('hljs', '').trim();
-                
-                if (language && language !== 'undefined') {
-                    pre.setAttribute('data-language', language);
-                } else {
-                    pre.setAttribute('data-language', 'text');
-                }
-                
-                // 복사 버튼을 위한 wrapper 추가
-                const wrapper = document.createElement('div');
-                wrapper.className = 'code-block-wrapper';
-                pre.parentNode.insertBefore(wrapper, pre);
-                wrapper.appendChild(pre);
-                
-                // 복사 버튼 추가
-                const copyButton = document.createElement('button');
-                copyButton.className = 'copy-button';
-                copyButton.textContent = 'Copy';
-                copyButton.addEventListener('click', () => {
-                    navigator.clipboard.writeText(block.textContent).then(() => {
-                        copyButton.textContent = 'Copied!';
-                        copyButton.classList.add('copied');
-                        setTimeout(() => {
-                            copyButton.textContent = 'Copy';
-                            copyButton.classList.remove('copied');
-                        }, 2000);
-                    });
-                });
-                wrapper.appendChild(copyButton);
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const overlayContainer = document.createElement('div');
+        overlayContainer.className = 'image-overlay-container';
+        overlayContainer.innerHTML = `
+            <button class="close-button">&times;</button>
+            <img src="" alt="Overlay Image" draggable="false">
+        `;
+        document.body.appendChild(overlayContainer);
+
+        const overlayImage = overlayContainer.querySelector('img');
+        const closeButton = overlayContainer.querySelector('.close-button');
+
+        let isZoomed = false;
+        let isDragging = false;
+        let startX = 0, startY = 0;
+        let translateX = 0, translateY = 0;
+        let initialDistance = 0; // 두 손가락 간 초기 거리
+
+        function preventTouchMove(e) {
+            e.preventDefault();
+        }
+
+        // 오버레이 열기
+        function openOverlay() {
+            overlayContainer.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            window.addEventListener('touchmove', preventTouchMove, { passive: false });
+        }
+
+        // 오버레이 닫기
+        function closeOverlay() {
+            overlayContainer.classList.remove('active');
+            document.body.style.overflow = '';
+            window.removeEventListener('touchmove', preventTouchMove, { passive: false });
+            resetImagePosition();
+        }
+
+        // 이미지 클릭 시
+        document.querySelectorAll('main.content img').forEach(img => {
+            img.addEventListener('click', () => {
+                overlayImage.src = img.src;
+                openOverlay();
             });
-            
-            // Prism.js 하이라이팅 적용
-            if (typeof Prism !== 'undefined') {
-                Prism.highlightAll();
+        });
+
+        // 닫기 버튼
+        closeButton.addEventListener('click', closeOverlay);
+
+        // ESC 키
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeOverlay();
             }
         });
 
-        // 스크롤 애니메이션
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.animationPlayState = 'running';
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.section').forEach(el => {
-            observer.observe(el);
+        // 더블클릭으로 확대/축소 (데스크톱)
+        overlayImage.addEventListener('dblclick', () => {
+            toggleZoom();
         });
 
-        function typeWriter() {
-            const currentText = texts[textIndex];
-            
-            if (isDeleting) {
-                subtitle.textContent = currentText.substring(0, charIndex - 1);
-                charIndex--;
-            } else {
-                subtitle.textContent = currentText.substring(0, charIndex + 1);
-                charIndex++;
+        // 더블 터치로 확대/축소 (모바일)
+        overlayImage.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 1) {
+                const touch = e.touches[0];
+                startX = touch.clientX;
+                startY = touch.clientY;
+                isDragging = true;
+            } else if (e.touches.length === 2) {
+                // 두 손가락 간 거리 계산
+                initialDistance = getDistance(e.touches[0], e.touches[1]);
             }
+        });
 
-            if (!isDeleting && charIndex === currentText.length) {
-                isDeleting = true;
-                setTimeout(typeWriter, 2000);
-            } else if (isDeleting && charIndex === 0) {
-                isDeleting = false;
-                textIndex = (textIndex + 1) % texts.length;
-                setTimeout(typeWriter, 500);
+        overlayImage.addEventListener('touchmove', (e) => {
+            if (isDragging && isZoomed && e.touches.length === 1) {
+                const touch = e.touches[0];
+                const deltaX = touch.clientX - startX;
+                const deltaY = touch.clientY - startY;
+                translateX += deltaX;
+                translateY += deltaY;
+                overlayImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(2)`;
+                startX = touch.clientX;
+                startY = touch.clientY;
+            } else if (e.touches.length === 2) {
+                // 두 손가락 간 거리 변화 계산
+                const currentDistance = getDistance(e.touches[0], e.touches[1]);
+                if (currentDistance < initialDistance * 0.8) { // 축소 동작 감지
+                    resetImagePosition();
+                    isZoomed = false;
+                }
+            }
+        });
+
+        document.addEventListener('touchend', (e) => {
+            if (e.touches.length === 0) {
+                isDragging = false;
+            }
+        });
+
+        // 이미지 드래그 시작 (마우스)
+        overlayImage.addEventListener('mousedown', (e) => {
+            if (isZoomed) {
+                e.preventDefault();
+                isDragging = true;
+                startX = e.clientX;
+                startY = e.clientY;
+                overlayImage.style.cursor = 'grabbing';
+            }
+        });
+
+        // 이미지 드래그 이동 (마우스)
+        document.addEventListener('mousemove', (e) => {
+            if (isDragging && isZoomed) {
+                const deltaX = e.clientX - startX;
+                const deltaY = e.clientY - startY;
+                translateX += deltaX;
+                translateY += deltaY;
+                overlayImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(2)`;
+                startX = e.clientX;
+                startY = e.clientY;
+            }
+        });
+
+        // 이미지 드래그 종료 (마우스)
+        document.addEventListener('mouseup', () => {
+            if (isDragging) {
+                isDragging = false;
+                overlayImage.style.cursor = 'grab';
+            }
+        });
+
+        // 확대/축소 토글 함수
+        function toggleZoom() {
+            if (isZoomed) {
+                overlayImage.style.transform = 'translate(0, 0) scale(1)';
+                isZoomed = false;
+                resetImagePosition();
             } else {
-                setTimeout(typeWriter, isDeleting ? 50 : 100);
+                overlayImage.style.transform = 'scale(2)';
+                isZoomed = true;
             }
         }
-    </script>
+
+        // 이미지 위치 초기화
+        function resetImagePosition() {
+            translateX = 0;
+            translateY = 0;
+            overlayImage.style.transform = 'translate(0, 0) scale(1)';
+        }
+
+        // 두 손가락 간 거리 계산 함수
+        function getDistance(touch1, touch2) {
+            const deltaX = touch2.clientX - touch1.clientX;
+            const deltaY = touch2.clientY - touch1.clientY;
+            return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+        }
+    });
+</script>
 </body>
 </html>

@@ -18,17 +18,17 @@
 ```
 ChatBot-AI/
 ├── fastapi/
-│   ├── ai_model/           # AI 모델 파일 (볼륨 마운트)
-│   ├── logs/               # 로그 파일 (공유 볼륨)
-│   ├── prompt/             # 프롬프트 설정
+│   ├── ai_model/             # AI 모델 파일 (볼륨 마운트)
+│   ├── logs/                 # 로그 파일 (공유 볼륨)
+│   ├── prompt/               # 프롬프트 설정
 │   ├── src/
-│   │   ├── server-office/  # Office API 서버 코드
-│   │   └── server-character/ # Character API 서버 코드
-│   ├── .env                # 환경 변수
-│   └── bot.yaml            # 봇 설정
+│   │   ├── server-office/      # Office API 서버
+│   │   └── server-character/   # Character API 서버
+│   ├── .env                  # 환경 변수
+│   └── bot.yaml              # 봇 설정
 ├── nginx/
-│   ├── nginx.conf          # nginx 리버스 프록시 설정
-│   └── 404.html            # 커스텀 404 페이지
+│   ├── nginx.conf            # nginx 리버스 프록시 설정
+│   └── 404.html              # 커스텀 404 페이지
 ├── docker-compose.yml
 └── README.md
 ```
@@ -41,11 +41,11 @@ ChatBot-AI/
 ### 📑 ChatBot-AI/fastapi/src/utils/handlers 클래스 다이어그램 
 ![image](https://lh3.googleusercontent.com/d/10s3xwUFxnmfKb8WBEvU3jqQhJgExNa28)
 
-### 📑 ChatBot-AI/fastapi/src/utils/schemas 클래스 다이어그램
-![image](https://lh3.googleusercontent.com/d/1Az97lKerSOJltMPWEMeAW6G72axCdIii)
+### 📑 utils(schemas) 클래스 다이어그램
+![Class-Diagram-ChatBot(AI)-utils(schemas)](/images/Class-Diagram-ChatBot(AI)-utils(schemas).webp)
 
 ## 📋 UML 패키지 다이어그램 
-![image](https://lh3.googleusercontent.com/d/1_fifSzf7YFoEMQd80hUQGgF0rI0vsYtm)
+![Package-Diagram-ChatBot(AI)](/images/Package-Diagram-ChatBot(AI).webp)
 
 
 ## 🚀 빠른 시작 (Docker 기반)

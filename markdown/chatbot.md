@@ -16,8 +16,7 @@
 | 👍 임창묵 (dlackdanr777) | 
 
 # 시스템 아키텍처 다이어그램
-[![System Architecture Diagram](/images/System-Architecture-Diagram-ChatBot.webp)](https://drive.google.com/file/d/1MGojuhD_O90ldOLZ5slQY1h_4f_Hkmiw/view?usp=sharing)
-
+![System-Architecture-Diagram-ChatBot](/images/System-Architecture-Diagram-ChatBot.webp)
 
 ### 도커 컨테이너 및 이미지 모두 삭제 후 자동 재빌드
 

@@ -13,6 +13,7 @@
 @import url('components/social-links.css');
 @import url('components/content.css');
 @import url('components/code-blocks.css');
+@import url('components/image-overlay.css');
 
 /* Utils */
 @import url('utils/animations.css');

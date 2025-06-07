@@ -1,0 +1,60 @@
+.image-overlay-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    pointer-events: none; /* 기본적으로 클릭 차단 */
+}
+
+.image-overlay-container.active {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto; /* 활성화 시 클릭 허용 */
+}
+
+.image-overlay-container img {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 8px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+    cursor: grab;
+    transition: transform 0.3s ease-in-out;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.image-overlay-container img:active {
+    cursor: grabbing;
+}
+
+.image-overlay-container .close-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: #ff6b6b;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: background 0.3s ease;
+}
+
+.image-overlay-container .close-button:hover {
+    background: #ff4b4b;
+}
