@@ -52,8 +52,10 @@ ChatBot-AI/
 └── README.md                           # 프로젝트 설명서
 ```
 
+## 📋 시스템 아키텍처 다이어그램
+![System-Architecture-Diagram-ChatBot](/images/System-Architecture-Diagram-ChatBot.webp)
 
-## 📋 UML 클래스 다이어그램 
+## 📋 클래스 다이어그램 
 ### 📑 utils(ai_models) 클래스 다이어그램 
 ![Class-Diagram-ChatBot(AI)-utils(ai_models)](/images/Class-Diagram-ChatBot(AI)-utils(ai_models).webp)
 
@@ -63,7 +65,7 @@ ChatBot-AI/
 ### 📑 utils(schemas) 클래스 다이어그램
 ![Class-Diagram-ChatBot(AI)-utils(schemas)](/images/Class-Diagram-ChatBot(AI)-utils(schemas).webp)
 
-## 📋 UML 패키지 다이어그램 
+## 📋 패키지 다이어그램 
 ![Package-Diagram-ChatBot(AI)](/images/Package-Diagram-ChatBot(AI).webp)
 
 

@@ -2,7 +2,8 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 기존 viewport를 더 구체적으로 설정 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>{{ title }} - 백엔드 개발자 서정훈</title>
     <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -149,6 +150,8 @@
         </main>
     </div>
 
+    <!-- 모바일 최적화 스크립트 -->
+    <script src="/static/js/mobile-fix.js"></script>
     <!-- 이메일 기능 스크립트 -->
     <script src="/static/js/modal-module.js"></script>
     <script>

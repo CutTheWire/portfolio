@@ -9,12 +9,6 @@
 | 권재현 (donismoney) | 백엔드 | Spring Boot |  
 | 손유노 (GingGang) | 프론트엔드 | React, TypeScript |
 
-| 도움을 주신 분 |
-|--------|  
-| 👍 오동현 (zbezdac1f), (odh1231) |  
-| 👍 백성현 (Seonghyeon8983) |
-| 👍 임창묵 (dlackdanr777) | 
-
 # 시스템 아키텍처 다이어그램
 ![System-Architecture-Diagram-ChatBot](/images/System-Architecture-Diagram-ChatBot.webp)
 

@@ -2,7 +2,8 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 기존 viewport를 더 구체적으로 설정 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>{{ title }} - 백엔드 개발자 서정훈</title>
     <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -36,6 +37,8 @@
     <!-- 복사 기능 플러그인만 사용 (언어 라벨 플러그인 제거) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
     
+    <!-- 모바일 최적화 스크립트 -->
+    <script src="/static/js/mobile-fix.js"></script>
     <!-- 이메일 기능 스크립트 -->
     <script src="/static/js/modal-module.js"></script>
     
@@ -247,7 +250,7 @@
                 const deltaY = touch.clientY - startY;
                 translateX += deltaX;
                 translateY += deltaY;
-                overlayImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(2)`;
+                overlayImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(3)`;
                 startX = touch.clientX;
                 startY = touch.clientY;
             } else if (e.touches.length === 2) {
@@ -281,7 +284,7 @@
                 const deltaY = e.clientY - startY;
                 translateX += deltaX;
                 translateY += deltaY;
-                overlayImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(2)`;
+                overlayImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(3)`;
                 startX = e.clientX;
                 startY = e.clientY;
             }
@@ -300,7 +303,7 @@
                 isZoomed = false;
                 resetImagePosition();
             } else {
-                overlayImage.style.transform = 'scale(2)';
+                overlayImage.style.transform = 'scale(3)';
                 isZoomed = true;
             }
         }

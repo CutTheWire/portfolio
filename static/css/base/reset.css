@@ -4,6 +4,19 @@
     box-sizing: border-box;
 }
 
+html {
+    /* 모바일에서 확대/축소 시 레이아웃 안정화 */
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    /* 터치 스크롤 최적화 */
+    -webkit-overflow-scrolling: touch;
+    /* 모바일에서 수평 스크롤 방지 */
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+}
+
 body {
     font-family: 'Inter', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
     background: var(--bg-primary);
@@ -11,6 +24,22 @@ body {
     line-height: 1.6;
     overflow-x: hidden;
     scroll-behavior: smooth;
+    /* 모바일에서 확대 방지 */
+    width: 100%;
+    max-width: 100vw;
+    min-height: 100vh;
+    position: relative;
+}
+
+/* 모든 요소가 뷰포트를 넘지 않도록 */
+* {
+    max-width: 100%;
+}
+
+/* 이미지가 컨테이너를 넘지 않도록 */
+img {
+    max-width: 100%;
+    height: auto;
 }
 
 /* 스크롤바 */
@@ -29,4 +58,18 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
     background: var(--accent-secondary);
+}
+
+/* 모바일 전용 스타일 */
+@media (max-width: 768px) {
+    html, body {
+        overflow-x: hidden !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+    }
+    
+    /* 터치 디바이스에서 확대 동작 제한 */
+    body {
+        touch-action: pan-y;
+    }
 }
