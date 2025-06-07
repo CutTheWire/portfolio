@@ -149,47 +149,468 @@
         </main>
     </div>
 
-    <script>
-        // 스크롤 애니메이션
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
+    <!-- 우측 하단 고정 이메일 버튼 -->
+    <button class="email-floating-button" onclick="openEmailModal()" title="이메일 보내기">
+        <i class="fas fa-envelope"></i>
+    </button>
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.animationPlayState = 'running';
-                }
-            });
-        }, observerOptions);
-
-        document.querySelectorAll('.section').forEach(el => {
-            observer.observe(el);
-        });
-
-        function typeWriter() {
-            const currentText = texts[textIndex];
+    <!-- 이메일 오버레이 -->
+    <div class="email-overlay" id="emailOverlay">
+        <div class="email-modal">
+            <div class="email-modal-header">
+                <h3 class="email-modal-title">
+                    <i class="fas fa-envelope"></i>
+                    이메일 전송
+                </h3>
+                <button class="email-modal-close" onclick="closeEmailModal()" title="닫기">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
             
-            if (isDeleting) {
-                subtitle.textContent = currentText.substring(0, charIndex - 1);
-                charIndex--;
-            } else {
-                subtitle.textContent = currentText.substring(0, charIndex + 1);
-                charIndex++;
+            <!-- SMTP 안내 메시지 -->
+            <div class="email-info-notice">
+                <div class="email-info-header">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>실제 이메일 전송 서비스</strong>
+                </div>
+                <div class="email-info-content">
+                    • 이 양식으로 전송된 메일은 <strong>SMTP를 통해 실제로 발송</strong>됩니다<br>
+                    • 입력하신 <strong>이메일 주소로 답변</strong>을 받으실 수 있습니다<br>
+                    • 단순한 문의 양식이 아닌 <strong>실제 메일 시스템</strong>입니다
+                </div>
+            </div>
+            
+            <!-- 네트워크 오류 알림 -->
+            <div class="email-network-error" id="emailNetworkError">
+                <i class="fas fa-exclamation-triangle"></i>
+                네트워크 연결을 확인하고 다시 시도해주세요.
+            </div>
+            
+            <div id="emailFormContainer">
+                <form class="email-form" onsubmit="sendEmail(event)">
+                    <div class="email-form-group">
+                        <label class="email-form-label" for="senderName">이름 *</label>
+                        <input 
+                            type="text" 
+                            id="senderName" 
+                            name="sender_name"
+                            class="email-form-input" 
+                            required 
+                            placeholder="홍길동"
+                        >
+                        <div class="email-field-error" id="nameError"></div>
+                    </div>
+                    
+                    <div class="email-form-group">
+                        <label class="email-form-label" for="senderEmail">
+                            답변받을 이메일 주소 *
+                            <span class="email-reply-notice">답변을 받으실 실제 이메일을 입력해주세요</span>
+                        </label>
+                        <input 
+                            type="email" 
+                            id="senderEmail" 
+                            name="sender_email"
+                            class="email-form-input" 
+                            required 
+                            placeholder="example@email.com"
+                        >
+                        <div class="email-field-error" id="emailError"></div>
+                    </div>
+                    
+                    <div class="email-form-group">
+                        <label class="email-form-label" for="subject">제목 *</label>
+                        <input 
+                            type="text" 
+                            id="subject" 
+                            name="subject"
+                            class="email-form-input" 
+                            required 
+                            placeholder="협업 제안 / 문의사항 등"
+                        >
+                        <div class="email-field-error" id="subjectError"></div>
+                    </div>
+                    
+                    <div class="email-form-group">
+                        <label class="email-form-label" for="message">메시지 *</label>
+                        <textarea 
+                            id="message" 
+                            name="message"
+                            class="email-form-textarea" 
+                            required 
+                            placeholder="협업 제안, 프로젝트 문의, 기술 상담 등 
+어떤 내용이든 편하게 말씀해주세요.
+
+입력하신 이메일로 직접 답변드리겠습니다."
+                        ></textarea>
+                        <div class="email-field-error" id="messageError"></div>
+                    </div>
+                    
+                    <div class="email-form-buttons">
+                        <button type="button" class="email-form-cancel" onclick="closeEmailModal()">
+                            ❓다시 생각해 볼게...
+                        </button>
+                        <button type="submit" class="email-form-submit" id="emailSubmitButton">
+                            <i class="fas fa-paper-plane"></i>
+                            이메일 전송
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <div id="emailSuccessContainer" class="email-container-hidden">
+                <div class="email-success-message">
+                    <div class="email-success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h4 class="email-success-title">메일이 성공적으로 전송되었습니다!</h4>
+                    <p class="email-success-description">
+                        <strong>입력하신 이메일로 직접 답변</strong>드리겠습니다.<br>
+                        보통 <strong>24시간 이내</strong>에 회신해드립니다.<br>
+                        만약 24시간 이내에 답변이 없으면, <strong>스팸 폴더</strong>를 확인해주세요.<br>
+                        <br>
+                        소중한 연락 감사합니다! 🙏
+                    </p>
+                </div>
+            </div>
+            
+            <div id="emailErrorContainer" class="email-container-hidden">
+                <div class="email-error-message">
+                    <div class="email-error-icon">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <h4 class="email-error-title">메일 전송에 실패했습니다</h4>
+                    <p class="email-error-description" id="emailErrorText">
+                        일시적인 오류가 발생했습니다.<br>
+                        잠시 후 다시 시도해주세요.
+                    </p>
+                    <div class="email-error-actions">
+                        <button class="email-retry-button" onclick="retryEmail()">
+                            <i class="fas fa-redo"></i> 다시 시도
+                        </button>
+                        <button class="email-close-button" onclick="closeEmailModal()">
+                            닫기
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 전역 변수
+        let lastFormData = null;
+        let retryCount = 0;
+        const MAX_RETRY = 3;
+        let isFormDirty = false; // 폼이 수정되었는지 확인하는 플래그
+
+        // 이메일 모달 관련 함수들
+        function openEmailModal() {
+            document.getElementById('emailOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            resetEmailForm();
+        }
+
+        function closeEmailModal() {
+            // 폼이 수정된 상태에서 닫으려고 하면 확인 요청
+            if (isFormDirty && !confirm('작성 중인 내용이 있습니다. 정말 닫으시겠습니까?')) {
+                return;
+            }
+            
+            document.getElementById('emailOverlay').classList.remove('active');
+            document.body.style.overflow = '';
+            resetEmailForm();
+        }
+
+        function resetEmailForm() {
+            // 폼 초기화
+            const form = document.querySelector('.email-form');
+            if (form) form.reset();
+            
+            // 컨테이너 표시 상태 초기화
+            document.getElementById('emailFormContainer').style.display = 'block';
+            document.getElementById('emailSuccessContainer').style.display = 'none';
+            document.getElementById('emailErrorContainer').style.display = 'none';
+            
+            // 버튼 상태 초기화
+            const submitBtn = document.getElementById('emailSubmitButton');
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('loading');
+            
+            // 오류 상태 초기화
+            clearFormErrors();
+            hideNetworkError();
+            
+            // 재시도 카운트 초기화
+            retryCount = 0;
+            lastFormData = null;
+            isFormDirty = false; // 더티 플래그 초기화
+        }
+
+        // 폼 더티 상태 체크 함수
+        function markFormDirty() {
+            isFormDirty = true;
+        }
+
+        // 폼 유효성 검사
+        function validateForm(data) {
+            let isValid = true;
+            clearFormErrors();
+
+            // 이름 검사
+            if (!data.sender_name || !data.sender_name.trim()) {
+                showFieldError('senderName', 'nameError', '이름을 입력해주세요.');
+                isValid = false;
             }
 
-            if (!isDeleting && charIndex === currentText.length) {
-                isDeleting = true;
-                setTimeout(typeWriter, 2000);
-            } else if (isDeleting && charIndex === 0) {
-                isDeleting = false;
-                textIndex = (textIndex + 1) % texts.length;
-                setTimeout(typeWriter, 500);
-            } else {
-                setTimeout(typeWriter, isDeleting ? 50 : 100);
+            // 이메일 검사
+            if (!data.sender_email || !data.sender_email.trim()) {
+                showFieldError('senderEmail', 'emailError', '이메일을 입력해주세요.');
+                isValid = false;
+            } else if (!validateEmail(data.sender_email.trim())) {
+                showFieldError('senderEmail', 'emailError', '올바른 이메일 형식을 입력해주세요.');
+                isValid = false;
+            }
+
+            // 제목 검사
+            if (!data.subject || !data.subject.trim()) {
+                showFieldError('subject', 'subjectError', '제목을 입력해주세요.');
+                isValid = false;
+            }
+
+            // 메시지 검사
+            if (!data.message || !data.message.trim()) {
+                showFieldError('message', 'messageError', '메시지를 입력해주세요.');
+                isValid = false;
+            } else if (data.message.trim().length < 10) {
+                showFieldError('message', 'messageError', '메시지는 10자 이상 입력해주세요.');
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        // 이메일 형식 검증
+        function validateEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // 필드 오류 표시
+        function showFieldError(fieldId, errorId, message) {
+            const field = document.getElementById(fieldId);
+            const error = document.getElementById(errorId);
+            
+            field.classList.add('error');
+            error.textContent = message;
+            error.classList.add('visible');
+        }
+
+        // 모든 필드 오류 제거
+        function clearFormErrors() {
+            const fields = ['senderName', 'senderEmail', 'subject', 'message'];
+            const errors = ['nameError', 'emailError', 'subjectError', 'messageError'];
+            
+            fields.forEach(fieldId => {
+                document.getElementById(fieldId).classList.remove('error');
+            });
+            
+            errors.forEach(errorId => {
+                const error = document.getElementById(errorId);
+                error.classList.remove('visible');
+            });
+        }
+
+        // 네트워크 오류 표시/숨김
+        function showNetworkError() {
+            document.getElementById('emailNetworkError').classList.add('visible');
+        }
+
+        function hideNetworkError() {
+            document.getElementById('emailNetworkError').classList.remove('visible');
+        }
+
+        // 오류 메시지 업데이트
+        function updateErrorMessage(message) {
+            document.getElementById('emailErrorText').innerHTML = message;
+        }
+
+        // 이메일 전송 함수 (JSON으로 수정)
+        async function sendEmail(event) {
+            event.preventDefault();
+            
+            const submitBtn = document.getElementById('emailSubmitButton');
+            const form = event.target;
+            
+            // FormData 대신 JSON 객체로 생성
+            const formData = {
+                sender_name: form.sender_name.value,
+                sender_email: form.sender_email.value,
+                subject: form.subject.value,
+                message: form.message.value
+            };
+            
+            // 폼 유효성 검사
+            if (!validateForm(formData)) {
+                return;
+            }
+
+            // 마지막 폼 데이터 저장 (재시도용)
+            lastFormData = formData;
+            
+            // 로딩 상태
+            submitBtn.disabled = true;
+            submitBtn.classList.add('loading');
+            hideNetworkError();
+            
+            try {
+                const response = await fetch('/smtp/email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // 성공 시
+                    showSuccessMessage();
+                    retryCount = 0;
+                    isFormDirty = false; // 전송 성공 시 더티 상태 해제
+                } else {
+                    // 서버 오류 시
+                    const errorMessage = result.message || '서버에서 오류가 발생했습니다.';
+                    showErrorMessage(errorMessage);
+                }
+            } catch (error) {
+                console.error('Email send error:', error);
+                
+                // 네트워크 오류 시
+                if (error.name === 'TypeError' || error.message.includes('fetch')) {
+                    showNetworkError();
+                    showErrorMessage('네트워크 연결을 확인하고 다시 시도해주세요.');
+                } else {
+                    showErrorMessage('예상치 못한 오류가 발생했습니다.<br>잠시 후 다시 시도해주세요.');
+                }
+            } finally {
+                // 로딩 상태 해제
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('loading');
             }
         }
+
+        // 성공 메시지 표시
+        function showSuccessMessage() {
+            document.getElementById('emailFormContainer').style.display = 'none';
+            document.getElementById('emailErrorContainer').style.display = 'none';
+            document.getElementById('emailSuccessContainer').style.display = 'block';
+            
+            // 5초 후 자동으로 닫기 (성공 메시지를 충분히 읽을 수 있도록)
+            setTimeout(() => {
+                isFormDirty = false; // 성공 후에는 더티 상태 해제
+                closeEmailModal();
+            }, 5000);
+        }
+
+        // 오류 메시지 표시
+        function showErrorMessage(message) {
+            updateErrorMessage(message);
+            document.getElementById('emailFormContainer').style.display = 'none';
+            document.getElementById('emailSuccessContainer').style.display = 'none';
+            document.getElementById('emailErrorContainer').style.display = 'block';
+            
+            retryCount++;
+        }
+
+        // 재시도 함수 (JSON 데이터로 수정)
+        async function retryEmail() {
+            if (!lastFormData) {
+                closeEmailModal();
+                return;
+            }
+
+            if (retryCount >= MAX_RETRY) {
+                updateErrorMessage(
+                    '최대 재시도 횟수를 초과했습니다.<br>' +
+                    '나중에 다시 시도하시거나 직접 연락해주세요.<br>' +
+                    '<strong>직접 연락: sjmbee04@gmail.com</strong>'
+                );
+                return;
+            }
+
+            // 폼으로 돌아가기
+            document.getElementById('emailFormContainer').style.display = 'block';
+            document.getElementById('emailErrorContainer').style.display = 'none';
+            hideNetworkError();
+            
+            // 로딩 상태
+            const retryBtn = document.querySelector('.email-retry-button');
+            retryBtn.disabled = true;
+            retryBtn.classList.add('loading');
+            
+            try {
+                const response = await fetch('/smtp/email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(lastFormData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showSuccessMessage();
+                    retryCount = 0;
+                    isFormDirty = false; // 재시도 성공 시 더티 상태 해제
+                } else {
+                    const errorMessage = result.message || '서버에서 오류가 발생했습니다.';
+                    showErrorMessage(errorMessage);
+                }
+            } catch (error) {
+                console.error('Retry email error:', error);
+                showErrorMessage('재시도 중 오류가 발생했습니다.<br>잠시 후 다시 시도해주세요.');
+            } finally {
+                retryBtn.disabled = false;
+                retryBtn.classList.remove('loading');
+            }
+        }
+
+        // 이벤트 리스너들
+        document.addEventListener('DOMContentLoaded', function() {
+            // ESC 키로 모달 닫기 (더티 상태 확인)
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && document.getElementById('emailOverlay').classList.contains('active')) {
+                    closeEmailModal();
+                }
+            });
+            
+            // 오버레이 배경 클릭시 닫기 방지 (더이상 닫히지 않음)
+            document.getElementById('emailOverlay').addEventListener('click', function(e) {
+                // 배경 클릭으로는 닫히지 않도록 주석 처리
+                // if (e.target === this) closeEmailModal();
+            });
+
+            // 입력 필드 포커스 시 오류 상태 제거 및 더티 플래그 설정
+            const fields = ['senderName', 'senderEmail', 'subject', 'message'];
+            fields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                
+                // 포커스 시 오류 상태 제거
+                field.addEventListener('focus', function() {
+                    this.classList.remove('error');
+                    const errorId = fieldId === 'senderName' ? 'nameError' :
+                                    fieldId === 'senderEmail' ? 'emailError' :
+                                    fieldId === 'subject' ? 'subjectError' : 'messageError';
+                    document.getElementById(errorId).classList.remove('visible');
+                });
+                
+                // 입력 시 더티 플래그 설정
+                field.addEventListener('input', markFormDirty);
+                field.addEventListener('change', markFormDirty);
+            });
+        });
     </script>
 </body>
 </html>

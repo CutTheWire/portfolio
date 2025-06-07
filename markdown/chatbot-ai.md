@@ -4,6 +4,7 @@
 > AI 기반 챗봇 API 프로젝트입니다.  
 > FastAPI 기반의 Office/Character API 서버와 Llama 기반 AI 모델을 Docker로 통합 운영합니다.
 
+[github-link](https://github.com/TreeNut-KR/ChatBot-AI)
 
 ## 🏗️ 전체 아키텍처
 

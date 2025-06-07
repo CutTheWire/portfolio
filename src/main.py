@@ -1,13 +1,14 @@
-from fastapi import FastAPI, Request, HTTPException
+import os
+import uvicorn
+
+from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse, FileResponse
+from fastapi.responses import HTMLResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.types import Scope, Receive, Send
 
-import os
-import uvicorn
-import markdown as md
+from utils import ErrorHandler, SmtpController, PageController
 
 class CachedStaticFiles(StaticFiles):
     def __init__(self, *args, **kwargs):
@@ -35,6 +36,9 @@ app = FastAPI(
     redoc_url=None,
 )
 
+# ErrorHandler 등록
+ErrorHandler.ExceptionManager.register(app)
+
 # 기존 StaticFiles를 CachedStaticFiles로 교체
 app.mount(
     path="/static",
@@ -54,32 +58,52 @@ app.mount(
 
 templates = Jinja2Templates(directory="static")
 
-# 404 예외 핸들러 - 개선된 버전
+# 404 예외 핸들러 - ErrorHandler를 사용하도록 개선
 @app.exception_handler(StarletteHTTPException)
 async def custom_404_handler(request: Request, exc: StarletteHTTPException):
     if exc.status_code == 404:
         # 브라우저/도구 자동 요청 경로들 필터링 (더 포괄적)
         ignored_paths = (
-            "/.well-known",
+            "/.well-known/",
             "/favicon.ico",
-            "/robots.txt",
+            "/robots.txt", 
             "/sitemap.xml",
             "/apple-touch-icon",
             "/manifest.json",
-            "/chrome-extension",
-            "/devtools"
+            "/chrome-extension/",
+            "/devtools/",
+            "/.well-known/appspecific/"
         )
         
+        # 정확한 경로 매칭을 위해 startswith와 exact match 모두 확인
+        request_path = request.url.path
+        
         # 무시할 경로면 조용히 404 응답 (로그 없음)
-        if any(request.url.path.startswith(p) for p in ignored_paths):
+        if (any(request_path.startswith(p) for p in ignored_paths) or
+            request_path in ["/favicon.ico", "/robots.txt", "/sitemap.xml", "/manifest.json"]):
             return HTMLResponse(status_code=404, content="")
         
-        # 나머지 404는 unauthorized.html로 처리
+        # 나머지 404는 ErrorHandler를 통해 로그 기록 후 unauthorized.html로 처리
+        ErrorHandler.log_error(
+            exc=exc,
+            request=request,
+            status_code=404,
+            detail=f"Route not found: {request.url.path}"
+        )
+        
         return templates.TemplateResponse(
             "unauthorized.html",
             {"request": request},
             status_code=404
         )
+    
+    # 기타 HTTP 예외도 ErrorHandler를 통해 처리
+    ErrorHandler.log_error(
+        exc=exc,
+        request=request,
+        status_code=exc.status_code,
+        detail=exc.detail if hasattr(exc, 'detail') else str(exc)
+    )
     
     return templates.TemplateResponse(
         "unauthorized.html",
@@ -89,68 +113,32 @@ async def custom_404_handler(request: Request, exc: StarletteHTTPException):
 
 @app.get("/favicon.ico")
 async def favicon():
-    from fastapi.responses import FileResponse
-    favicon_path = os.path.join("static", "favicon.ico")
-    if os.path.exists(favicon_path):
-        return FileResponse(favicon_path)
-    else:
-        # 파일이 없으면 빈 응답 반환
-        return HTMLResponse(status_code=204, content="")
+    try:
+        from fastapi.responses import FileResponse
+        favicon_path = os.path.join("static", "favicon.ico")
+        if os.path.exists(favicon_path):
+            return FileResponse(favicon_path)
+        else:
+            # 파일이 없으면 404 처리
+            raise ErrorHandler.NotFoundException("Favicon not found")
+    except ErrorHandler.NotFoundException:
+        raise
+    except Exception as e:
+        raise ErrorHandler.InternalServerErrorException("Favicon loading error")
 
-@app.get("/", response_class=HTMLResponse)
-async def read_index(request: Request):
-    # main.md 파일을 읽어와서 HTML로 변환
-    md_path = os.path.join("markdown", "main.md")
-    if not os.path.exists(md_path):
-        html_content = "<h1>main.md 파일이 존재하지 않습니다.</h1>"
-    else:
-        with open(md_path, encoding="utf-8") as f:
-            md_content = f.read()
-        html_content = md.markdown(md_content, extensions=["fenced_code", "tables"])
+app.include_router(
+    PageController.page_router,
+    prefix = "",
+    tags = ["Page Router"],
+    responses = {500: {"description": "Internal Server Error"}}
+)
 
-    # 템플릿에 마크다운 변환 결과를 전달
-    return templates.TemplateResponse(
-        "index.html",
-        {
-            "request": request,
-            "title": "메인",
-            "content": html_content,
-        }
-    )
-
-@app.get("/portfolio/{filename}", response_class=HTMLResponse)
-async def read_markdown(request: Request, filename: str):
-    # 확장자 체크 및 경로 보호
-    if not filename.endswith(".md"):
-        filename += ".md"
-    safe_filename = os.path.basename(filename)
-    md_path = os.path.join("markdown", safe_filename)
-    if not os.path.exists(md_path):
-        raise HTTPException(status_code=404, detail="마크다운 파일이 존재하지 않습니다.")
-    
-    with open(md_path, encoding="utf-8") as f:
-        md_content = f.read()
-    html_content = md.markdown(md_content, extensions=["fenced_code", "tables"])
-    
-    return templates.TemplateResponse(
-        "portfolio.html",
-        {
-            "request": request,
-            "title": safe_filename.replace(".md", ""),
-            "content": html_content,
-        }
-    )
-
-@app.get("/images/{img:path}")
-async def get_image(img: str):
-    # 경로 보호: ../ 등 우회 방지
-    safe_img = os.path.normpath(img).replace("\\", "/")
-    if ".." in safe_img or safe_img.startswith("/"):
-        raise HTTPException(status_code=400, detail="잘못된 이미지 경로입니다.")
-    image_path = os.path.join("images", safe_img)
-    if not os.path.exists(image_path):
-        raise HTTPException(status_code=404, detail="이미지 파일이 존재하지 않습니다.")
-    return FileResponse(image_path)
+app.include_router(
+    SmtpController.smtp_router,
+    prefix = "/smtp",
+    tags = ["SMTP Router"],
+    responses = {500: {"description": "Internal Server Error"}}
+)
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8010, reload=True)

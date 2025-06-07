@@ -22,11 +22,13 @@
 
 #### 1. Linux, Mac OS
 ```bash
+
 source ./rebuild.sh
 ```
 
 #### 2. Windows OS
 ```bash
+
  & ./rebuild.bat
 ```
 

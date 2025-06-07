@@ -1,0 +1,344 @@
+/* GitHub Link Preview Card 스타일 */
+.github-link-card {
+    display: block;
+    background: var(--gradient-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+    position: relative;
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.github-link-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--accent-primary);
+}
+
+.github-link-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-primary);
+    border-radius: 16px 16px 0 0;
+}
+
+.github-link-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.github-card-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.github-link-card-icon {
+    font-size: 2rem;
+    color: var(--accent-primary);
+}
+
+.github-link-card-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.github-link-card-stats {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.repo-language {
+    background: var(--accent-primary);
+    color: var(--bg-primary);
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    font-weight: 500;
+    font-size: 0.75rem;
+}
+
+.repo-stars, .repo-forks {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.github-link-card-description {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.github-link-card-topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.topic-tag {
+    background: var(--bg-secondary);
+    color: var(--accent-secondary);
+    padding: 0.2rem 0.6rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    border: 1px solid var(--border-color);
+}
+
+.github-link-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+}
+
+.github-link-card-url {
+    color: var(--accent-secondary);
+    font-family: 'JetBrains Mono', monospace;
+    opacity: 0.8;
+}
+
+.github-link-card-updated {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+/* 새창에서 열기 표시 */
+.github-link-card-external {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--accent-primary);
+    font-size: 0.8rem;
+    font-weight: 500;
+    opacity: 0;
+    transition: all 0.3s ease;
+    justify-content: flex-end;
+}
+
+.github-link-card:hover .github-link-card-external {
+    opacity: 1;
+}
+
+.github-link-card-external i {
+    font-size: 0.75rem;
+}
+
+/* 로딩 상태 애니메이션 - 개선된 버전 */
+.github-link-card .github-link-card-title:contains("로딩 중") {
+    position: relative;
+}
+
+.github-link-card .github-link-card-title:contains("로딩 중")::after {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(var(--accent-primary-rgb), 0.3);
+    border-radius: 50%;
+    border-top-color: var(--accent-primary);
+    border-right-color: var(--accent-primary);
+    animation: smooth-spin 1.2s cubic-bezier(0.4, 0.0, 0.2, 1) infinite;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+}
+
+/* 더 부드러운 회전 애니메이션 */
+@keyframes smooth-spin {
+    0% { 
+        transform: rotate(0deg);
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.8;
+    }
+    100% { 
+        transform: rotate(360deg);
+        opacity: 1;
+    }
+}
+
+/* 추가적인 로딩 애니메이션 (점점이 스타일) */
+.loading-dots {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    margin-left: 0.5rem;
+}
+
+.loading-dots::after {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--accent-primary);
+    animation: loading-dots 1.5s ease-in-out infinite;
+}
+
+.loading-dots::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--accent-primary);
+    animation: loading-dots 1.5s ease-in-out infinite 0.2s;
+    margin-right: 0.2rem;
+}
+
+@keyframes loading-dots {
+    0%, 20%, 80%, 100% {
+        opacity: 0.3;
+        transform: scale(0.8);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* 펄스 애니메이션 (대안) */
+.loading-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0.0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.6;
+    }
+}
+
+/* 부드러운 페이드 인 애니메이션 */
+.github-link-card {
+    animation: fadeInUp 0.6s cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .github-link-card {
+        padding: 1rem;
+        margin: 1.5rem 0;
+    }
+    
+    .github-link-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .github-card-left {
+        width: 100%;
+    }
+    
+    .github-link-card-stats {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        width: 100%;
+        justify-content: flex-start;
+    }
+    
+    .github-link-card-icon {
+        font-size: 1.5rem;
+    }
+    
+    .github-link-card-title {
+        font-size: 1.1rem;
+    }
+    
+    .github-link-card-description {
+        font-size: 0.9rem;
+    }
+    
+    .github-link-card-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .github-link-card-external {
+        justify-content: flex-start;
+        opacity: 1; /* 모바일에서는 항상 표시 */
+    }
+}
+
+/* 기존 CSS 셀렉터들도 유지 (하위 호환성) */
+.content a[href*="github.com"]:has-text("github-link"),
+.content a[href*="github.com"][aria-label="github-link"],
+.content a[href*="github.com"]:is([title*="github"], [data-github]),
+.content p a[href*="github.com"]:only-child {
+    display: block;
+    background: var(--gradient-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+    position: relative;
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.content a[href*="github.com"]:has-text("github-link"):hover,
+.content a[href*="github.com"][aria-label="github-link"]:hover,
+.content a[href*="github.com"]:is([title*="github"], [data-github]):hover,
+.content p a[href*="github.com"]:only-child:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--accent-primary);
+}
+
+.content a[href*="github.com"]:has-text("github-link")::before,
+.content a[href*="github.com"][aria-label="github-link"]::before,
+.content a[href*="github.com"]:is([title*="github"], [data-github])::before,
+.content p a[href*="github.com"]:only-child::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-primary);
+    border-radius: 16px 16px 0 0;
+}
