@@ -45,12 +45,3 @@
 @keyframes expandWidth {
     to { width: 100px; }
 }
-
-@keyframes expandHorizontal {
-    from {
-        transform: scaleX(0);
-    }
-    to {
-        transform: scaleX(1);
-    }
-}

@@ -4,35 +4,6 @@
     align-self: start;
 }
 
-.career-title {
-    font-size: 2.3rem;
-    font-weight: 600;
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 2px solid var(--accent-primary);
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    color: var(--text-primary);
-}
-
-.career-title i {
-    color: var(--accent-primary);
-    font-size: 2rem;
-}
-
-.career-title::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: var(--gradient-primary);
-    animation: expandWidth 1s ease-out 1.5s forwards;
-}
-
 /* 경력 타임라인 */
 .timeline {
     position: relative;

@@ -41,30 +41,97 @@
     animation: rotate 3s linear infinite;
 }
 
+/* 이름과 직책을 한 줄로 표시 */
+.name-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
 .profile-info h1 {
     font-size: clamp(2.5rem, 4vw, 3.5rem);
     font-weight: 700;
-    margin-bottom: 1rem;
+    margin: 0;
     background: var(--gradient-primary);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
-.profile-info .subtitle {
-    font-size: 1.5rem;
+.title-separator {
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
     color: var(--text-secondary);
-    margin-bottom: 2rem;
+    font-weight: 300;
+}
+
+.profile-info .subtitle {
+    font-size: clamp(1.25rem, 2vw, 1.75rem);
+    color: var(--text-secondary);
+    margin: 0;
     font-weight: 300;
 }
 
 .profile-description {
-    color: var(--text-secondary);
-    font-size: 1.1rem;
-    line-height: 1.7;
+    color: var(--text-secondary, #bdbdbd);
+    font-size: 1.08rem;
+    line-height: 2;
     margin-bottom: 2rem;
-    max-width: 400px;
+    max-width: 520px;
+    width: 100%;
     text-align: left;
+    background: rgba(255,255,255,0.02);
+    border-radius: 10px;
+    padding: 1.2rem 1.5rem;
+    border: 1px solid var(--border-color, #222);
+}
+
+.profile-description br {
+    display: none;
+}
+
+.profile-description ul {
+    margin: 0.5rem 0 0 -0.5rem;
+    padding-left: 1.2rem;
+}
+
+.profile-description li {
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.8;
+    list-style: disc inside;
+    word-break: keep-all;
+}
+
+.profile-main {
+    margin-bottom: 1.2rem;
+}
+
+.profile-main strong {
+    display: block;
+    font-size: 1.13rem;
+    color: var(--accent-primary, #4fa3ff);
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    letter-spacing: 0.01em;
+}
+
+.profile-detail {
+    margin: 0 0 0 1.1rem;
+    padding-left: 1.1rem;
+    font-size: 0.98rem;
+    color: var(--text-secondary, #bdbdbd);
+    opacity: 0.92;
+}
+
+.profile-detail li {
+    margin-bottom: 0.2rem;
+    line-height: 1.7;
+    list-style: disc inside;
+    word-break: keep-all;
 }
 
 .tech-stack {
@@ -72,7 +139,8 @@
     flex-wrap: wrap;
     gap: 0.8rem;
     justify-content: center;
-    max-width: 400px;
+    max-width: 520px;
+    width: 100%;
 }
 
 .tech-item {
@@ -91,4 +159,22 @@
     background: var(--accent-primary);
     color: var(--bg-primary);
     box-shadow: var(--shadow-md);
+}
+
+/* PC 및 가로가 세로보다 클 때(데스크탑, landscape)에서 프로필 정보/설명/소셜링크 너비 확장 */
+@media (min-width: 1100px) and (orientation: landscape), (min-width: 1100px) and (aspect-ratio: 16/9) {
+    .profile-info {
+        max-width: 520px;
+        width: 520px;
+    }
+    .profile-description {
+        max-width: 520px;
+        width: 100%;
+    }
+    .social-links {
+        max-width: 520px;
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+    }
 }

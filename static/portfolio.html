@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Prism.js CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <!-- Prism.js 툴바 플러그인 CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.css">
     <!-- 새로운 CSS 구조 -->
     <link rel="stylesheet" href="/static/css/main.css">
 </head>
@@ -29,17 +31,45 @@
                 <br><br><br>
             </div>
             {{ content|safe }}
+
+<!-- 복사 버튼은 Prism.js toolbar 플러그인이 자동으로 추가 -->
         </main>
     </div>
 
-    <!-- Prism.js 코어 -->
+    <!-- Prism.js 코어 및 플러그인 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
-    <!-- 복사 기능 플러그인 -->
+    <!-- 툴바 플러그인 (복사 버튼의 기반) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <!-- 복사 기능 플러그인만 사용 (언어 라벨 플러그인 제거) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
     
 <script>
+    // 언어 라벨을 수동으로 추가하는 함수 (CSS ::before로 표시)
+    function addLanguageLabels() {
+        document.querySelectorAll('pre code[class*="language-"]').forEach((codeElement) => {
+            const pre = codeElement.parentElement;
+            const className = codeElement.className;
+            const match = className.match(/language-(\w+)/);
+            
+            if (match && !pre.hasAttribute('data-language')) {
+                const language = match[1].toUpperCase();
+                pre.setAttribute('data-language', language);
+                pre.classList.add(`language-${match[1]}`);
+            }
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
+        // 언어 라벨 추가
+        addLanguageLabels();
+        
+        // Prism.js 하이라이팅 실행
+        if (window.Prism) {
+            Prism.highlightAll();
+        }
+        
+        // 이미지 오버레이 기능
         const overlayContainer = document.createElement('div');
         overlayContainer.className = 'image-overlay-container';
         overlayContainer.innerHTML = `
@@ -55,20 +85,18 @@
         let isDragging = false;
         let startX = 0, startY = 0;
         let translateX = 0, translateY = 0;
-        let initialDistance = 0; // 두 손가락 간 초기 거리
+        let initialDistance = 0;
 
         function preventTouchMove(e) {
             e.preventDefault();
         }
 
-        // 오버레이 열기
         function openOverlay() {
             overlayContainer.classList.add('active');
             document.body.style.overflow = 'hidden';
             window.addEventListener('touchmove', preventTouchMove, { passive: false });
         }
 
-        // 오버레이 닫기
         function closeOverlay() {
             overlayContainer.classList.remove('active');
             document.body.style.overflow = '';
@@ -76,7 +104,6 @@
             resetImagePosition();
         }
 
-        // 이미지 클릭 시
         document.querySelectorAll('main.content img').forEach(img => {
             img.addEventListener('click', () => {
                 overlayImage.src = img.src;
@@ -84,22 +111,18 @@
             });
         });
 
-        // 닫기 버튼
         closeButton.addEventListener('click', closeOverlay);
 
-        // ESC 키
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 closeOverlay();
             }
         });
 
-        // 더블클릭으로 확대/축소 (데스크톱)
         overlayImage.addEventListener('dblclick', () => {
             toggleZoom();
         });
 
-        // 더블 터치로 확대/축소 (모바일)
         overlayImage.addEventListener('touchstart', (e) => {
             if (e.touches.length === 1) {
                 const touch = e.touches[0];
@@ -107,7 +130,6 @@
                 startY = touch.clientY;
                 isDragging = true;
             } else if (e.touches.length === 2) {
-                // 두 손가락 간 거리 계산
                 initialDistance = getDistance(e.touches[0], e.touches[1]);
             }
         });
@@ -123,9 +145,8 @@
                 startX = touch.clientX;
                 startY = touch.clientY;
             } else if (e.touches.length === 2) {
-                // 두 손가락 간 거리 변화 계산
                 const currentDistance = getDistance(e.touches[0], e.touches[1]);
-                if (currentDistance < initialDistance * 0.8) { // 축소 동작 감지
+                if (currentDistance < initialDistance * 0.8) {
                     resetImagePosition();
                     isZoomed = false;
                 }
@@ -138,7 +159,6 @@
             }
         });
 
-        // 이미지 드래그 시작 (마우스)
         overlayImage.addEventListener('mousedown', (e) => {
             if (isZoomed) {
                 e.preventDefault();
@@ -149,7 +169,6 @@
             }
         });
 
-        // 이미지 드래그 이동 (마우스)
         document.addEventListener('mousemove', (e) => {
             if (isDragging && isZoomed) {
                 const deltaX = e.clientX - startX;
@@ -162,7 +181,6 @@
             }
         });
 
-        // 이미지 드래그 종료 (마우스)
         document.addEventListener('mouseup', () => {
             if (isDragging) {
                 isDragging = false;
@@ -170,7 +188,6 @@
             }
         });
 
-        // 확대/축소 토글 함수
         function toggleZoom() {
             if (isZoomed) {
                 overlayImage.style.transform = 'translate(0, 0) scale(1)';
@@ -182,18 +199,16 @@
             }
         }
 
-        // 이미지 위치 초기화
         function resetImagePosition() {
             translateX = 0;
             translateY = 0;
             overlayImage.style.transform = 'translate(0, 0) scale(1)';
         }
 
-        // 두 손가락 간 거리 계산 함수
         function getDistance(touch1, touch2) {
             const deltaX = touch2.clientX - touch1.clientX;
             const deltaY = touch2.clientY - touch1.clientY;
-            return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+            return Math.sqrt(deltaX * deltaX + deltaY * deltaX);
         }
     });
 </script>

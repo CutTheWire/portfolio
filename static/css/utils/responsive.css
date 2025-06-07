@@ -1,8 +1,22 @@
+/* 기본 career-title 스타일 (미디어 쿼리 밖에 정의) */
+.career-title {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 2.2rem;
+    margin-bottom: 2rem;
+    margin-top: 2rem;
+}
+
+.career-title i {
+    font-size: 2rem;
+}
+
 /* 반응형 디자인 - 너비가 높이보다 작을 때 */
 @media (max-aspect-ratio: 1/1) {
     .profile-career-section {
         grid-template-columns: 1fr;
-        gap: 3rem;
+        gap: 2rem;
         align-items: stretch;
     }
 
@@ -24,14 +38,21 @@
         margin-bottom: 1.5rem;
     }
 
+    .name-title {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .title-separator {
+        display: none;
+    }
+
     .profile-info h1 {
         font-size: 2.5rem;
-        margin-bottom: 0.8rem;
     }
 
     .profile-info .subtitle {
         font-size: 1.3rem;
-        margin-bottom: 1.5rem;
     }
 
     .profile-description {
@@ -47,12 +68,14 @@
 
     .social-links {
         max-width: none;
+        width: 100%;
         margin-top: 1.5rem;
     }
 
     .career-title {
         font-size: 2rem;
         margin-bottom: 1.5rem;
+        margin-top: 0;
         justify-content: center;
         text-align: center;
     }
@@ -83,7 +106,7 @@
 @media (max-width: 968px) {
     .profile-career-section {
         grid-template-columns: 1fr;
-        gap: 3rem;
+        gap: 2rem;
     }
 
     .profile-left {
@@ -105,12 +128,31 @@
         height: 200px;
     }
 
+    .name-title {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .title-separator {
+        display: none;
+    }
+
     .profile-info h1 {
         font-size: 2.5rem;
     }
 
+    .profile-info .subtitle {
+        font-size: 1.3rem;
+    }
+
+    .social-links {
+        max-width: none;
+        width: 100%;
+    }
+
     .career-title {
         font-size: 2rem;
+        margin-top: 0;
     }
 
     .timeline::before {
@@ -129,12 +171,29 @@
 
     .profile-career-section {
         padding: 2rem 0;
-        gap: 2rem;
+        gap: 1.5rem;
     }
 
     .profile-image {
         width: 180px;
         height: 180px;
+    }
+
+    .name-title {
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+
+    .title-separator {
+        display: none;
+    }
+
+    .profile-info h1 {
+        font-size: 2.2rem;
+    }
+
+    .profile-info .subtitle {
+        font-size: 1.1rem;
     }
 
     .tech-stack {
@@ -148,6 +207,8 @@
 
     .social-links {
         gap: 0.6rem;
+        max-width: none;
+        width: 100%;
     }
     
     .link-item {
@@ -185,6 +246,7 @@
     .career-title {
         font-size: 1.8rem;
         gap: 0.8rem;
+        margin-top: 0;
     }
 
     .career-title i {
@@ -222,7 +284,7 @@
 @media (max-width: 480px) and (orientation: portrait) {
     .profile-career-section {
         padding: 1.5rem 0;
-        gap: 1.5rem;
+        gap: 1rem;
     }
 
     .profile-left {
@@ -235,13 +297,22 @@
         margin-bottom: 1rem;
     }
 
+    .name-title {
+        flex-direction: column;
+        gap: 0.2rem;
+        margin-bottom: 1rem;
+    }
+
+    .title-separator {
+        display: none;
+    }
+
     .profile-info h1 {
         font-size: 2rem;
     }
 
     .profile-info .subtitle {
-        font-size: 1.2rem;
-        margin-bottom: 1rem;
+        font-size: 1rem;
     }
 
     .profile-description {
@@ -262,6 +333,8 @@
     .social-links {
         gap: 0.5rem;
         margin-top: 1rem;
+        max-width: none;
+        width: 100%;
     }
 
     .link-item {
@@ -271,6 +344,7 @@
     .career-title {
         font-size: 1.6rem;
         margin-bottom: 1rem;
+        margin-top: 0;
         flex-direction: column;
         gap: 0.5rem;
     }

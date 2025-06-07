@@ -117,6 +117,13 @@
     border-color: var(--accent-tertiary);
 }
 
+/* Prism.js toolbar 복사 버튼을 오른쪽에서 10px만큼 왼쪽으로 이동 */
+div.code-toolbar > .toolbar {
+    right: 1.5rem !important; /* 기존보다 왼쪽으로 이동 (기본값이 0 또는 0.5rem일 수 있음) */
+    left: auto !important;
+    top: 0.5rem !important;
+}
+
 /* 프리즘 테마 커스터마이징 */
 .token.comment,
 .token.prolog,

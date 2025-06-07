@@ -18,28 +18,46 @@
 ```
 ChatBot-AI/
 ├── fastapi/
-│   ├── ai_model/             # AI 모델 파일 (볼륨 마운트)
-│   ├── logs/                 # 로그 파일 (공유 볼륨)
-│   ├── prompt/               # 프롬프트 설정
+│   ├── .dockerignore
+│   ├── requirements.txt                # Python 패키지 의존성
+│   ├── requirements_llama.txt          # Llama 모델 전용 의존성
+│   ├── ai_model/                       # AI 모델 파일 및 설명
+│   │   └── README.md
+│   ├── batch/                          # 배치 스크립트
+│   │   ├── venv_install.bat
+│   │   └── venv_setup.bat
+│   ├── certificates/                   # 인증서 관련 문서
+│   │   ├── DNS_README.md
+│   │   └── PEM_README.md
+│   ├── logs/                           # 로그 파일 (공유 볼륨)
+│   ├── prompt/                         # 프롬프트 설정
+│   │   ├── config-Llama.json
+│   │   └── config-OpenAI.json
 │   ├── src/
-│   │   ├── server-office/      # Office API 서버
-│   │   └── server-character/   # Character API 서버
-│   ├── .env                  # 환경 변수
-│   └── bot.yaml              # 봇 설정
+│   │   ├── server-office/              # Office API 서버 (정보 제공)
+│   │   │   ├── Dockerfile
+│   │   │   ├── server.py
+│   │   │   └── ... (utils, handlers, routers 등)
+│   │   └── server-character/           # Character API 서버 (캐릭터 대화)
+│   │       ├── Dockerfile
+│   │       ├── server.py
+│   │       └── ... (utils, handlers, routers 등)
+│   ├── .env                            # 환경 변수 파일
+│   └── bot.yaml                        # 봇 설정
 ├── nginx/
-│   ├── nginx.conf            # nginx 리버스 프록시 설정
-│   └── 404.html              # 커스텀 404 페이지
-├── docker-compose.yml
-└── README.md
+│   ├── nginx.conf                      # nginx 리버스 프록시 설정
+│   └── 404.html                        # 커스텀 404 페이지
+├── docker-compose.yml                  # 전체 서비스 오케스트레이션
+└── README.md                           # 프로젝트 설명서
 ```
 
 
 ## 📋 UML 클래스 다이어그램 
-### 📑 ChatBot-AI/fastapi/src/utils/ai_models 클래스 다이어그램 
-![image](https://lh3.googleusercontent.com/d/11BO1kgmcn_I0N-gAegB8p36-PrAm4IHn)
+### 📑 utils(ai_models) 클래스 다이어그램 
+![Class-Diagram-ChatBot(AI)-utils(ai_models)](/images/Class-Diagram-ChatBot(AI)-utils(ai_models).webp)
 
-### 📑 ChatBot-AI/fastapi/src/utils/handlers 클래스 다이어그램 
-![image](https://lh3.googleusercontent.com/d/10s3xwUFxnmfKb8WBEvU3jqQhJgExNa28)
+### 📑 utils(handlers) 클래스 다이어그램 
+![Class-Diagram-ChatBot(AI)-utils(handlers)](/images/Class-Diagram-ChatBot(AI)-utils(handlers).webp)
 
 ### 📑 utils(schemas) 클래스 다이어그램
 ![Class-Diagram-ChatBot(AI)-utils(schemas)](/images/Class-Diagram-ChatBot(AI)-utils(schemas).webp)
@@ -69,6 +87,7 @@ ChatBot-AI/
 
 ### 5. **컨테이너 빌드 및 실행**
 ```bash
+
 docker compose up --build
 ```
 
@@ -84,24 +103,74 @@ docker compose up --build
 ## 📝 주요 nginx 설정
 
 ```nginx
-server {
-    listen 8001;
 
-    location ^~ /office/ {
-        proxy_pass http://office_backend/;
-        # ...헤더 설정 생략...
+events {}
+
+http {
+    # HTTP/1.1 강제 설정
+    proxy_http_version 1.1;
+    proxy_set_header Connection "";
+    
+    upstream office_backend {
+        server office:8002;
+        keepalive 32;
     }
-    location ^~ /character/ {
-        proxy_pass http://character_backend/;
-        # ...헤더 설정 생략...
+    
+    upstream character_backend {
+        server character:8003;
+        keepalive 32;
     }
-    error_page 404 /404.html;
-    location = /404.html {
-        root /etc/nginx/html;
-        internal;
-    }
-    location / {
-        return 404;
+
+    server {
+        listen 8001;
+        
+        # HTTP 버전 강제 설정
+        http2 off;  # HTTP/2 비활성화
+
+        # office API
+        location ^~ /office/ {
+            proxy_pass http://office_backend/;
+            proxy_http_version 1.1;
+            # ... 
+            # 세부 설정 생략
+            
+            # 타임아웃 설정을 420초(7분)
+            proxy_read_timeout 420s;
+            proxy_connect_timeout 420s;
+            proxy_send_timeout 420s;
+
+            # 버퍼 설정 추가
+            proxy_buffering off;
+            proxy_request_buffering off;
+        }
+
+        # character API
+        location ^~ /character/ {
+            proxy_pass http://character_backend/;
+            # ... 
+            # 세부 설정 생략
+            
+            # 타임아웃 설정을 420초(7분)
+            proxy_read_timeout 420s;
+            proxy_connect_timeout 420s;
+            proxy_send_timeout 420s;
+            
+            # 버퍼 설정 추가
+            proxy_buffering off;
+            proxy_request_buffering off;
+        }
+
+        # 404 커스텀 페이지
+        error_page 404 /404.html;
+        location = /404.html {
+            root /etc/nginx/html;
+            default_type text/html;
+            internal;
+        }
+
+        location / {
+            return 404;
+        }
     }
 }
 ```
@@ -113,19 +182,4 @@ server {
 - **모델 파일**: 호스트의 `fastapi/ai_model/` → 컨테이너 내부 `/app/fastapi/ai_model/`
 - **로그**: 호스트의 `fastapi/logs/` → 컨테이너 내부 `/app/logs/`
 - **nginx 404.html**: 호스트의 `nginx/404.html` → 컨테이너 `/etc/nginx/html/404.html`
-
-
-## 🛠️ 개발/운영 팁
-
-- FastAPI 서버의 docs/redoc/openapi 경로는  
-  각각 `/office/docs`, `/character/docs` 등으로 prefix를 다르게 설정해야  
-  nginx 프록시 환경에서 충돌이 없습니다.
-- 라우터 등록 시 prefix는 빈 문자열로 두고,  
-  nginx에서 prefix를 붙여주는 구조가 권장됩니다.
-- 모델 파일은 반드시 완전히 다운로드되어야 하며,  
-  파일 크기/해시가 공식 배포본과 일치해야 합니다.
-
-
-## 🔑 라이선스
-
-- **AI 모델**: Meta AI 라이선스
+<br><br>

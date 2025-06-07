@@ -3,29 +3,13 @@ a {
     color: var(--accent-secondary);
     text-decoration: none;
     transition: all 0.3s ease;
-    position: relative;
 }
 
 a:hover {
     color: var(--accent-primary);
 }
 
-a::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: var(--accent-primary);
-    transition: width 0.3s ease;
-}
-
-a:hover::after {
-    width: 100%;
-}
-
-/* 섹션 타이틀 */
+/* 섹션 타이틀 공통 스타일 */
 .section-title {
     font-size: 2.5rem;
     font-weight: 600;
@@ -36,6 +20,7 @@ a:hover::after {
     display: flex;
     align-items: center;
     gap: 1rem;
+    color: var(--text-primary);
 }
 
 .section-title i {
@@ -51,5 +36,5 @@ a:hover::after {
     width: 0;
     height: 2px;
     background: var(--gradient-primary);
-    animation: expandWidth 1s ease-out 1s forwards;
+    animation: expandWidth 1s ease-out 1.5s forwards;
 }

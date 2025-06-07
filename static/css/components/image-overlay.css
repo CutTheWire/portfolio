@@ -12,13 +12,13 @@
     visibility: hidden;
     opacity: 0;
     transition: opacity 0.3s ease-in-out;
-    pointer-events: none; /* 기본적으로 클릭 차단 */
+    pointer-events: none;
 }
 
 .image-overlay-container.active {
     visibility: visible;
     opacity: 1;
-    pointer-events: auto; /* 활성화 시 클릭 허용 */
+    pointer-events: auto;
 }
 
 .image-overlay-container img {
@@ -30,6 +30,8 @@
     transition: transform 0.3s ease-in-out;
     -webkit-user-select: none;
     user-select: none;
+    z-index: 1;
+    position: relative;
 }
 
 .image-overlay-container img:active {
@@ -37,22 +39,24 @@
 }
 
 .image-overlay-container .close-button {
-    position: absolute;
-    top: 20px;
-    right: 20px;
+    position: fixed;
+    top: 32px;
+    right: 32px;
+    z-index: 10;
     background: #ff6b6b;
     color: #fff;
     border: none;
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    font-size: 1.5rem;
+    width: 44px;
+    height: 44px;
+    font-size: 2rem;
     cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
     transition: background 0.3s ease;
+    pointer-events: auto;
 }
 
 .image-overlay-container .close-button:hover {

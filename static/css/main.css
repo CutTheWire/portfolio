@@ -14,6 +14,7 @@
 @import url('components/content.css');
 @import url('components/code-blocks.css');
 @import url('components/image-overlay.css');
+@import url('components/portfolio-page.css');
 
 /* Utils */
 @import url('utils/animations.css');
