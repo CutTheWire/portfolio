@@ -56,7 +56,12 @@ async def read_markdown(request: Request, filename: str):
         md_path = os.path.join("markdown", safe_filename)
         
         if not os.path.exists(md_path):
-            raise ErrorHandler.NotFoundException("마크다운 파일이 존재하지 않습니다.")
+            # 마크다운 파일이 존재하지 않으면 unauthorized.html 페이지로 리다이렉트
+            return templates.TemplateResponse(
+                "unauthorized.html",
+                {"request": request},
+                status_code=404
+            )
         
         with open(md_path, encoding="utf-8") as f:
             md_content = f.read()
@@ -71,13 +76,25 @@ async def read_markdown(request: Request, filename: str):
                 "content": html_content,
             }
         )
-    except (ErrorHandler.NotFoundException, ErrorHandler.BadRequestException):
-        raise
+    except ErrorHandler.BadRequestException:
+        # 잘못된 파일명도 unauthorized.html로 처리
+        return templates.TemplateResponse(
+            "unauthorized.html",
+            {"request": request},
+            status_code=400
+        )
     except FileNotFoundError:
+        # 템플릿 파일이 없는 경우는 서버 에러로 처리
         raise ErrorHandler.NotFoundException("템플릿 파일이 존재하지 않습니다.")
     except UnicodeDecodeError:
-        raise ErrorHandler.InternalServerErrorException("파일 인코딩 오류가 발생했습니다.")
+        # 파일 인코딩 오류도 unauthorized.html로 처리
+        return templates.TemplateResponse(
+            "unauthorized.html",
+            {"request": request},
+            status_code=400
+        )
     except Exception as e:
+        # 기타 예외는 서버 에러로 처리
         raise ErrorHandler.InternalServerErrorException("페이지 로딩 중 오류가 발생했습니다.")
 
 @page_router.get("/images/{img:path}")

@@ -22,14 +22,6 @@
                 <br>
                 <br>
             </div>
-            <!-- 홈 버튼 -->
-            <div class="home-button">
-                <a href="/" title="홈으로 돌아가기">
-                    <i class="fas fa-home"></i>
-                    <span>Home</span>
-                </a>
-                <br><br><br>
-            </div>
             {{ content|safe }}
 
 <!-- 복사 버튼은 Prism.js toolbar 플러그인이 자동으로 추가 -->
@@ -43,6 +35,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <!-- 복사 기능 플러그인만 사용 (언어 라벨 플러그인 제거) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    
+    <!-- 이메일 기능 스크립트 -->
+    <script src="/static/js/modal-module.js"></script>
     
 <script>
     // 언어 라벨을 수동으로 추가하는 함수 (CSS ::before로 표시)
@@ -166,6 +161,9 @@
     }
 
     document.addEventListener('DOMContentLoaded', function () {
+        // 이메일 컴포넌트 로드
+        loadEmailComponent();
+        
         // 언어 라벨 추가
         addLanguageLabels();
         
