@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse, Response
+from fastapi.responses import HTMLResponse, Response, FileResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.types import Scope, Receive, Send
 
@@ -148,66 +148,6 @@ Crawl-delay: 1
 """
     return Response(content=content, media_type="text/plain")
 
-@app.get("/sitemap.xml", response_class=Response)
-async def sitemap_xml():
-    """검색 엔진을 위한 사이트맵 (동적 생성)"""
-    
-    base_url = "https://cutwire.myddns.me"
-    current_date = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S+00:00")
-    
-    # 마크다운 디렉토리 경로 확인
-    markdown_dir_src = SRC_DIR / "markdown"
-    markdown_dir_base = BASE_DIR / "markdown"
-    
-    if markdown_dir_src.exists():
-        markdown_dir = markdown_dir_src
-    elif markdown_dir_base.exists():
-        markdown_dir = markdown_dir_base
-    else:
-        markdown_dir = markdown_dir_base  # 기본값
-    
-    sitemap_content = f"""<?xml version="1.0" encoding="UTF-8"?>
-<urlset
-        xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-<!-- generated dynamically by FastAPI portfolio server -->
-
-<url>
-    <loc>{base_url}/</loc>
-    <lastmod>{current_date}</lastmod>
-    <priority>1.00</priority>
-</url>"""
-    
-    # 마크다운 파일들을 동적으로 추가
-    if markdown_dir.exists():
-        for md_file in sorted(markdown_dir.glob("*.md")):
-            if md_file.name == "main.md":
-                continue  # main.md는 메인 페이지에서 사용되므로 제외
-            
-            filename_without_ext = md_file.stem
-            
-            # 파일 수정 시간 가져오기
-            try:
-                file_mtime = datetime.datetime.fromtimestamp(md_file.stat().st_mtime)
-                lastmod = file_mtime.strftime("%Y-%m-%dT%H:%M:%S+00:00")
-            except:
-                lastmod = current_date
-            
-            sitemap_content += f"""
-<url>
-    <loc>{base_url}/portfolio/{filename_without_ext}</loc>
-    <lastmod>{lastmod}</lastmod>
-    <priority>0.80</priority>
-</url>"""
-    
-    sitemap_content += """
-
-</urlset>"""
-    
-    return Response(content=sitemap_content, media_type="application/xml")
-
 @app.get("/manifest.json", response_class=Response)
 async def manifest_json():
     """PWA 매니페스트 파일"""
@@ -296,61 +236,21 @@ def generate_meta_tags(title="서정훈 포트폴리오", description="Python �
         "structured_data": get_structured_data()
     }
 
-# 404 예외 핸들러 - ACME Challenge 요청은 제외
 @app.exception_handler(StarletteHTTPException)
 async def custom_404_handler(request: Request, exc: StarletteHTTPException):
-    if exc.status_code == 404:
-        # 브라우저/도구 자동 요청 경로들 필터링
-        ignored_paths = (
-            "/favicon.ico",
-            "/robots.txt", 
-            "/sitemap.xml",
-            "/apple-touch-icon",
-            "/manifest.json",
-            "/chrome-extension/",
-            "/devtools/"
-        )
-        
-        request_path = request.url.path
-        
-        # 무시할 경로면 조용히 404 응답 (로그 없음)
-        if (any(request_path.startswith(p) for p in ignored_paths) or
-            request_path in ["/favicon.ico", "/robots.txt", "/sitemap.xml", "/manifest.json"]):
-            return HTMLResponse(status_code=404, content="")
-        
-        # 나머지 404는 ErrorHandler를 통해 로그 기록 후 unauthorized.html로 처리
-        ErrorHandler.log_error(
-            exc=exc,
-            request=request,
-            status_code=404,
-            detail=f"Route not found: {request.url.path}"
-        )
-        
-        # SEO 메타 태그와 함께 404 페이지 반환
-        meta_tags = generate_meta_tags(
-            title="페이지를 찾을 수 없습니다 - 서정훈 포트폴리오",
-            description="요청하신 페이지를 찾을 수 없습니다. 서정훈의 백엔드 개발자 포트폴리오를 확인해보세요."
-        )
-        
-        return templates.TemplateResponse(
-            "unauthorized.html",
-            {"request": request, "meta_tags": meta_tags},
-            status_code=404
-        )
-    
-    # 기타 HTTP 예외도 ErrorHandler를 통해 처리
+    # 기타 HTTP 예외
     ErrorHandler.log_error(
         exc=exc,
         request=request,
         status_code=exc.status_code,
         detail=exc.detail if hasattr(exc, 'detail') else str(exc)
     )
-    
+
     meta_tags = generate_meta_tags(
         title="오류가 발생했습니다 - 서정훈 포트폴리오",
         description="서비스 이용 중 오류가 발생했습니다. 서정훈의 백엔드 개발자 포트폴리오를 확인해보세요."
     )
-    
+
     return templates.TemplateResponse(
         "unauthorized.html",
         {"request": request, "meta_tags": meta_tags},
@@ -376,6 +276,78 @@ async def favicon():
         raise
     except Exception as e:
         raise ErrorHandler.InternalServerErrorException("Favicon loading error")
+
+@app.get("/sitemap.xml", response_class=Response)
+async def sitemap_xml():
+    """동적 사이트맵 생성"""
+    try:
+        # 기본 URL들
+        urls = [
+            {
+                "loc": "https://cutwire.myddns.me/",
+                "lastmod": "2025-06-08",
+                "changefreq": "weekly",
+                "priority": "1.0"
+            },
+            {
+                "loc": "https://cutwire.myddns.me/portfolio/chatbot-ai",
+                "lastmod": "2025-06-08",
+                "changefreq": "monthly",
+                "priority": "0.8"
+            },
+            {
+                "loc": "https://cutwire.myddns.me/portfolio/chatbot",
+                "lastmod": "2025-06-08",
+                "changefreq": "monthly",
+                "priority": "0.8"
+            }
+        ]
+        
+        # 마크다운 파일들을 동적으로 추가
+        markdown_dir = SRC_DIR / "markdown"
+        if markdown_dir.exists():
+            for md_file in markdown_dir.glob("*.md"):
+                filename = md_file.stem  # 확장자 제거
+                urls.append({
+                    "loc": f"https://cutwire.myddns.me/portfolio/{filename}",
+                    "lastmod": "2025-06-08",
+                    "changefreq": "monthly",
+                    "priority": "0.7"
+                })
+        
+        # XML 생성 (공백 없이 시작)
+        xml_lines = []
+        xml_lines.append('<?xml version="1.0" encoding="UTF-8"?>')
+        xml_lines.append('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
+        
+        for url in urls:
+            xml_lines.append('  <url>')
+            xml_lines.append(f'    <loc>{url["loc"]}</loc>')
+            xml_lines.append(f'    <lastmod>{url["lastmod"]}</lastmod>')
+            xml_lines.append(f'    <changefreq>{url["changefreq"]}</changefreq>')
+            xml_lines.append(f'    <priority>{url["priority"]}</priority>')
+            xml_lines.append('  </url>')
+        
+        xml_lines.append('</urlset>')
+        
+        xml_content = '\n'.join(xml_lines)
+        
+        return Response(
+            content=xml_content,
+            media_type="application/xml",
+            headers={
+                "Cache-Control": "public, max-age=3600",
+                "Access-Control-Allow-Origin": "*"
+            }
+        )
+        
+    except Exception as e:
+        # 정적 파일로 폴백
+        sitemap_path = SRC_DIR / "sitemap.xml"
+        if sitemap_path.exists():
+            return FileResponse(str(sitemap_path), media_type="application/xml")
+        else:
+            raise ErrorHandler.NotFoundException("sitemap.xml not found")
 
 app.include_router(
     PageController.page_router,
@@ -412,8 +384,8 @@ if __name__ == "__main__":
         certificates_dir = certificates_dir_src  # 기본값
     
     ssl_keyfile = certificates_dir / key_pem
-    ssl_certfile = certificates_dir / crt_pem
-    
+    ssl_certfile = certificates_dir / crt_pem  # 반드시 체인 포함 PEM 지정
+
     if not ssl_keyfile.is_file() or not ssl_certfile.is_file():
         raise FileNotFoundError("SSL 인증서 파일을 찾을 수 없습니다. 경로를 확인하세요.")
     
