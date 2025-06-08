@@ -26,7 +26,7 @@ def generate_meta_tags(title="서정훈 포트폴리오", description="Python �
     return {
         "title": title,
         "description": description,
-        "keywords": "포트폴리오, portfolio, 백엔드 개발자, backend developer, Python, FastAPI, 웹 개발, API 개발, 서정훈",
+        "keywords": "백엔드 개발자 포트폴리오, 백엔드 포트폴리오, 개발자 포트폴리오, fastapi 포트폴리오, python 포트폴리오, 백엔드 개발자, Python 개발자, FastAPI 개발자, 웹 개발자, API 개발자, 서버 개발자, Docker 개발자, MongoDB 개발자, 포트폴리오, portfolio, backend developer, Python, FastAPI, 웹 개발, API 개발, 서정훈, 백엔드 프로젝트, AI 챗봇 개발, 키오스크 개발, 학생관리시스템",
         "author": "서정훈",
         "url": url,
         "google_verification": google_verification,
@@ -35,9 +35,12 @@ def generate_meta_tags(title="서정훈 포트폴리오", description="Python �
         "og_url": url,
         "og_type": "website",
         "og_locale": "ko_KR",
-        "twitter_card": "summary",
+        "og_site_name": "서정훈 백엔드 개발자 포트폴리오",
+        "twitter_card": "summary_large_image",
         "twitter_title": title,
         "twitter_description": description,
+        "twitter_site": "@cutwire_dev",
+        "canonical_url": url,
         "structured_data": get_structured_data()  # 구조화된 데이터 추가
     }
 
@@ -48,25 +51,67 @@ def get_structured_data():
         "@type": "Person",
         "name": "서정훈",
         "jobTitle": "백엔드 개발자",
-        "description": "Python, FastAPI를 활용한 백엔드 개발자",
+        "description": "Python, FastAPI, Docker, MongoDB를 활용한 백엔드 개발자. AI 챗봇, 학생관리시스템 등 다양한 백엔드 프로젝트 경험을 보유한 개발자 포트폴리오",
         "url": "https://cutwire.myddns.me",
         "sameAs": [
             "https://github.com/CutTheWire",
-            "https://github.com/TreeNut-KR"
+            "https://github.com/TreeNut-KR",
+            "https://treenut.ddns.net"
         ],
         "knowsAbout": [
-            "Python",
-            "FastAPI",
             "백엔드 개발",
+            "Python 개발",
+            "FastAPI 개발",
             "API 개발",
             "웹 개발",
             "서버 개발",
-            "Docker",
-            "MongoDB"
+            "Docker 컨테이너",
+            "MongoDB 데이터베이스",
+            "백엔드 아키텍처",
+            "REST API",
+            "AI 챗봇 개발",
+            "키오스크 시스템",
+            "학생관리시스템"
         ],
+        "hasOccupation": {
+            "@type": "Occupation",
+            "name": "백엔드 개발자",
+            "occupationLocation": {
+                "@type": "Country",
+                "name": "대한민국"
+            },
+            "skills": [
+                "Python 백엔드 개발",
+                "FastAPI 프레임워크",
+                "Docker 컨테이너화",
+                "MongoDB 데이터베이스",
+                "REST API 설계",
+                "백엔드 아키텍처"
+            ]
+        },
         "worksFor": {
             "@type": "Organization",
-            "name": "개인 프리랜서"
+            "name": "TreeNut",
+            "description": "백엔드 개발 및 AI 프로젝트 전문 팀"
+        },
+        "alumniOf": {
+            "@type": "CollegeOrUniversity",
+            "name": "청운대학교",
+            "department": "컴퓨터공학과"
+        },
+        "award": [
+            "인천서부소방서장 표창장",
+            "능력개발교육원 인공지능 비전인식 기반 협동로봇 제어 수료"
+        ],
+        "portfolio": {
+            "@type": "CreativeWork",
+            "name": "백엔드 개발자 포트폴리오",
+            "description": "Python, FastAPI를 활용한 백엔드 프로젝트들을 소개하는 개발자 포트폴리오",
+            "url": "https://cutwire.myddns.me",
+            "creator": {
+                "@type": "Person",
+                "name": "서정훈"
+            }
         }
     }
 
@@ -84,8 +129,8 @@ async def read_index(request: Request):
             html_content = md.markdown(md_content, extensions=["fenced_code", "tables"])
 
         meta_tags = generate_meta_tags(
-            title="서정훈 - 백엔드 개발자 포트폴리오",
-            description="Python, FastAPI를 활용한 백엔드 개발자 서정훈의 포트폴리오입니다. 웹 개발, API 개발 프로젝트를 확인해보세요.",
+            title="백엔드 개발자 서정훈 포트폴리오 | Python FastAPI 개발자",
+            description="Python, FastAPI, Docker를 활용한 백엔드 개발자 서정훈의 포트폴리오입니다. AI 챗봇, 키오스크 시스템 등 다양한 백엔드 프로젝트와 개발 경험을 확인해보세요. 백엔드 포트폴리오의 모든 것을 여기서 만나보세요.",
             url="https://cutwire.myddns.me/"
         )
         

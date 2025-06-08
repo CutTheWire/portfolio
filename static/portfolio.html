@@ -15,7 +15,10 @@
     <meta name="description" content="{{ meta_tags.description }}">
     <meta name="keywords" content="{{ meta_tags.keywords }}">
     <meta name="author" content="{{ meta_tags.author }}">
-    <meta name="robots" content="index, follow">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    
+    <!-- 정규 URL -->
+    <link rel="canonical" href="{{ meta_tags.canonical_url }}">
     
     <!-- Open Graph 메타 태그들 -->
     <meta property="og:title" content="{{ meta_tags.og_title }}">
@@ -23,6 +26,7 @@
     <meta property="og:url" content="{{ meta_tags.og_url }}">
     <meta property="og:type" content="{{ meta_tags.og_type }}">
     <meta property="og:locale" content="{{ meta_tags.og_locale }}">
+    <meta property="og:site_name" content="서정훈 백엔드 개발자 포트폴리오">
     
     <!-- Twitter 카드 메타 태그들 -->
     <meta name="twitter:card" content="{{ meta_tags.twitter_card }}">
@@ -46,11 +50,44 @@
     {{ meta_tags.structured_data | tojson }}
     </script>
     {% endif %}
+    
+    <!-- 브레드크럼 구조화된 데이터 -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "백엔드 개발자 포트폴리오",
+                "item": "https://cutwire.myddns.me/"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "{{ title }}",
+                "item": "{{ meta_tags.og_url }}"
+            }
+        ]
+    }
+    </script>
 </head>
 <body>
+    <!-- SEO 네비게이션 -->
+    <nav style="position: absolute; left: -9999px;">
+        <a href="/">백엔드 개발자 포트폴리오 홈</a> > 
+        <span>{{ title }}</span>
+    </nav>
 
     <div class="container">
         <main class="content">
+            <!-- 프로젝트 헤더 -->
+            <header class="project-header">
+                <h1>{{ title }} - 백엔드 프로젝트</h1>
+                <p>Python, FastAPI를 활용한 백엔드 개발 프로젝트 상세 내용</p>
+            </header>
+            
             <div>
                 <br>
                 <br>

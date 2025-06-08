@@ -141,10 +141,26 @@ Allow: /portfolio/
 Allow: /static/
 Allow: /images/
 
+# 백엔드 개발자 포트폴리오 사이트맵
 Sitemap: https://cutwire.myddns.me/sitemap.xml
 
 # 검색 엔진 최적화
 Crawl-delay: 1
+
+# 중요 페이지 우선순위
+User-agent: Googlebot
+Allow: /
+Allow: /portfolio/chatbot-ai
+Allow: /portfolio/chatbot
+Allow: /portfolio/
+
+User-agent: Bingbot
+Allow: /
+Allow: /portfolio/
+
+User-agent: NaverBot
+Allow: /
+Allow: /portfolio/
 """
     return Response(content=content, media_type="text/plain")
 
@@ -248,7 +264,7 @@ async def custom_404_handler(request: Request, exc: StarletteHTTPException):
 
     meta_tags = generate_meta_tags(
         title="오류가 발생했습니다 - 서정훈 포트폴리오",
-        description="서비스 이용 중 오류가 발생했습니다. 서정훈의 백엔드 개발자 포트폴리오를 확인해보세요."
+        description="서비스 이용 중 오류가 발생했습니다. 서정훈의 백엔드 포트폴리오를 확인해보세요."
     )
 
     return templates.TemplateResponse(
@@ -288,32 +304,38 @@ async def sitemap_xml():
                 "lastmod": "2025-06-08",
                 "changefreq": "weekly",
                 "priority": "1.0"
-            },
-            {
-                "loc": "https://cutwire.myddns.me/portfolio/chatbot-ai",
-                "lastmod": "2025-06-08",
-                "changefreq": "monthly",
-                "priority": "0.8"
-            },
-            {
-                "loc": "https://cutwire.myddns.me/portfolio/chatbot",
-                "lastmod": "2025-06-08",
-                "changefreq": "monthly",
-                "priority": "0.8"
             }
         ]
+        
+        # 주요 포트폴리오 페이지들 (우선순위 높음)
+        main_portfolios = [
+            "chatbot-ai",
+            "chatbot", 
+            "treenut-chatbot",
+            "jmeduserver",
+            "docker-optimization"
+        ]
+        
+        for portfolio in main_portfolios:
+            urls.append({
+                "loc": f"https://cutwire.myddns.me/portfolio/{portfolio}",
+                "lastmod": "2025-06-08",
+                "changefreq": "monthly",
+                "priority": "0.9"
+            })
         
         # 마크다운 파일들을 동적으로 추가
         markdown_dir = SRC_DIR / "markdown"
         if markdown_dir.exists():
             for md_file in markdown_dir.glob("*.md"):
                 filename = md_file.stem  # 확장자 제거
-                urls.append({
-                    "loc": f"https://cutwire.myddns.me/portfolio/{filename}",
-                    "lastmod": "2025-06-08",
-                    "changefreq": "monthly",
-                    "priority": "0.7"
-                })
+                if filename not in main_portfolios and filename != "main":
+                    urls.append({
+                        "loc": f"https://cutwire.myddns.me/portfolio/{filename}",
+                        "lastmod": "2025-06-08",
+                        "changefreq": "monthly",
+                        "priority": "0.7"
+                    })
         
         # XML 생성 (공백 없이 시작)
         xml_lines = []
