@@ -1,15 +1,47 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+    <!-- 기본 메타 태그들 -->
     <meta charset="UTF-8">
-    <!-- 기존 viewport를 더 구체적으로 설정 -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>{{ title }} - 백엔드 개발자 서정훈</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Google Search Console 인증 메타 태그 -->
+    {% if meta_tags.google_verification %}
+    <meta name="google-site-verification" content="{{ meta_tags.google_verification }}" />
+    {% endif %}
+    
+    <!-- SEO 메타 태그들 -->
+    <title>{{ meta_tags.title }}</title>
+    <meta name="description" content="{{ meta_tags.description }}">
+    <meta name="keywords" content="{{ meta_tags.keywords }}">
+    <meta name="author" content="{{ meta_tags.author }}">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph 메타 태그들 -->
+    <meta property="og:title" content="{{ meta_tags.og_title }}">
+    <meta property="og:description" content="{{ meta_tags.og_description }}">
+    <meta property="og:url" content="{{ meta_tags.og_url }}">
+    <meta property="og:type" content="{{ meta_tags.og_type }}">
+    <meta property="og:locale" content="{{ meta_tags.og_locale }}">
+    
+    <!-- Twitter 카드 메타 태그들 -->
+    <meta name="twitter:card" content="{{ meta_tags.twitter_card }}">
+    <meta name="twitter:title" content="{{ meta_tags.twitter_title }}">
+    <meta name="twitter:description" content="{{ meta_tags.twitter_description }}">
+
+    <!-- 파비콘 및 외부 리소스 -->
     <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- 새로운 CSS 구조 -->
     <link rel="stylesheet" href="/static/css/main.css">
+    
+    <!-- 구조화된 데이터 (JSON-LD) -->
+    {% if meta_tags.structured_data %}
+    <script type="application/ld+json">
+    {{ meta_tags.structured_data | tojson }}
+    </script>
+    {% endif %}
 </head>
 <body>
     <div class="container">
