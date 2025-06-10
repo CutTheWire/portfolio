@@ -1,25 +1,24 @@
 from fastapi import APIRouter
 from starlette.responses import JSONResponse
 
-from utils.handlers.smtp_handler import SMTPHandler as SmtpHandler
-from utils.handlers import error_handler as ErrorHandler
-from utils.schemas import schema as Schema
+from app.utils import error_tools, email_client
+from app.schemas import smtp_schema
 
-smtp_handler = SmtpHandler()
+smtp_handler = email_client.SMTPHandler()  # 모듈.클래스명() 형태로 사용
 smtp_router = APIRouter()
 
 # 이메일 전송 API 엔드포인트
 @smtp_router.post("/email")
-async def send_email_api(request: Schema.Email_Request):
+async def send_email_api(request: smtp_schema.Email_Request):
     """이메일 전송 API"""
     try:
         # 입력값 검증
         if not all([request.sender_name.strip(), request.sender_email.strip(), request.subject.strip(), request.message.strip()]):
-            raise ErrorHandler.BadRequestException("모든 필드를 입력해주세요.")
+            raise error_tools.BadRequestException("모든 필드를 입력해주세요.")
         
         # 이메일 형식 간단 검증
         if "@" not in request.sender_email or "." not in request.sender_email:
-            raise ErrorHandler.ValueErrorException("올바른 이메일 형식을 입력해주세요.")
+            raise error_tools.ValueErrorException("올바른 이메일 형식을 입력해주세요.")
         
         # 이메일 전송
         submit_inquiry = await smtp_handler.submit_inquiry_smtp(
@@ -44,13 +43,13 @@ async def send_email_api(request: Schema.Email_Request):
                 }
             )
         else:
-            raise ErrorHandler.InternalServerErrorException("메일 전송 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.")
+            raise error_tools.InternalServerErrorException("메일 전송 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.")
             
     except (
-        ErrorHandler.BadRequestException,
-        ErrorHandler.ValueErrorException,
-        ErrorHandler.InternalServerErrorException,
+        error_tools.BadRequestException,
+        error_tools.ValueErrorException,
+        error_tools.InternalServerErrorException,
     ): 
         raise
     except Exception as e:
-        raise ErrorHandler.InternalServerErrorException("서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.")
+        raise error_tools.InternalServerErrorException("서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.")

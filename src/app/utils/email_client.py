@@ -1,6 +1,5 @@
 import os
 import smtplib
-import logging
 
 from pathlib import Path
 from datetime import datetime

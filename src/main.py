@@ -1,5 +1,4 @@
 import os
-import datetime
 import uvicorn
 import asyncio
 import logging
@@ -15,7 +14,11 @@ from fastapi.responses import HTMLResponse, Response, FileResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.types import Scope, Receive, Send
 
-from utils import ErrorHandler, SmtpController, PageController
+from app import (
+    error_tools,
+    smtp_controller,
+    portfolio_controller,
+)
 
 GREEN = "\033[32m"
 RED = "\033[31m"
@@ -54,8 +57,8 @@ app = FastAPI(
     redoc_url=None,
 )
 
-# ErrorHandler 등록
-ErrorHandler.ExceptionManager.register(app)
+# error_tools 등록
+error_tools.ExceptionManager.register(app)
 
 # .well-known 디렉토리 경로 설정 (BASE_DIR 기준)
 well_known_path = BASE_DIR / ".well-known"
@@ -128,45 +131,51 @@ templates = Jinja2Templates(directory=template_directory)
 # Google Search Console 인증 파일
 @app.get("/googlec0f02607421c3396.html", response_class=Response)
 async def google_verification():
-    """Google Search Console 인증 파일"""
+    """
+    Google Search Console 인증 파일
+    """
     return Response(content="google-site-verification: googlec0f02607421c3396.html", media_type="text/html")
 
 # SEO 관련 엔드포인트들
 @app.get("/robots.txt", response_class=Response)
 async def robots_txt():
-    """검색 엔진 크롤러를 위한 robots.txt"""
+    """
+    검색 엔진 크롤러를 위한 robots.txt
+    """
     content = """User-agent: *
-Allow: /
-Allow: /portfolio/
-Allow: /static/
-Allow: /images/
+    Allow: /
+    Allow: /portfolio/
+    Allow: /static/
+    Allow: /images/
 
-# 백엔드 개발자 포트폴리오 사이트맵
-Sitemap: https://cutwire.myddns.me/sitemap.xml
+    # 백엔드 개발자 포트폴리오 사이트맵
+    Sitemap: https://cutwire.myddns.me/sitemap.xml
 
-# 검색 엔진 최적화
-Crawl-delay: 1
+    # 검색 엔진 최적화
+    Crawl-delay: 1
 
-# 중요 페이지 우선순위
-User-agent: Googlebot
-Allow: /
-Allow: /portfolio/chatbot-ai
-Allow: /portfolio/chatbot
-Allow: /portfolio/
+    # 중요 페이지 우선순위
+    User-agent: Googlebot
+    Allow: /
+    Allow: /portfolio/chatbot-ai
+    Allow: /portfolio/chatbot
+    Allow: /portfolio/
 
-User-agent: Bingbot
-Allow: /
-Allow: /portfolio/
+    User-agent: Bingbot
+    Allow: /
+    Allow: /portfolio/
 
-User-agent: NaverBot
-Allow: /
-Allow: /portfolio/
-"""
+    User-agent: NaverBot
+    Allow: /
+    Allow: /portfolio/
+    """
     return Response(content=content, media_type="text/plain")
 
 @app.get("/manifest.json", response_class=Response)
 async def manifest_json():
-    """PWA 매니페스트 파일"""
+    """
+    PWA 매니페스트 파일
+    """
     manifest = {
         "name": "서정훈 포트폴리오 - 백엔드 개발자",
         "short_name": "서정훈 Portfolio",
@@ -177,7 +186,7 @@ async def manifest_json():
         "theme_color": "#000000",
         "icons": [
             {
-                "src": "/static/favicon.ico",
+                "src": "/static/icon/favicon.ico",
                 "sizes": "32x32",
                 "type": "image/x-icon"
             }
@@ -191,7 +200,9 @@ async def manifest_json():
 
 # 구조화된 데이터 (JSON-LD) 추가를 위한 헬퍼 함수
 def get_structured_data():
-    """검색 엔진을 위한 구조화된 데이터"""
+    """
+    검색 엔진을 위한 구조화된 데이터
+    """
     return {
         "@context": "https://schema.org",
         "@type": "Person",
@@ -230,7 +241,9 @@ def get_structured_data():
 
 # 메타 태그 생성 헬퍼 함수
 def generate_meta_tags(title="서정훈 포트폴리오", description="Python 백엔드 개발자 서정훈의 포트폴리오", url="https://cutwire.myddns.me"):
-    """SEO 메타 태그 생성"""
+    """
+    SEO 메타 태그 생성
+    """
     # 환경변수에서 Google 인증 코드 가져오기
     google_verification = os.getenv("GOOGLE_SITE_VERIFICATION", "")
     
@@ -254,8 +267,10 @@ def generate_meta_tags(title="서정훈 포트폴리오", description="Python �
 
 @app.exception_handler(StarletteHTTPException)
 async def custom_404_handler(request: Request, exc: StarletteHTTPException):
-    # 기타 HTTP 예외
-    ErrorHandler.log_error(
+    """
+    커스텀 404 에러 핸들러
+    """
+    error_tools.log_error(
         exc=exc,
         request=request,
         status_code=exc.status_code,
@@ -275,6 +290,9 @@ async def custom_404_handler(request: Request, exc: StarletteHTTPException):
 
 @app.get("/favicon.ico")
 async def favicon():
+    """
+    Favicon 엔드포인트
+    """
     try:
         from fastapi.responses import FileResponse
         # favicon 파일 위치 확인 (static 디렉토리에서)
@@ -287,15 +305,17 @@ async def favicon():
             return FileResponse(str(favicon_path_base))
         else:
             # 파일이 없으면 404 처리
-            raise ErrorHandler.NotFoundException("Favicon not found")
-    except ErrorHandler.NotFoundException:
+            raise error_tools.NotFoundException("Favicon not found")
+    except error_tools.NotFoundException:
         raise
     except Exception as e:
-        raise ErrorHandler.InternalServerErrorException("Favicon loading error")
+        raise error_tools.InternalServerErrorException("Favicon loading error")
 
 @app.get("/sitemap.xml", response_class=Response)
 async def sitemap_xml():
-    """동적 사이트맵 생성"""
+    """
+    동적 사이트맵 생성, ./sitemap.xml은 필요 시에 사용 예정.
+    """
     try:
         # 기본 URL들
         urls = [
@@ -369,17 +389,17 @@ async def sitemap_xml():
         if sitemap_path.exists():
             return FileResponse(str(sitemap_path), media_type="application/xml")
         else:
-            raise ErrorHandler.NotFoundException("sitemap.xml not found")
+            raise error_tools.NotFoundException("sitemap.xml not found")
 
 app.include_router(
-    PageController.page_router,
+    portfolio_controller.page_router,
     prefix = "",
     tags = ["Page Router"],
     responses = {500: {"description": "Internal Server Error"}}
 )
 
 app.include_router(
-    SmtpController.smtp_router,
+    smtp_controller.smtp_router,
     prefix = "/smtp",
     tags = ["SMTP Router"],
     responses = {500: {"description": "Internal Server Error"}}
@@ -387,7 +407,7 @@ app.include_router(
 
 if __name__ == "__main__":
     load_dotenv()
-    # uvicorn.run("main:app", host="0.0.0.0", port=80, reload=True)
+    # uvicorn.run("main:app", host="0.0.0.0", port=80, reload=True) # 개발 모드에서 실행
     logging.basicConfig(level=logging.INFO, format=f"{GREEN}INFO{RESET}:     %(asctime)s - %(levelname)s - %(message)s")
     logger = logging.getLogger("hypercorn")
 

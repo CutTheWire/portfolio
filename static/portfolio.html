@@ -1,6 +1,34 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+    <!-- 파비콘 및 외부 리소스 -->
+    <link rel="icon" type="image/x-icon" href="/static/icon/favicon.ico">
+    <link rel="apple-touch-icon" sizes="57x57" href="/static/icon/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/static/icon/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/static/icon/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/static/icon/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/static/icon/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/static/icon/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/static/icon/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/static/icon/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="/static/icon/apple-touch-icon-167x167.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/icon/apple-touch-icon-180x180.png">
+    <!-- 기본 Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="/static/icon/apple-touch-icon.png">
+    <!-- 추가 favicon 크기들 -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/icon/icon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/icon/icon-32.png">
+    <!-- Windows 타일 -->
+    <meta name="msapplication-TileImage" content="/static/icon/apple-touch-icon-144x144.png">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Prism.js CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <!-- Prism.js 툴바 플러그인 CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.css">
+    <!-- 새로운 CSS 구조 -->
+    <link rel="stylesheet" href="/static/css/main.css">
+    
     <!-- 기본 메타 태그들 -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,17 +61,6 @@
     <meta name="twitter:title" content="{{ meta_tags.twitter_title }}">
     <meta name="twitter:description" content="{{ meta_tags.twitter_description }}">
 
-    <!-- 파비콘 및 외부 리소스 -->
-    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Prism.js CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
-    <!-- Prism.js 툴바 플러그인 CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.css">
-    <!-- 새로운 CSS 구조 -->
-    <link rel="stylesheet" href="/static/css/main.css">
-    
     <!-- 구조화된 데이터 (JSON-LD) -->
     {% if meta_tags.structured_data %}
     <script type="application/ld+json">
@@ -75,7 +92,7 @@
 </head>
 <body>
     <!-- SEO 네비게이션 -->
-    <nav style="position: absolute; left: -9999px;">
+    <nav class="seo-nav">
         <a href="/">백엔드 개발자 포트폴리오 홈</a> > 
         <span>{{ title }}</span>
     </nav>

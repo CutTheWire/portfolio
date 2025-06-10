@@ -1,6 +1,32 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+    <!-- 파비콘 및 외부 리소스 -->
+    <link rel="icon" type="image/x-icon" href="/static/icon/favicon.ico">
+    <link rel="apple-touch-icon" sizes="57x57" href="/static/icon/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/static/icon/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/static/icon/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/static/icon/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/static/icon/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/static/icon/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/static/icon/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/static/icon/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="/static/icon/apple-touch-icon-167x167.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/icon/apple-touch-icon-180x180.png">
+    <!-- 기본 Apple Touch Icon (가장 중요) -->
+    <link rel="apple-touch-icon" href="/static/icon/apple-touch-icon.png">
+    <!-- 추가 favicon 크기들 -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/icon/icon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/icon/icon-32.png">
+    <!-- PWA 지원을 위한 추가 아이콘들 -->
+    <link rel="icon" type="image/png" sizes="128x128" href="/static/icon/icon-128.png">
+    <link rel="icon" type="image/png" sizes="256x256" href="/static/icon/icon-256.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/static/icon/icon-512.png">
+    <!-- Windows 타일 -->
+    <meta name="msapplication-TileImage" content="/static/icon/apple-touch-icon-144x144.png">
+    <!-- 새로운 CSS 구조 -->
+    <link rel="stylesheet" href="/static/css/main.css">
+    
     <!-- 기본 메타 태그들 -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -42,8 +68,9 @@
     <meta name="subject" content="백엔드 개발자 포트폴리오">
     <meta name="rating" content="General">
     <meta name="referrer" content="origin-when-cross-origin">
-    <meta name="theme-color" content="#000000">
     <meta name="msapplication-TileColor" content="#000000">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="msapplication-navbutton-color" content="#000000">
     
     <!-- 지역 SEO -->
     <meta name="geo.region" content="KR">
@@ -54,14 +81,6 @@
     <meta http-equiv="content-language" content="ko-KR">
     <link rel="alternate" hreflang="ko" href="https://cutwire.myddns.me/">
     <link rel="alternate" hreflang="x-default" href="https://cutwire.myddns.me/">
-
-    <!-- 파비콘 및 외부 리소스 -->
-    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
-    <link rel="apple-touch-icon" sizes="180x180" href="/static/favicon.ico">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- 새로운 CSS 구조 -->
-    <link rel="stylesheet" href="/static/css/main.css">
     
     <!-- 구조화된 데이터 (JSON-LD) -->
     {% if meta_tags.structured_data %}
@@ -126,7 +145,7 @@
 
 <body>
     <!-- SEO를 위한 숨겨진 헤더 콘텐츠 -->
-    <header style="position: absolute; left: -9999px;">
+    <header class="sr-only">
         <h1>백엔드 개발자 서정훈 포트폴리오</h1>
         <h2>Python FastAPI Docker MongoDB 전문 백엔드 개발자</h2>
         <nav>
@@ -215,26 +234,6 @@
                         <div class="timeline-content">청운대학교 컴퓨터공학과 입학 - 백엔드 개발 전문성 구축</div>
                     </div>
                     <div class="timeline-item">
-                        <div class="timeline-date">2019.06</div>
-                        <div class="timeline-content">
-                            <a href="https://drive.google.com/file/d/1Hp_mQNc8TAn6sdRyxwNyBJOkNu21jNzv" target="_blank" rel="noopener">
-                                인천서부소방서장 표창장 수여
-                            </a>
-                        </div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-date">2020.01</div>
-                        <div class="timeline-content">
-                            <a href="https://drive.google.com/file/d/1vVK01h9xqusmZVl5fItSla0GjdM2saJI" target="_blank" rel="noopener">
-                                능력개발교육원 워크넷 직업심리검사 결과를 활용한 진로지도 코칭 기법 수료
-                            </a>
-                        </div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-date">2021.05 - 2023.02</div>
-                        <div class="timeline-content">공군 무선통신병 복무 - 시스템 관리 및 네트워크 운영 경험</div>
-                    </div>
-                    <div class="timeline-item">
                         <div class="timeline-date">2023.07 - 2023.09</div>
                         <div class="timeline-content">타이니웨이브 백엔드 개발 취업연계 참여 - Python 전문 교육</div>
                     </div>
@@ -275,7 +274,7 @@
         </section>
 
         <!-- SEO를 위한 키워드 관련 섹션 -->
-        <section style="position: absolute; left: -9999px;">
+        <section class="sr-only">
             <h2>백엔드 개발자 포트폴리오 주요 기술 스택</h2>
             <h3>Python 백엔드 개발 전문성</h3>
             <p>Python을 활용한 백엔드 개발 전문가로서 FastAPI 프레임워크를 이용한 고성능 API 개발 경험을 보유하고 있습니다.</p>
@@ -291,7 +290,7 @@
             {{ content|safe }}
             
             <!-- 추가 SEO 콘텐츠 -->
-            <section class="seo-content" style="margin-top: 2rem;">
+            <section class="seo-content">
                 <h2>백엔드 개발자로서의 전문성</h2>
                 <p>저는 <strong>Python 백엔드 개발</strong>에 특화된 개발자로서, <strong>FastAPI 프레임워크</strong>를 활용한 고성능 API 개발과 <strong>Docker 컨테이너화</strong>를 통한 효율적인 배포 환경 구축에 전문성을 가지고 있습니다.</p>
                 
@@ -304,7 +303,7 @@
                 
                 <h3>백엔드 기술 스택</h3>
                 <p>이 <strong>개발자 포트폴리오</strong>에서는 Python, FastAPI, Docker, MongoDB 등을 활용한 실제 프로젝트 경험과 성과를 확인하실 수 있습니다.</p>
-            </section>
+            </>
         </main>
     </div>
 

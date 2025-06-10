@@ -6,7 +6,7 @@ from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.templating import Jinja2Templates
 
-from utils.handlers import error_handler as ErrorHandler
+from app.utils import error_tools
 
 page_router = APIRouter()
 templates = Jinja2Templates(directory="static")
@@ -145,11 +145,11 @@ async def read_index(request: Request):
             }
         )
     except FileNotFoundError:
-        raise ErrorHandler.NotFoundException("템플릿 파일이 존재하지 않습니다.")
+        raise error_tools.NotFoundException("템플릿 파일이 존재하지 않습니다.")
     except UnicodeDecodeError:
-        raise ErrorHandler.InternalServerErrorException("파일 인코딩 오류가 발생했습니다.")
+        raise error_tools.InternalServerErrorException("파일 인코딩 오류가 발생했습니다.")
     except Exception as e:
-        raise ErrorHandler.InternalServerErrorException("페이지 로딩 중 오류가 발생했습니다.")
+        raise error_tools.InternalServerErrorException("페이지 로딩 중 오류가 발생했습니다.")
 
 @page_router.get("/portfolio/{filename}", response_class=HTMLResponse)
 async def read_markdown(request: Request, filename: str):
@@ -163,7 +163,7 @@ async def read_markdown(request: Request, filename: str):
         
         # 파일명 검증
         if not safe_filename or safe_filename in [".", ".."]:
-            raise ErrorHandler.BadRequestException("잘못된 파일명입니다.")
+            raise error_tools.BadRequestException("잘못된 파일명입니다.")
         
         md_path = os.path.join("markdown", safe_filename)
         
@@ -201,7 +201,7 @@ async def read_markdown(request: Request, filename: str):
                 "meta_tags": meta_tags
             }
         )
-    except ErrorHandler.BadRequestException:
+    except error_tools.BadRequestException:
         # 잘못된 파일명도 unauthorized.html로 처리
         meta_tags = generate_meta_tags(
             title="잘못된 요청 - 서정훈 포트폴리오",
@@ -214,7 +214,7 @@ async def read_markdown(request: Request, filename: str):
         )
     except FileNotFoundError:
         # 템플릿 파일이 없는 경우는 서버 에러로 처리
-        raise ErrorHandler.NotFoundException("템플릿 파일이 존재하지 않습니다.")
+        raise error_tools.NotFoundException("템플릿 파일이 존재하지 않습니다.")
     except UnicodeDecodeError:
         # 파일 인코딩 오류도 unauthorized.html로 처리
         meta_tags = generate_meta_tags(
@@ -228,7 +228,7 @@ async def read_markdown(request: Request, filename: str):
         )
     except Exception as e:
         # 기타 예외는 서버 에러로 처리
-        raise ErrorHandler.InternalServerErrorException("페이지 로딩 중 오류가 발생했습니다.")
+        raise error_tools.InternalServerErrorException("페이지 로딩 중 오류가 발생했습니다.")
 
 @page_router.get("/images/{img:path}")
 async def get_image(img: str):
@@ -238,29 +238,29 @@ async def get_image(img: str):
         safe_img = os.path.normpath(img).replace("\\", "/")
         
         if ".." in safe_img or safe_img.startswith("/") or safe_img.startswith("\\"):
-            raise ErrorHandler.BadRequestException("잘못된 이미지 경로입니다.")
+            raise error_tools.BadRequestException("잘못된 이미지 경로입니다.")
         
         # 빈 경로 체크
         if not safe_img.strip():
-            raise ErrorHandler.BadRequestException("이미지 경로가 비어있습니다.")
+            raise error_tools.BadRequestException("이미지 경로가 비어있습니다.")
         
         image_path = os.path.join("images", safe_img)
         
         if not os.path.exists(image_path):
-            raise ErrorHandler.NotFoundException("이미지 파일이 존재하지 않습니다.")
+            raise error_tools.NotFoundException("이미지 파일이 존재하지 않습니다.")
         
         # 파일이 실제로 이미지 파일인지 확인 (확장자 기반)
         allowed_extensions = {'.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.ico'}
         file_ext = os.path.splitext(safe_img)[1].lower()
         
         if file_ext not in allowed_extensions:
-            raise ErrorHandler.BadRequestException("지원되지 않는 이미지 형식입니다.")
+            raise error_tools.BadRequestException("지원되지 않는 이미지 형식입니다.")
         
         return FileResponse(image_path)
         
-    except (ErrorHandler.NotFoundException, ErrorHandler.BadRequestException):
+    except (error_tools.NotFoundException, error_tools.BadRequestException):
         raise
     except PermissionError:
-        raise ErrorHandler.InternalServerErrorException("파일 접근 권한이 없습니다.")
+        raise error_tools.InternalServerErrorException("파일 접근 권한이 없습니다.")
     except Exception as e:
-        raise ErrorHandler.InternalServerErrorException("이미지 로딩 중 오류가 발생했습니다.")
+        raise error_tools.InternalServerErrorException("이미지 로딩 중 오류가 발생했습니다.")
