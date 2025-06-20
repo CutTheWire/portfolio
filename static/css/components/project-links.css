@@ -1,0 +1,69 @@
+/* 프로젝트 링크 카드 스타일 */
+.project-link-card {
+    display: inline-block;
+    padding: 12px 20px;
+    margin: 8px 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.project-link-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.project-link-card:hover::before {
+    left: 100%;
+}
+
+.project-link-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    text-decoration: none;
+    color: white;
+}
+
+.project-link-card i {
+    margin-right: 8px;
+    font-size: 1.1em;
+}
+
+/* 다크 테마 변형 */
+.project-link-card.dark {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    box-shadow: 0 4px 15px rgba(44, 62, 80, 0.3);
+}
+
+.project-link-card.dark:hover {
+    box-shadow: 0 8px 25px rgba(44, 62, 80, 0.4);
+}
+
+/* 아이콘 + 텍스트 레이아웃 */
+.project-link-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.project-link-icon {
+    font-size: 1.2em;
+    opacity: 0.9;
+}
+
+.project-link-text {
+    font-size: 0.95em;
+    letter-spacing: 0.5px;
+}

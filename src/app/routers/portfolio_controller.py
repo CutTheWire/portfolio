@@ -230,6 +230,75 @@ async def read_markdown(request: Request, filename: str):
         # 기타 예외는 서버 에러로 처리
         raise error_tools.InternalServerErrorException("페이지 로딩 중 오류가 발생했습니다.")
 
+@page_router.get("/portfolio/reference/{category}/{filename}", response_class=HTMLResponse)
+async def read_reference_markdown(request: Request, category: str, filename: str):
+    """
+    reference/ 하위 폴더의 마크다운 파일을 웹페이지로 렌더링
+    예: /portfolio/reference/chatbot-ai/version(1.1.x)
+    """
+    try:
+        # 확장자 자동 처리
+        if not filename.endswith(".md"):
+            filename += ".md"
+        safe_category = os.path.basename(category)
+        safe_filename = os.path.basename(filename)
+        # 경로 보호
+        if not safe_category or not safe_filename or safe_category in [".", ".."] or safe_filename in [".", ".."]:
+            raise error_tools.BadRequestException("잘못된 경로입니다.")
+        md_path = os.path.join("markdown", "reference", safe_category, safe_filename)
+        if not os.path.exists(md_path):
+            meta_tags = generate_meta_tags(
+                title="페이지를 찾을 수 없습니다 - 서정훈 포트폴리오",
+                description="요청하신 reference 문서를 찾을 수 없습니다."
+            )
+            return templates.TemplateResponse(
+                "unauthorized.html",
+                {"request": request, "meta_tags": meta_tags},
+                status_code=404
+            )
+        with open(md_path, encoding="utf-8") as f:
+            md_content = f.read()
+        html_content = md.markdown(md_content, extensions=["fenced_code", "tables"])
+        page_title = f"{safe_category} / {safe_filename.replace('.md','')}"
+        meta_tags = generate_meta_tags(
+            title=f"{page_title} - 서정훈 포트폴리오",
+            description=f"reference/{safe_category}의 {safe_filename} 문서입니다.",
+            url=f"https://cutwire.myddns.me/portfolio/reference/{safe_category}/{safe_filename.replace('.md','')}"
+        )
+        return templates.TemplateResponse(
+            "reference.html",
+            {
+                "request": request,
+                "title": page_title,
+                "content": html_content,
+                "meta_tags": meta_tags
+            }
+        )
+    except error_tools.BadRequestException:
+        meta_tags = generate_meta_tags(
+            title="잘못된 요청 - 서정훈 포트폴리오",
+            description="잘못된 요청입니다."
+        )
+        return templates.TemplateResponse(
+            "unauthorized.html",
+            {"request": request, "meta_tags": meta_tags},
+            status_code=400
+        )
+    except FileNotFoundError:
+        raise error_tools.NotFoundException("템플릿 파일이 존재하지 않습니다.")
+    except UnicodeDecodeError:
+        meta_tags = generate_meta_tags(
+            title="파일 오류 - 서정훈 포트폴리오",
+            description="파일을 읽는 중 오류가 발생했습니다."
+        )
+        return templates.TemplateResponse(
+            "unauthorized.html",
+            {"request": request, "meta_tags": meta_tags},
+            status_code=400
+        )
+    except Exception:
+        raise error_tools.InternalServerErrorException("페이지 로딩 중 오류가 발생했습니다.")
+
 @page_router.get("/images/{img:path}")
 async def get_image(img: str):
     """이미지 파일 제공"""

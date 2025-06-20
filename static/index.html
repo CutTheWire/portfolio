@@ -27,6 +27,9 @@
     <!-- 새로운 CSS 구조 -->
     <link rel="stylesheet" href="/static/css/main.css">
     
+    <!-- FontAwesome 추가 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <!-- 기본 메타 태그들 -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -145,7 +148,7 @@
 
 <body>
     <!-- SEO를 위한 숨겨진 헤더 콘텐츠 -->
-    <header class="sr-only">
+    <header class="sr-only" aria-hidden="true" style="display:none;">
         <h1>백엔드 개발자 서정훈 포트폴리오</h1>
         <h2>Python FastAPI Docker MongoDB 전문 백엔드 개발자</h2>
         <nav>
@@ -274,7 +277,7 @@
         </section>
 
         <!-- SEO를 위한 키워드 관련 섹션 -->
-        <section class="sr-only">
+        <section class="sr-only" aria-hidden="true" style="display:none;">
             <h2>백엔드 개발자 포트폴리오 주요 기술 스택</h2>
             <h3>Python 백엔드 개발 전문성</h3>
             <p>Python을 활용한 백엔드 개발 전문가로서 FastAPI 프레임워크를 이용한 고성능 API 개발 경험을 보유하고 있습니다.</p>
@@ -290,7 +293,7 @@
             {{ content|safe }}
             
             <!-- 추가 SEO 콘텐츠 -->
-            <section class="seo-content">
+            <section class="seo-content" aria-hidden="true" style="display:none;">
                 <h2>백엔드 개발자로서의 전문성</h2>
                 <p>저는 <strong>Python 백엔드 개발</strong>에 특화된 개발자로서, <strong>FastAPI 프레임워크</strong>를 활용한 고성능 API 개발과 <strong>Docker 컨테이너화</strong>를 통한 효율적인 배포 환경 구축에 전문성을 가지고 있습니다.</p>
                 

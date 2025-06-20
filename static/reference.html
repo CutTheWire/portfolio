@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <!-- 폰트 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Prism.js CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.css">
+    
+    <!-- 새로운 CSS 구조 -->
+    <link rel="stylesheet" href="/static/css/main.css">
+    
+    <!-- 기본 메타 태그들 -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Google Search Console 인증 메타 태그 -->
+    {% if meta_tags.google_verification %}
+    <meta name="google-site-verification" content="{{ meta_tags.google_verification }}" />
+    {% endif %}
+    
+    <!-- SEO 메타 태그들 -->
+    <title>{{ meta_tags.title }}</title>
+    <meta name="description" content="{{ meta_tags.description }}">
+    <meta name="keywords" content="{{ meta_tags.keywords }}">
+    <meta name="author" content="{{ meta_tags.author }}">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    
+    <!-- 정규 URL -->
+    <link rel="canonical" href="{{ meta_tags.canonical_url }}">
+    
+    <!-- Open Graph 메타 태그들 -->
+    <meta property="og:title" content="{{ meta_tags.og_title }}">
+    <meta property="og:description" content="{{ meta_tags.og_description }}">
+    <meta property="og:url" content="{{ meta_tags.og_url }}">
+    <meta property="og:type" content="{{ meta_tags.og_type }}">
+    <meta property="og:locale" content="{{ meta_tags.og_locale }}">
+    <meta property="og:site_name" content="{{ meta_tags.og_site_name }}">
+    <meta property="og:image" content="https://cutwire.myddns.me/images/portfolio-preview.webp">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    
+    <!-- Twitter Card 메타 태그들 -->
+    <meta name="twitter:card" content="{{ meta_tags.twitter_card }}">
+    <meta name="twitter:title" content="{{ meta_tags.twitter_title }}">
+    <meta name="twitter:description" content="{{ meta_tags.twitter_description }}">
+    <meta name="twitter:site" content="{{ meta_tags.twitter_site }}">
+    <meta name="twitter:image" content="https://cutwire.myddns.me/images/portfolio-preview.webp">
+    
+    <!-- 추가 메타 태그들 -->
+    <meta name="theme-color" content="#1a1a1a">
+    <meta name="msapplication-navbutton-color" content="#000000">
+    
+    <!-- 구조화된 데이터 (JSON-LD) -->
+    {% if meta_tags.structured_data %}
+    <script type="application/ld+json">
+    {{ meta_tags.structured_data | tojson }}
+    </script>
+    {% endif %}
+</head>
+<body>
+    <!-- 메인 컨텐츠 -->
+    <main class="main">
+        <div class="container">
+            <!-- Reference 문서 전용 레이아웃 -->
+            <div class="reference-layout">
+                <!-- 브레드크럼 네비게이션 -->
+                <nav class="breadcrumb">
+                    <a href="/" class="breadcrumb-link">
+                        <i class="fas fa-home"></i>
+                        홈
+                    </a>
+                    <span class="breadcrumb-separator">/</span>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const currentPath = window.location.pathname;
+                            const breadcrumbNav = document.querySelector('.breadcrumb');
+                            
+                            // /reference/를 기준으로 경로 분할
+                            const referenceSplit = currentPath.split('/reference/');
+                            
+                            if (referenceSplit.length === 2) {
+                                const prefix = referenceSplit[0].replace(/^\//, ''); // 앞의 / 제거
+                                const suffix = referenceSplit[1].split('/')[0]; // 첫 번째 폴더명만
+                                
+                                const projectLink = `/${prefix}/${suffix}`;
+                                
+                                // 기존 "프로젝트" 링크 찾아서 업데이트하거나 새로 생성
+                                const existingLink = breadcrumbNav.querySelector('.breadcrumb-link:last-of-type');
+                                if (existingLink && existingLink.textContent.trim() === suffix) {
+                                    existingLink.href = projectLink;
+                                } else {
+                                    // 새 링크 생성
+                                    const projectLinkElement = document.createElement('a');
+                                    projectLinkElement.href = projectLink;
+                                    projectLinkElement.className = 'breadcrumb-link';
+                                    projectLinkElement.textContent = suffix;
+                                    
+                                    const separator = document.createElement('span');
+                                    separator.className = 'breadcrumb-separator';
+                                    separator.textContent = '/';
+                                    
+                                    const currentSpan = breadcrumbNav.querySelector('.breadcrumb-current');
+                                    breadcrumbNav.insertBefore(projectLinkElement, currentSpan);
+                                    breadcrumbNav.insertBefore(separator, currentSpan);
+                                }
+                            }
+
+                          // URL에서 파일명 추출하여 breadcrumb-current 업데이트
+                            const currentSpan = breadcrumbNav.querySelector('.breadcrumb-current');
+                            if (currentSpan) {
+                                // URL의 마지막 부분에서 파일명 추출
+                                const pathParts = currentPath.split('/');
+                                const lastPart = pathParts[pathParts.length - 1];
+                                
+                                if (lastPart) {
+                                    // .md 확장자 제거하고 표시
+                                    const fileName = lastPart.replace(/\.md$/, '');
+                                    currentSpan.textContent = fileName;
+                                }
+                            }
+                        });
+                    </script>
+                    <span class="breadcrumb-current"></span>
+                </nav>
+                <!-- Reference 컨텐츠 -->
+                <div class="reference-content">
+                    {{ content|safe }}
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Prism.js Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    
+    <!-- 모바일 최적화 스크립트 -->
+    <script src="/static/js/mobile-fix.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Prism.js 하이라이팅 실행
+            if (window.Prism) {
+                Prism.highlightAll();
+            }
+        });
+    </script>
+</body>
+</html>
