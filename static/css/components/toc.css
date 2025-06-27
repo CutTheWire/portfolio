@@ -1,0 +1,130 @@
+/* 목차 스타일 */
+.toc-container {
+    position: fixed;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    background: rgba(26, 26, 26, 0.9);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 16px 12px;
+    max-height: 60vh;
+    overflow-y: auto;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    min-width: 200px;
+    max-width: 280px;
+}
+
+.toc-container.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.toc-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+}
+
+.toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.toc-item {
+    margin: 4px 0;
+}
+
+.toc-link {
+    display: block;
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    font-size: 13px;
+    line-height: 1.4;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    border-left: 2px solid transparent;
+}
+
+.toc-link:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+    border-left-color: #007acc;
+}
+
+.toc-link.active {
+    color: #007acc;
+    background: rgba(0, 122, 204, 0.1);
+    border-left-color: #007acc;
+}
+
+/* 헤딩 레벨별 들여쓰기 */
+.toc-link[data-level="1"] {
+    padding-left: 8px;
+    font-weight: 600;
+}
+
+.toc-link[data-level="2"] {
+    padding-left: 16px;
+    font-weight: 500;
+}
+
+.toc-link[data-level="3"] {
+    padding-left: 24px;
+    font-weight: 400;
+}
+
+.toc-link[data-level="4"] {
+    padding-left: 32px;
+    font-weight: 400;
+    font-size: 12px;
+}
+
+.toc-link[data-level="5"] {
+    padding-left: 40px;
+    font-weight: 400;
+    font-size: 12px;
+}
+
+.toc-link[data-level="6"] {
+    padding-left: 48px;
+    font-weight: 400;
+    font-size: 11px;
+}
+
+/* 스크롤바 스타일 */
+.toc-container::-webkit-scrollbar {
+    width: 4px;
+}
+
+.toc-container::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+}
+
+.toc-container::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+}
+
+.toc-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+/* 모바일에서는 숨김 */
+@media (max-width: 768px) {
+    .toc-container {
+        display: none;
+    }
+}

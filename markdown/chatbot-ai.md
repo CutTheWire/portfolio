@@ -11,6 +11,13 @@
 - **nginx**: API Gateway (8001, reverse proxy, 커스텀 404 지원)
 - **python-libs-init**: 공통 Python 라이브러리 볼륨 초기화
 
+## 🌐 API Gateway (nginx) 구조
+
+- **8001 포트**에서 모든 API를 통합 제공
+- `/office/` → office 서버(8002)로 프록시
+- `/character/` → character 서버(8003)로 프록시
+- 존재하지 않는 경로는 `/404.html` 커스텀 페이지 반환
+
 ## 🗓️ 버전별 명세
 ### 📄 v1.0.x
 <div class="project-link-content">
@@ -20,8 +27,8 @@
     </a>
 </div>
 
-- Last Commit Hash : `3ebe8e2a5edda44b2076937eb484a1f18b889927`
-- Last Commit Days : 2024-10-22 (화) 20:07:07 (KST)
+- Last Commit Hash : `3071c6319a6e96e695d49f111bfbba5aea603f49`
+- Last Commit Days : 2024-12-16 (화) 15:48:19 (KST)
 
 
 ### 📄 v1.1.x
@@ -35,25 +42,20 @@
 - Last Commit Hash : `d014744640fa72366c398541ec9f5b4c7361fd7f`
 - Last Commit Days : 2025-01-15 (수) 15:40:49 (KST)
 
+### 📄 v1.2.x
+<div class="project-link-content">
+    <a href="/portfolio/reference/chatbot-ai/version(1.2.x).md" class="project-link-card dark">
+        <i class="fas fa-external-link-alt project-link-icon"></i>
+        <span class="project-link-text">명세 상세보기</span>
+    </a>
+</div>
+
+- Last Commit Hash : `cba10b2cebceaf36d2836c9e9e0bb5fcaf37dffd`
+- Last Commit Days : 2025-02-18 (수) 10:42:34 (KST)
+
+
 ## 📋 시스템 아키텍처 다이어그램
 ![System-Architecture-Diagram-ChatBot](/images/System-Architecture-Diagram-ChatBot.webp)
 
-## 📋 클래스 다이어그램 
-### 📑 utils(ai_models) 클래스 다이어그램 
-![Class-Diagram-ChatBot(AI)-utils(ai_models)](/images/Class-Diagram-ChatBot(AI)-utils(ai_models).webp)
-
-### 📑 utils(handlers) 클래스 다이어그램 
-![Class-Diagram-ChatBot(AI)-utils(handlers)](/images/Class-Diagram-ChatBot(AI)-utils(handlers).webp)
-
-### 📑 utils(schemas) 클래스 다이어그램
-![Class-Diagram-ChatBot(AI)-utils(schemas)](/images/Class-Diagram-ChatBot(AI)-utils(schemas).webp)
-
 ## 📋 패키지 다이어그램 
 ![Package-Diagram-ChatBot(AI)](/images/Package-Diagram-ChatBot(AI).webp)
-
-## 🌐 API Gateway (nginx) 구조
-
-- **8001 포트**에서 모든 API를 통합 제공
-- `/office/` → office 서버(8002)로 프록시
-- `/character/` → character 서버(8003)로 프록시
-- 존재하지 않는 경로는 `/404.html` 커스텀 페이지 반환
