@@ -27,9 +27,8 @@
     </a>
 </div>
 
-- Last Commit Hash : `3071c6319a6e96e695d49f111bfbba5aea603f49`
-- Last Commit Days : 2024-12-16 (화) 15:48:19 (KST)
-
+- First Commit Days : 2024-10-19 (토) 23:02:45 GMT+0900 (한국 표준시)
+- Last Commit Days : 2024-12-16 (월) 18:22:23 GMT+0900 (한국 표준시)
 
 ### 📄 v1.1.x
 <div class="project-link-content">
@@ -39,8 +38,7 @@
     </a>
 </div>
 
-- Last Commit Hash : `d014744640fa72366c398541ec9f5b4c7361fd7f`
-- Last Commit Days : 2025-01-15 (수) 15:40:49 (KST)
+- Commit Days : 2025-01-15 (수) 15:40:49 GMT+0900 (한국 표준시)
 
 ### 📄 v1.2.x
 <div class="project-link-content">
@@ -50,9 +48,62 @@
     </a>
 </div>
 
-- Last Commit Hash : `cba10b2cebceaf36d2836c9e9e0bb5fcaf37dffd`
-- Last Commit Days : 2025-02-18 (수) 10:42:34 (KST)
+- Commit Days : 2025-02-18 (화) 10:42:34 GMT+0900 (한국 표준시)
 
+### 📄 v1.3.x
+<div class="project-link-content">
+    <a href="/portfolio/reference/chatbot-ai/version(1.3.x).md" class="project-link-card dark">
+        <i class="fas fa-external-link-alt project-link-icon"></i>
+        <span class="project-link-text">명세 상세보기</span>
+    </a>
+</div>
+
+- First Commit Days : 2025-02-18 (화) 11:26:36 GMT+0900 (한국 표준시)
+- Last Commit Days : 2024-03-15 (토) 15:44:49 GMT+0900 (한국 표준시)
+
+### 📄 v1.4.x
+<div class="project-link-content">
+    <a href="/portfolio/reference/chatbot-ai/version(1.4.x).md" class="project-link-card dark">
+        <i class="fas fa-external-link-alt project-link-icon"></i>
+        <span class="project-link-text">명세 상세보기</span>
+    </a>
+</div>
+
+- First Commit Days : 2024-03-15 (토) 15:47:20 GMT+0900 (한국 표준시)
+- Last Commit Days : 2024-03-16 (일) 18:24:02 GMT+0900 (한국 표준시)
+
+### 📄 v1.5.x
+<div class="project-link-content">
+    <a href="/portfolio/reference/chatbot-ai/version(1.5.x).md" class="project-link-card dark">
+        <i class="fas fa-external-link-alt project-link-icon"></i>
+        <span class="project-link-text">명세 상세보기</span>
+    </a>
+</div>
+
+- First Commit Days : 2024-03-21 (금) 15:41:35 GMT+0900 (한국 표준시)
+- Last Commit Days : 2024-05-03 (토) 18:56:29 GMT+0900 (한국 표준시)
+
+### 📄 v1.6.x
+<div class="project-link-content">
+    <a href="/portfolio/reference/chatbot-ai/version(1.6.x).md" class="project-link-card dark">
+        <i class="fas fa-external-link-alt project-link-icon"></i>
+        <span class="project-link-text">명세 상세보기</span>
+    </a>
+</div>
+
+- First Commit Days : 2024-05-10 (토) 04:43:23 GMT+0900 (한국 표준시)
+- Last Commit Days : 2024-05-16 (금) 01:30:44 GMT+0900 (한국 표준시)
+
+### 📄 v1.7.x
+<div class="project-link-content">
+    <a href="/portfolio/reference/chatbot-ai/version(1.7.x).md" class="project-link-card dark">
+        <i class="fas fa-external-link-alt project-link-icon"></i>
+        <span class="project-link-text">명세 상세보기</span>
+    </a>
+</div>
+
+- First Commit Days : 2024-05-30 (금) 19:19:05 GMT+0900 (한국 표준시)
+- Last Commit Days : 2024-06-16 (월) 16:36:43 GMT+0900 (한국 표준시)
 
 ## 📋 시스템 아키텍처 다이어그램
 ![System-Architecture-Diagram-ChatBot](/images/System-Architecture-Diagram-ChatBot.webp)
