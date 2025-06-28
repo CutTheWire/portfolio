@@ -294,18 +294,24 @@ async def favicon():
     Favicon 엔드포인트
     """
     try:
-        from fastapi.responses import FileResponse
-        # favicon 파일 위치 확인 (static 디렉토리에서)
-        favicon_path_src = SRC_DIR / "static" / "favicon.ico"
-        favicon_path_base = BASE_DIR / "static" / "favicon.ico"
+        # static/icon 디렉토리에서 favicon 찾기
+        favicon_paths = [
+            SRC_DIR / "static" / "icon" / "favicon.ico",
+            BASE_DIR / "static" / "icon" / "favicon.ico", 
+            SRC_DIR / "static" / "favicon.ico",
+            BASE_DIR / "static" / "favicon.ico"
+        ]
         
-        if favicon_path_src.exists():
-            return FileResponse(str(favicon_path_src))
-        elif favicon_path_base.exists():
-            return FileResponse(str(favicon_path_base))
-        else:
-            # 파일이 없으면 404 처리
-            raise error_tools.NotFoundException("Favicon not found")
+        for favicon_path in favicon_paths:
+            if favicon_path.exists():
+                return FileResponse(
+                    str(favicon_path),
+                    media_type="image/x-icon",
+                    headers={"Cache-Control": "public, max-age=86400"}
+                )
+        
+        # 파일이 없으면 404 처리
+        raise error_tools.NotFoundException("Favicon not found")
     except error_tools.NotFoundException:
         raise
     except Exception as e:
