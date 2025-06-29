@@ -24,7 +24,7 @@
 **프로젝트 기간:** 2024.08 - 2025.05
 
 ### 🛠️ 담당
-- Docker를 통한 GPU 자원을 분할 할당하여 2개의 FastAPI 서버 구성
+- Docker를 통한 GPU 자원을 분할 할당하여 2개의 FastAPI 서버를 구성하여 독립 마이크로서비스 office/character 관리
 - Llama GGUF 압출 모델 GPU에 각각 할당하는 아키텍쳐 구성
 - 한정된 GPU 자원을 큐 대기열로 답변 처리 및 오버된 대기자(예상 대기시간 180초 이상 대기자) 처리하도록 개발
 - REST-Like API 구성
@@ -35,7 +35,7 @@
 
 ## 🤖 ChatBot
 <div class="project-link-content">
-    <a href="/portfolio/chatbot-ai" class="project-link-card dark">
+    <a href="/portfolio/chatbot" class="project-link-card dark">
         <i class="fas fa-external-link-alt project-link-icon"></i>
         <span class="project-link-text">프로젝트 상세보기</span>
     </a>
@@ -45,11 +45,17 @@
 
 **프로젝트 기간:** 2024.08 - 2025.05
 
+### 🛠️ 담당
+- FastAPI에서 MongoDB 채팅방 관리 및 SMTP API 개발
+- FastAPI를 REST-Like API 구성
+- Spring Boot에서 AI 답변을 채팅방 저장 및 NySQL과 MongoDB에서 관리 API 개발
+- git tags 기능을 통한 github actions 동작, API 명세서 및 Docker Containers 자동 업로드하여 릴리스로 버전 관리
+
 ---
 
 ## 🏫 JMEDUSERVER
 <div class="project-link-content">
-    <a href="/portfolio/chatbot-ai" class="project-link-card dark">
+    <a href="/portfolio/jmeduserver" class="project-link-card dark">
         <i class="fas fa-external-link-alt project-link-icon"></i>
         <span class="project-link-text">프로젝트 상세보기</span>
     </a>
@@ -63,7 +69,7 @@
 
 ## 🏫 JMEDUSERVER-Kiosk
 <div class="project-link-content">
-    <a href="/portfolio/chatbot-ai" class="project-link-card dark">
+    <a href="/portfolio/jmeduserver-kiosk" class="project-link-card dark">
         <i class="fas fa-external-link-alt project-link-icon"></i>
         <span class="project-link-text">프로젝트 상세보기</span>
     </a>

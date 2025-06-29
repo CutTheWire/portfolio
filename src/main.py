@@ -438,7 +438,7 @@ if __name__ == "__main__":
         raise FileNotFoundError("SSL 인증서 파일을 찾을 수 없습니다. 경로를 확인하세요.")
     
     config = Config()
-    config.bind = ["0.0.0.0:443"]
+    config.bind = ["0.0.0.0:444"]
     config.certfile = str(ssl_certfile)
     config.keyfile = str(ssl_keyfile)
     config.alpn_protocols = ["h2", "http/1.1"]  # HTTP/2 활성화
