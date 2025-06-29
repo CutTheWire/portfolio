@@ -27,8 +27,8 @@
     </a>
 </div>
 
-- First Commit Days : 2024-10-19 (토) 23:02:45 GMT+0900 (한국 표준시)
-- Last Commit Days : 2024-12-16 (월) 18:22:23 GMT+0900 (한국 표준시)
+- `First Commit Days` : 2024-10-19 (토) 23:02:45 GMT+0900 (한국 표준시)
+- `Last Commit Days` : 2024-12-16 (월) 18:22:23 GMT+0900 (한국 표준시)
 
 ### 📄 v1.1.x
 <div class="project-link-content">
@@ -38,7 +38,7 @@
     </a>
 </div>
 
-- Commit Days : 2025-01-15 (수) 15:40:49 GMT+0900 (한국 표준시)
+- `First Commit Days` : 2025-01-15 (수) 15:40:49 GMT+0900 (한국 표준시)
 
 ### 📄 v1.2.x
 <div class="project-link-content">
@@ -48,7 +48,7 @@
     </a>
 </div>
 
-- Commit Days : 2025-02-18 (화) 10:42:34 GMT+0900 (한국 표준시)
+- `First Commit Days` : 2025-02-18 (화) 10:42:34 GMT+0900 (한국 표준시)
 
 ### 📄 v1.3.x
 <div class="project-link-content">
@@ -58,8 +58,8 @@
     </a>
 </div>
 
-- First Commit Days : 2025-02-18 (화) 11:26:36 GMT+0900 (한국 표준시)
-- Last Commit Days : 2024-03-15 (토) 15:44:49 GMT+0900 (한국 표준시)
+- `First Commit Days` : 2025-02-18 (화) 11:26:36 GMT+0900 (한국 표준시)
+- `Last Commit Days` : 2024-03-15 (토) 15:44:49 GMT+0900 (한국 표준시)
 
 ### 📄 v1.4.x
 <div class="project-link-content">
@@ -69,8 +69,8 @@
     </a>
 </div>
 
-- First Commit Days : 2024-03-15 (토) 15:47:20 GMT+0900 (한국 표준시)
-- Last Commit Days : 2024-03-16 (일) 18:24:02 GMT+0900 (한국 표준시)
+- `First Commit Days` : 2024-03-15 (토) 15:47:20 GMT+0900 (한국 표준시)
+- `Last Commit Days` : 2024-03-16 (일) 18:24:02 GMT+0900 (한국 표준시)
 
 ### 📄 v1.5.x
 <div class="project-link-content">
@@ -80,8 +80,8 @@
     </a>
 </div>
 
-- First Commit Days : 2024-03-21 (금) 15:41:35 GMT+0900 (한국 표준시)
-- Last Commit Days : 2024-05-03 (토) 18:56:29 GMT+0900 (한국 표준시)
+- `First Commit Days` : 2024-03-21 (금) 15:41:35 GMT+0900 (한국 표준시)
+- `Last Commit Days` : 2024-05-03 (토) 18:56:29 GMT+0900 (한국 표준시)
 
 ### 📄 v1.6.x
 <div class="project-link-content">
@@ -91,8 +91,8 @@
     </a>
 </div>
 
-- First Commit Days : 2024-05-10 (토) 04:43:23 GMT+0900 (한국 표준시)
-- Last Commit Days : 2024-05-16 (금) 01:30:44 GMT+0900 (한국 표준시)
+- `First Commit Days` : 2024-05-10 (토) 04:43:23 GMT+0900 (한국 표준시)
+- `Last Commit Days` : 2024-05-16 (금) 01:30:44 GMT+0900 (한국 표준시)
 
 ### 📄 v1.7.x
 <div class="project-link-content">
@@ -102,8 +102,8 @@
     </a>
 </div>
 
-- First Commit Days : 2024-05-30 (금) 19:19:05 GMT+0900 (한국 표준시)
-- Last Commit Days : 2024-06-16 (월) 16:36:43 GMT+0900 (한국 표준시)
+- `First Commit Days` : 2024-05-30 (금) 19:19:05 GMT+0900 (한국 표준시)
+- `Last Commit Days` : 2024-06-16 (월) 16:36:43 GMT+0900 (한국 표준시)
 
 ## 📋 시스템 아키텍처 다이어그램
 ![System-Architecture-Diagram-ChatBot](/images/System-Architecture-Diagram-ChatBot.webp)
