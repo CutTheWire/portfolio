@@ -1,15 +1,15 @@
 # ChatBot AI - 버전 명세서 v1.6.x
 
 ## 개요
-이 문서는 ChatBot AI 시스템의 v1.6.x 계열 버전에 대한 공식 명세서입니다. v1.5.x의 라우터 기반 아키텍처에서 **컨트롤러 패턴 도입**과 **프로덕션 최적화**를 통해 **엔터프라이즈급 구조**로 완전히 전환되었으며, **GitHub Actions CI/CD**, **API 명세서 자동화**, **모듈 분리 최적화**를 도입한 프로덕션 준비 AI 챗봇 서비스입니다.
+이 문서는 ChatBot AI 시스템의 v1.6.x 계열 버전에 대한 공식 명세서입니다. v1.5.x의 라우터 기반 아키텍처에서 **컨트롤러 패턴 도입**과 **프로덕션 최적화**를 통해 **엔터프라이즈급 구조**로 완전히 전환되었으며, **GitHub Actions**, **API 명세서 자동화**, **모듈 분리 최적화**를 도입한 프로덕션 준비 AI 챗봇 서비스입니다.
 
 ## 버전 정보
 
 | 버전 | 릴리즈 날짜 | 커밋 해시 | 상태 |
 |------|-------------|-----------|------|
+| **None** | 2025-05-03 | `11adcd7ee4022e5b3f5b595ff132e02a869c145b` | Unstable |
 | **v1.6.0** | 2025-05-10 | `abf6e1d4667e08418e661bcee41e6fc83cde9922` | Stable |
 | **v1.6.1** | 2025-05-11 | `e93961d80627087bd9f284d52bac1f76d31c5613` | Latest |
-| **None** | 2025-05-16 | `0b5d65da73cae825fbf76e853fce56d86e103ae1` | Unstable |
 
 ## v1.5.x에서 v1.6.x로의 주요 변경사항
 
@@ -24,7 +24,7 @@
 - **공유 상태 관리** 시스템 (`app_state.py`)
 
 ### 개발 환경 혁신
-- **GitHub Actions** CI/CD 파이프라인
+- **GitHub Actions** Docs 자동화 (`update-api-docs.yml`)
 - **자동 API 명세서** 생성 (`api_specification.md`)
 - **프로토타입 정리** (14개 파일 삭제)
 - **라우터 분리** (`office_controller.py`, `character_controller.py`)
@@ -995,7 +995,7 @@ class LlamaCharacterModel:
 
 ### 6. 자동화 시스템 - v1.6.x 신규
 
-#### GitHub Actions CI/CD (update-api-docs.yml)
+#### GitHub Actions (update-api-docs.yml)
 
 API 명세서 자동 업데이트를 위한 GitHub Actions 워크플로우입니다.
 
@@ -1277,19 +1277,6 @@ deep-translator>=1.11.4
 Pillow
 ```
 
-### GitHub 통합 설정
-CI/CD 파이프라인과 자동 문서화를 위한 설정입니다.
-
-```bash
-# GitHub Actions 환경 변수 설정
-OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-MONGODB_URI: ${{ secrets.MONGODB_URI }}
-
-# 로컬 개발 환경 설정
-git config core.autocrlf true
-git config push.default current
-```
-
 ## 성능 특성
 
 ### 메모리 사용량
@@ -1345,11 +1332,6 @@ git config push.default current
    - 모델 인스턴스 캐싱
    - 메모리 사용량 모니터링
    - GC 튜닝 적용
-
-3. **CI/CD 최적화**
-   - 캐싱 전략 구현
-   - 병렬 빌드 설정
-   - 조건부 실행 최적화
 
 ## 보안 고려사항
 
