@@ -26,8 +26,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
     <!-- Prism.js 툴바 플러그인 CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.css">
-    <!-- Mermaid.js CSS (테마 설정) -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.css">
     <!-- 새로운 CSS 구조 -->
     <link rel="stylesheet" href="/static/css/main.css">
     
@@ -111,8 +109,6 @@
                 <br>
             </div>
             {{ content|safe }}
-
-<!-- 복사 버튼은 Prism.js toolbar 플러그인이 자동으로 추가 -->
         </main>
     </div>
 
@@ -124,229 +120,15 @@
     <!-- 복사 기능 플러그인만 사용 (언어 라벨 플러그인 제거) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
     
-    <!-- Mermaid.js 라이브러리 -->
-    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
-    
     <!-- 모바일 최적화 스크립트 -->
     <script src="/static/js/mobile-fix.js"></script>
     <!-- 이메일 기능 스크립트 -->
     <script src="/static/js/modal-module.js"></script>
+    <!-- Mermaid 모듈 스크립트 -->
+    <script src="/static/js/mermaid-module.js"></script>
+    
     
 <script>
-    // Mermaid 초기화 및 설정
-    function initializeMermaid() {
-        mermaid.initialize({
-            startOnLoad: false,
-            theme: 'dark',
-            themeVariables: {
-                primaryColor: '#6366f1',
-                primaryTextColor: '#ffffff',
-                primaryBorderColor: '#4f46e5',
-                lineColor: '#64748b',
-                sectionBkgColor: '#1e293b',
-                altSectionBkgColor: '#0f172a',
-                gridColor: '#374151',
-                c0: '#6366f1',
-                c1: '#8b5cf6',
-                c2: '#06b6d4',
-                c3: '#10b981',
-                c4: '#f59e0b',
-                c5: '#ef4444',
-                c6: '#ec4899',
-                c7: '#84cc16'
-            },
-            gantt: {
-                titleTopMargin: 25,
-                barHeight: 20,
-                fontSize: 11,
-                sectionFontSize: 24,
-                gridLineStartPadding: 35,
-                leftPadding: 75,
-                topPadding: 50,
-                rightPadding: 75,
-                bottomPadding: 50
-            }
-        });
-    }
-
-    // Mermaid 코드 블록을 찾아서 렌더링
-    async function renderMermaidCharts() {
-        const mermaidBlocks = document.querySelectorAll('code.language-mermaid');
-        
-        for (let i = 0; i < mermaidBlocks.length; i++) {
-            const block = mermaidBlocks[i];
-            const pre = block.parentElement;
-            const mermaidCode = block.textContent;
-            
-            try {
-                // 고유 ID 생성
-                const elementId = `mermaid-${Date.now()}-${i}`;
-                
-                // Mermaid 다이어그램을 렌더링할 div 생성
-                const mermaidDiv = document.createElement('div');
-                mermaidDiv.id = elementId;
-                mermaidDiv.className = 'mermaid-chart';
-                mermaidDiv.style.cssText = `
-                    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-                    border-radius: 12px;
-                    padding: 20px;
-                    margin: 20px 0;
-                    border: 1px solid #374151;
-                    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-                    overflow-x: auto;
-                `;
-                
-                // 기존 pre 요소를 새로운 div로 교체
-                pre.parentNode.replaceChild(mermaidDiv, pre);
-                
-                // Mermaid 렌더링 실행
-                const { svg } = await mermaid.render(elementId + '-svg', mermaidCode);
-                mermaidDiv.innerHTML = svg;
-                
-                // SVG 스타일 개선
-                const svgElement = mermaidDiv.querySelector('svg');
-                if (svgElement) {
-                    svgElement.style.cssText = `
-                        max-width: 100%;
-                        height: auto;
-                        font-family: 'Inter', 'Noto Sans KR', sans-serif;
-                    `;
-                    
-                    // 반응형 처리를 위한 viewBox 설정
-                    if (!svgElement.getAttribute('viewBox')) {
-                        const width = svgElement.getAttribute('width');
-                        const height = svgElement.getAttribute('height');
-                        if (width && height) {
-                            svgElement.setAttribute('viewBox', `0 0 ${width} ${height}`);
-                            svgElement.removeAttribute('width');
-                            svgElement.removeAttribute('height');
-                        }
-                    }
-                }
-                
-                // 줌 기능 추가
-                addZoomFunctionality(mermaidDiv);
-                
-            } catch (error) {
-                console.error('Mermaid 렌더링 오류:', error);
-                // 오류 발생시 원본 코드 블록 유지하고 오류 메시지 추가
-                const errorDiv = document.createElement('div');
-                errorDiv.style.cssText = `
-                    background: #fef2f2;
-                    border: 1px solid #fecaca;
-                    border-radius: 8px;
-                    padding: 12px;
-                    margin: 10px 0;
-                    color: #dc2626;
-                `;
-                errorDiv.innerHTML = `
-                    <strong>Mermaid 차트 렌더링 오류:</strong><br>
-                    ${error.message}
-                `;
-                pre.parentNode.insertBefore(errorDiv, pre);
-            }
-        }
-    }
-
-    // 차트 줌 기능 추가
-    function addZoomFunctionality(chartContainer) {
-        const zoomButton = document.createElement('button');
-        zoomButton.innerHTML = '🔍 확대';
-        zoomButton.style.cssText = `
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(99, 102, 241, 0.8);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            padding: 6px 12px;
-            font-size: 12px;
-            cursor: pointer;
-            z-index: 10;
-        `;
-        
-        // 컨테이너에 상대 위치 설정
-        chartContainer.style.position = 'relative';
-        chartContainer.appendChild(zoomButton);
-        
-        zoomButton.addEventListener('click', () => {
-            // 모달로 확대된 차트 표시
-            showChartModal(chartContainer.cloneNode(true));
-        });
-    }
-
-    // 차트 모달 표시 함수
-    function showChartModal(chartElement) {
-        // 기존 모달이 있으면 제거
-        const existingModal = document.querySelector('.chart-modal');
-        if (existingModal) {
-            existingModal.remove();
-        }
-
-        const modal = document.createElement('div');
-        modal.className = 'chart-modal';
-        modal.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            padding: 20px;
-        `;
-
-        const modalContent = document.createElement('div');
-        modalContent.style.cssText = `
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            border-radius: 12px;
-            padding: 20px;
-            max-width: 95vw;
-            max-height: 95vh;
-            overflow: auto;
-            position: relative;
-        `;
-
-        const closeButton = document.createElement('button');
-        closeButton.innerHTML = '✕';
-        closeButton.style.cssText = `
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #ef4444;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            cursor: pointer;
-            font-size: 16px;
-            z-index: 10;
-        `;
-
-        // 차트 복제본에서 줌 버튼 제거
-        const zoomBtn = chartElement.querySelector('button');
-        if (zoomBtn) zoomBtn.remove();
-
-        modalContent.appendChild(closeButton);
-        modalContent.appendChild(chartElement);
-        modal.appendChild(modalContent);
-        document.body.appendChild(modal);
-
-        // 모달 닫기 이벤트
-        closeButton.addEventListener('click', () => modal.remove());
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) modal.remove();
-        });
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') modal.remove();
-        });
-    }
-
     // 언어 라벨을 수동으로 추가하는 함수 (CSS ::before로 표시)
     function addLanguageLabels() {
         document.querySelectorAll('pre code[class*="language-"]').forEach((codeElement) => {
@@ -354,7 +136,7 @@
             const className = codeElement.className;
             const match = className.match(/language-(\w+)/);
             
-            if (match && !pre.hasAttribute('data-language') && match[1] !== 'mermaid') {
+            if (match && !pre.hasAttribute('data-language')) {
                 const language = match[1].toUpperCase();
                 pre.setAttribute('data-language', language);
                 pre.classList.add(`language-${match[1]}`);
@@ -467,21 +249,15 @@
         }
     }
 
-    document.addEventListener('DOMContentLoaded', async function () {
-        // Mermaid 초기화
-        initializeMermaid();
-        
+    document.addEventListener('DOMContentLoaded', function () {
         // 이메일 컴포넌트 로드
         loadEmailComponent();
         
-        // 언어 라벨 추가 (Mermaid 제외)
+        // 언어 라벨 추가
         addLanguageLabels();
         
         // GitHub 링크 카드 변환
         convertGithubLinks();
-        
-        // Mermaid 차트 렌더링 (Prism 하이라이팅 전에)
-        await renderMermaidCharts();
         
         // Prism.js 하이라이팅 실행
         if (window.Prism) {
