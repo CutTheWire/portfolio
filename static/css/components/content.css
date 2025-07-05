@@ -318,3 +318,85 @@ h3 a:hover + span,
 h3:hover span {
     opacity: 1;
 }
+
+/* 프로젝트 타임라인 스타일 (기간 표시) */
+.project-timeline {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 1rem 0;
+    padding: 0.8rem 1.2rem;
+    background: var(--gradient-card);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.project-timeline:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--accent-primary);
+}
+
+.timeline-icon {
+    color: var(--accent-primary);
+    font-size: 1.2rem;
+    min-width: 1.2rem;
+}
+
+.timeline-duration {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    color: var(--text-primary);
+    flex-grow: 1;
+}
+
+.timeline-duration::before {
+    content: '';
+    margin-right: 0.5rem;
+}
+
+.timeline-months {
+    font-size: 0.8rem;
+    color: var(--bg-primary);
+    background: var(--accent-primary);
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    margin-left: 0.5rem;
+    font-weight: 500;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+    .project-timeline {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+        padding: 1rem;
+    }
+    
+    .timeline-duration {
+        font-size: 0.9rem;
+    }
+    
+    .timeline-months {
+        align-self: flex-end;
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .project-timeline {
+        padding: 0.8rem;
+    }
+    
+    .timeline-duration::before {
+        content: '📅';
+        margin-right: 0.3rem;
+    }
+    
+    .timeline-duration {
+        font-size: 0.85rem;
+    }
+}

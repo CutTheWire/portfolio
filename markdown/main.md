@@ -1,17 +1,17 @@
 ## 📑 Skills
 
-## 💪 Strong
+### 💪 Strong
 > Python , FastAPI , MongoDB
 
-## 🍼 Knowledgeable
+### 🍼 Knowledgeable
 > Spring Boot , MySQL , Docker , NginX 
 
-## 📦 ETC
+### 📦 ETC
 > git
 
-# 📁 Projects
 
-## 🤖 ChatBot-AI 
+## 📁 Projects
+### 🤖 ChatBot-AI 
 <div class="project-link-content">
     <a href="/portfolio/chatbot-ai" class="project-link-card dark">
         <i class="fas fa-external-link-alt project-link-icon"></i>
@@ -19,11 +19,15 @@
     </a>
 </div>
 
-생성형 인공지능의 AI 서버 리포지토리입니다.
+> 생성형 인공지능의 AI 서버 리포지토리입니다.
 
-**프로젝트 기간:** 2024.08 - 2025.05
+<div class="project-timeline">
+    <i class="fas fa-calendar-alt timeline-icon"></i>
+    <span class="timeline-duration">2024.08 - 2025.06</span>
+    <span class="timeline-months">10개월</span>
+</div>
 
-### 🛠️ 담당
+#### 🛠️ 담당
 - Docker를 통한 GPU 자원을 분할 할당하여 2개의 FastAPI 서버를 구성하여 독립 마이크로서비스 office/character 관리
 - Llama GGUF 압출 모델 GPU에 각각 할당하는 아키텍쳐 구성
 - 한정된 GPU 자원을 큐 대기열로 답변 처리 및 오버된 대기자(예상 대기시간 180초 이상 대기자) 처리하도록 개발
@@ -33,7 +37,7 @@
 
 ---
 
-## 🤖 ChatBot
+### 🤖 ChatBot
 <div class="project-link-content">
     <a href="/portfolio/chatbot" class="project-link-card dark">
         <i class="fas fa-external-link-alt project-link-icon"></i>
@@ -41,11 +45,15 @@
     </a>
 </div>
 
-생성형 인공지능 대화 및 인공지능 캐릭터와 대화하는 챗봇 웹사이트 리포지토리입니다.
+> 생성형 인공지능 대화 및 인공지능 캐릭터와 대화하는 챗봇 웹사이트 리포지토리입니다.
 
-**프로젝트 기간:** 2024.08 - 2025.05
+<div class="project-timeline">
+    <i class="fas fa-calendar-alt timeline-icon"></i>
+    <span class="timeline-duration">2024.08 - 2025.06</span>
+    <span class="timeline-months">10개월</span>
+</div>
 
-### 🛠️ 담당
+#### 🛠️ 담당
 - FastAPI에서 MongoDB 채팅방 관리 및 SMTP API 개발
 - FastAPI를 REST-Like API 구성
 - Spring Boot에서 AI 답변을 채팅방 저장 및 NySQL과 MongoDB에서 관리 API 개발
@@ -53,7 +61,7 @@
 
 ---
 
-## 🏫 JMEDUSERVER
+### 🏫 JMEDUSERVER
 <div class="project-link-content">
     <a href="/portfolio/jmeduserver" class="project-link-card dark">
         <i class="fas fa-external-link-alt project-link-icon"></i>
@@ -61,13 +69,17 @@
     </a>
 </div>
 
-제이엠에듀 학생관리시스템 서버로, 학생 정보 관리 기능 리포지토리입니다.
+> 제이엠에듀 학생관리시스템 서버로, 학생 정보 관리 기능 리포지토리입니다.
 
-**프로젝트 기간:** 2024.06 - 2024.08
+<div class="project-timeline">
+    <i class="fas fa-calendar-alt timeline-icon"></i>
+    <span class="timeline-duration">2024.06 - 2024.08</span>
+    <span class="timeline-months">2개월</span>
+</div>
 
 ---
 
-## 🏫 JMEDUSERVER-Kiosk
+### 🏫 JMEDUSERVER-Kiosk
 <div class="project-link-content">
     <a href="/portfolio/jmeduserver-kiosk" class="project-link-card dark">
         <i class="fas fa-external-link-alt project-link-icon"></i>
@@ -75,6 +87,10 @@
     </a>
 </div>
 
-제이엠에듀 학생관리시스템 키오스크 리포지토리입니다.
+> 제이엠에듀 학생관리시스템 키오스크 리포지토리입니다.
 
-**프로젝트 기간:** 2024.06 - 2024.08
+<div class="project-timeline">
+    <i class="fas fa-calendar-alt timeline-icon"></i>
+    <span class="timeline-duration">2024.06 - 2024.08</span>
+    <span class="timeline-months">2개월</span>
+</div>

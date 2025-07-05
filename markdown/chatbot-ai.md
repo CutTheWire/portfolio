@@ -3,6 +3,12 @@
 
 [github-link](https://github.com/TreeNut-KR/ChatBot-AI)
 
+# 프로젝트 구성원
+
+| 구성원 | 업무 | 사용 기술 |  
+|--------|--------|------------|  
+| ✅ [서정훈 (CutTheWire)](https://github.com/CutTheWire) | 백엔드 | FastAPI, Llama CPP CUDA |  
+
 ## 🏗️ 전체 아키텍처
 
 - **office**: 업무용 챗봇 API (FastAPI, 8002)

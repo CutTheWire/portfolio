@@ -5,7 +5,7 @@
 | 구성원 | 업무 | 사용 기술 |  
 |--------|--------|------------|  
 | 김준건 (jgkim14) | 백엔드 | Spring Boot, Node.js |  
-| [서정훈 (CutTheWire)](https://github.com/CutTheWire) | 백엔드 | Spring Boot, FastAPI |  
+| ✅ [서정훈 (CutTheWire)](https://github.com/CutTheWire) | 백엔드 | Spring Boot, FastAPI |  
 | 이준호 (qwer9679) | 백엔드 | Spring Boot, FastAPI |  
 | 모현준 (Flattt12) | 백엔드 | Spring Boot |  
 | 권재현 (donismoney) | 백엔드 | Spring Boot |  
@@ -16,26 +16,27 @@
 - **nginx**: API Gateway 및 웹 서버 (443 포트, HTTPS 지원)
     - React 프론트엔드 정적 파일 서빙
     - FastAPI/Spring Boot 백엔드 프록시 역할
-- **fastapi**: Python 백엔드 API 서버 (8000 포트)
-    - FastAPI 프레임워크 기반
-    - MySQL/MongoDB 연동
-- **springboot**: Java 백엔드 API 서버 (8080 포트)
-    - Spring Boot 프레임워크 기반
-    - MySQL 연동
+- **FastAPI**: Python 백엔드 API 서버 (8000 포트)
+    - Google SMTP 연동 및 MySQL로 이메일 인증 정보 저장
+    - 채팅방 CRUD 기능 MongoDB 사용
+- **SpringBoot**: Java 백엔드 API 서버 (8080 포트)
+    - AI용 API(FastAPI)와 채팅방, SMTP용 API(FastAPI) 통합 관리
+    - 소셜 로그인 및 사용자 인증 처리
+    - 케릭터 챗봇 CRUD 기능
 - **admincontroller**: Node.js 관리자 컨트롤러 (5785 포트)
-    - Google Cloud 서비스 연동
-    - 시스템 관리 기능
+    - GCP 연결, 클라우드에 저장된 이미지 관리
 - **mysql**: 관계형 데이터베이스 (3308 포트)
-    - UTF8MB4 문자셋 지원
-    - Flyway를 통한 스키마 마이그레이션
+    - 유저, 유저의 채팅방 정보, 유저의 캐릭터, SMTP 이메일 인증 정보 저장
 - **mongodb**: NoSQL 데이터베이스 (27017 포트)
-    - 문서 기반 데이터 저장
-    - Google Cloud 인증 지원
+    - 채팅방 메시지 저장
 - **flyway**: 데이터베이스 마이그레이션 도구
     - MySQL 스키마 버전 관리
 
 ## 📋 시스템 아키텍처 다이어그램
 ![System-Architecture-Diagram-ChatBot](/images/System-Architecture-Diagram-ChatBot.webp)
+
+## 📋 Hybrid ERD
+![Hybrid-ERD-ChatBot](/images/Hybrid-ERD-ChatBot.webp)
 
 ## 🌐 API Gateway (nginx) 구조
 
