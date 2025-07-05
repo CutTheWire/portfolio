@@ -11,8 +11,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.css">
     
-    <!-- 새로운 CSS 구조 -->
-    <link rel="stylesheet" href="/static/css/main.css">
+    <!-- 레퍼런스 페이지 전용 CSS -->
+    <link rel="stylesheet" href="/static/css/reference.css">
     
     <!-- 파비콘 및 외부 리소스 -->
     <link rel="icon" type="image/x-icon" href="/static/icon/favicon.ico">
@@ -79,6 +79,72 @@
     {{ meta_tags.structured_data | tojson }}
     </script>
     {% endif %}
+    
+    <!-- Reference 페이지 테이블 반응형 스타일 보강 -->
+    <style>
+        /* reference.css와 content.css의 테이블 반응형 스타일 보강 */
+        @media (max-width: 480px) {
+            .content table,
+            .reference-content table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+                border-radius: 8px;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .content table thead th,
+            .content table tbody td,
+            .reference-content table thead th,
+            .reference-content table tbody td {
+                padding: 0.6rem 0.8rem;
+                min-width: 120px;
+            }
+            
+            /* 테이블 스크롤바 스타일링 */
+            .content table::-webkit-scrollbar,
+            .reference-content table::-webkit-scrollbar {
+                height: 8px;
+            }
+            
+            .content table::-webkit-scrollbar-track,
+            .reference-content table::-webkit-scrollbar-track {
+                background: var(--bg-secondary);
+                border-radius: 4px;
+            }
+            
+            .content table::-webkit-scrollbar-thumb,
+            .reference-content table::-webkit-scrollbar-thumb {
+                background: var(--accent-primary);
+                border-radius: 4px;
+            }
+            
+            .content table::-webkit-scrollbar-thumb:hover,
+            .reference-content table::-webkit-scrollbar-thumb:hover {
+                background: var(--accent-secondary);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .content table,
+            .reference-content table {
+                font-size: 0.85rem;
+                margin: 1.5rem 0;
+            }
+            
+            .content table thead th,
+            .content table tbody td,
+            .reference-content table thead th,
+            .reference-content table tbody td {
+                padding: 0.8rem 1rem;
+            }
+            
+            .content table thead th,
+            .reference-content table thead th {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- 메인 컨텐츠 -->
@@ -146,7 +212,7 @@
                     <span class="breadcrumb-current"></span>
                 </nav>
                 <!-- Reference 컨텐츠 -->
-                <div class="reference-content">
+                <div class="reference-content content">
                     {{ content|safe }}
                 </div>
             </div>
@@ -166,10 +232,216 @@
     <script src="/static/js/toc-module.js"></script>
 
     <script>
+        // 언어 라벨을 수동으로 추가하는 함수 (CSS ::before로 표시)
+        function addLanguageLabels() {
+            document.querySelectorAll('pre code[class*="language-"]').forEach((codeElement) => {
+                const pre = codeElement.parentElement;
+                const className = codeElement.className;
+                const match = className.match(/language-(\w+)/);
+                
+                if (match && !pre.hasAttribute('data-language')) {
+                    const language = match[1].toUpperCase();
+                    pre.setAttribute('data-language', language);
+                    pre.classList.add(`language-${match[1]}`);
+                }
+            });
+        }
+
+        // 테이블 반응형 스크롤 개선 함수
+        function enhanceTableResponsiveness() {
+            const tables = document.querySelectorAll('.content table, .reference-content table');
+            
+            tables.forEach(table => {
+                // 테이블을 래퍼로 감싸기 (이미 감싸져 있지 않은 경우)
+                if (!table.parentElement.classList.contains('table-wrapper')) {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'table-wrapper';
+                    wrapper.style.cssText = `
+                        overflow-x: auto;
+                        -webkit-overflow-scrolling: touch;
+                        border-radius: 12px;
+                        box-shadow: var(--shadow-md);
+                        border: 1px solid var(--border-color);
+                        margin: 2rem 0;
+                    `;
+                    
+                    table.parentNode.insertBefore(wrapper, table);
+                    wrapper.appendChild(table);
+                    
+                    // 테이블 자체의 마진 제거 (래퍼가 처리)
+                    table.style.margin = '0';
+                }
+                
+                // 모바일에서 최소 너비 보장
+                if (window.innerWidth <= 480) {
+                    const cells = table.querySelectorAll('th, td');
+                    cells.forEach(cell => {
+                        if (!cell.style.minWidth) {
+                            cell.style.minWidth = '120px';
+                        }
+                    });
+                }
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
+            // 언어 라벨 추가
+            addLanguageLabels();
+            
+            // 테이블 반응형 스크롤 개선
+            enhanceTableResponsiveness();
+            
+            // 윈도우 리사이즈 시 테이블 반응형 재적용
+            window.addEventListener('resize', function() {
+                enhanceTableResponsiveness();
+            });
+            
             // Prism.js 하이라이팅 실행
             if (window.Prism) {
                 Prism.highlightAll();
+            }
+            
+            // 이미지 오버레이 기능 (portfolio.html과 동일)
+            const overlayContainer = document.createElement('div');
+            overlayContainer.className = 'image-overlay-container';
+            overlayContainer.innerHTML = `
+                <button class="close-button">&times;</button>
+                <img src="" alt="Overlay Image" draggable="false">
+            `;
+            document.body.appendChild(overlayContainer);
+
+            const overlayImage = overlayContainer.querySelector('img');
+            const closeButton = overlayContainer.querySelector('.close-button');
+
+            let isZoomed = false;
+            let isDragging = false;
+            let startX = 0, startY = 0;
+            let translateX = 0, translateY = 0;
+            let initialDistance = 0;
+
+            function preventTouchMove(e) {
+                e.preventDefault();
+            }
+
+            function openOverlay() {
+                overlayContainer.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                window.addEventListener('touchmove', preventTouchMove, { passive: false });
+            }
+
+            function closeOverlay() {
+                overlayContainer.classList.remove('active');
+                document.body.style.overflow = '';
+                window.removeEventListener('touchmove', preventTouchMove, { passive: false });
+                resetImagePosition();
+            }
+
+            // 이미지 클릭 시 오버레이 열기 - content 클래스 내의 이미지에만 적용
+            document.querySelectorAll('.content img').forEach(img => {
+                img.addEventListener('click', () => {
+                    overlayImage.src = img.src;
+                    openOverlay();
+                });
+            });
+
+            closeButton.addEventListener('click', closeOverlay);
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeOverlay();
+                }
+            });
+
+            overlayImage.addEventListener('dblclick', () => {
+                toggleZoom();
+            });
+
+            overlayImage.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1) {
+                    const touch = e.touches[0];
+                    startX = touch.clientX;
+                    startY = touch.clientY;
+                    isDragging = true;
+                } else if (e.touches.length === 2) {
+                    initialDistance = getDistance(e.touches[0], e.touches[1]);
+                }
+            });
+
+            overlayImage.addEventListener('touchmove', (e) => {
+                if (isDragging && isZoomed && e.touches.length === 1) {
+                    const touch = e.touches[0];
+                    const deltaX = touch.clientX - startX;
+                    const deltaY = touch.clientY - startY;
+                    translateX += deltaX;
+                    translateY += deltaY;
+                    overlayImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(3)`;
+                    startX = touch.clientX;
+                    startY = touch.clientY;
+                } else if (e.touches.length === 2) {
+                    const currentDistance = getDistance(e.touches[0], e.touches[1]);
+                    if (currentDistance < initialDistance * 0.8) {
+                        resetImagePosition();
+                        isZoomed = false;
+                    }
+                }
+            });
+
+            document.addEventListener('touchend', (e) => {
+                if (e.touches.length === 0) {
+                    isDragging = false;
+                }
+            });
+
+            overlayImage.addEventListener('mousedown', (e) => {
+                if (isZoomed) {
+                    e.preventDefault();
+                    isDragging = true;
+                    startX = e.clientX;
+                    startY = e.clientY;
+                    overlayImage.style.cursor = 'grabbing';
+                }
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging && isZoomed) {
+                    const deltaX = e.clientX - startX;
+                    const deltaY = e.clientY - startY;
+                    translateX += deltaX;
+                    translateY += deltaY;
+                    overlayImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(3)`;
+                    startX = e.clientX;
+                    startY = e.clientY;
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (isDragging) {
+                    isDragging = false;
+                    overlayImage.style.cursor = 'grab';
+                }
+            });
+
+            function toggleZoom() {
+                if (isZoomed) {
+                    overlayImage.style.transform = 'translate(0, 0) scale(1)';
+                    isZoomed = false;
+                    resetImagePosition();
+                } else {
+                    overlayImage.style.transform = 'scale(3)';
+                    isZoomed = true;
+                }
+            }
+
+            function resetImagePosition() {
+                translateX = 0;
+                translateY = 0;
+                overlayImage.style.transform = 'translate(0, 0) scale(1)';
+            }
+
+            function getDistance(touch1, touch2) {
+                const deltaX = touch2.clientX - touch1.clientX;
+                const deltaY = touch2.clientY - touch1.clientY;
+                return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
             }
         });
     </script>

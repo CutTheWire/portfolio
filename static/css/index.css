@@ -1,0 +1,39 @@
+/* 포트폴리오 페이지 전용 CSS */
+
+/* Base Styles */
+@import url('base/variables.css');
+@import url('base/reset.css');
+@import url('base/typography.css');
+
+/* Layout */
+@import url('layout/container.css');
+
+/* Components - 컴포넌트 */
+@import url('components/content.css');
+@import url('components/code-blocks.css');
+@import url('components/image-overlay.css');
+@import url('components/portfolio-page.css');
+@import url('components/github-link-card.css');
+@import url('components/modal-button.css');
+@import url('components/profile.css');
+@import url('components/timeline.css');
+@import url('components/social-links.css');
+@import url('components/content.css');
+@import url('components/project-links.css');
+
+/* Utils */
+@import url('utils/animations.css');
+@import url('utils/responsive.css');/* 홈페이지 전용 CSS */
+
+/* Base Styles */
+@import url('base/variables.css');
+@import url('base/reset.css');
+@import url('base/typography.css');
+
+/* Layout */
+@import url('layout/container.css');
+@import url('layout/grid.css');
+
+/* Utils */
+@import url('utils/animations.css');
+@import url('utils/responsive.css');

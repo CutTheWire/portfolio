@@ -41,75 +41,6 @@
     font-weight: 500;
 }
 
-/* Reference 헤더 */
-.reference-header {
-    margin-bottom: 3rem;
-    padding: 2rem;
-    background: var(--gradient-card);
-    border-radius: 16px;
-    border: 1px solid var(--border-color);
-    position: relative;
-    overflow: hidden;
-}
-
-.reference-header::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: var(--gradient-primary);
-}
-
-.reference-title-wrapper {
-    position: relative;
-    z-index: 1;
-}
-
-.reference-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    color: var(--text-primary);
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.reference-title i {
-    color: var(--accent-primary);
-    font-size: 2rem;
-}
-
-.reference-meta {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-}
-
-.reference-type,
-.reference-category {
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.reference-type {
-    background: var(--accent-primary);
-    color: #000;
-}
-
-.reference-category {
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    color: var(--text-secondary);
-}
-
 /* Reference 컨텐츠 */
 .reference-content {
     background: var(--bg-secondary);
@@ -121,32 +52,122 @@
     position: relative;
 }
 
-/* 버전 히스토리 테이블 특별 스타일 */
+/* 헤딩 스타일 - 타이틀, 색상 사각형 이모지, 글자크기, 하얀색만 */
+.reference-content h1 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin: 3rem 0 2rem 0;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
 .reference-content h1:first-child {
-    background: var(--gradient-primary);
-    background-clip: text;
+    margin-top: 0;
+}
+
+.reference-content h1::before {
+    content: '🟥';
     font-size: 2.2rem;
-    margin-bottom: 2rem;
+}
+
+.reference-content h2 {
+    font-size: 2.2rem;
+    font-weight: 650;
+    margin: 2.5rem 0 1.8rem 0;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.reference-content h2::before {
+    content: '🟧';
+    font-size: 1.8rem;
+}
+
+.reference-content h3 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin: 2rem 0 1.2rem 0;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.reference-content h3::before {
+    content: '🟨';
+    font-size: 1.4rem;
+}
+
+.reference-content h4 {
+    font-size: 1.4rem;
+    font-weight: 550;
+    margin: 1.8rem 0 1rem 0;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.reference-content h4::before {
+    content: '🟩';
+    font-size: 1.2rem;
+}
+
+.reference-content h5 {
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin: 1.5rem 0 0.8rem 0;
+    color: #ffffff;
     display: flex;
     align-items: center;
     gap: 0.5rem;
 }
 
-.reference-content h1:first-child::before {
-    -webkit-text-fill-color: initial;
-    background: none;
+.reference-content h5::before {
+    content: '🟦';
+    font-size: 1rem;
 }
 
-/* 파일 구조 섹션 */
-.reference-content h1:has(+ pre) {
-    background: var(--gradient-secondary);
-    background-clip: text;
+.reference-content h6 {
+    font-size: 1.1rem;
+    font-weight: 450;
+    margin: 1.2rem 0 0.6rem 0;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-style: italic;
 }
 
-.reference-content h1:has(+ pre)::before {
-    margin-right: 0.5rem;
+.reference-content h6::before {
+    content: '🟪';
+    font-size: 0.9rem;
+    color: #ffffff;
 }
 
+/* 헤딩 내 링크 스타일 */
+.reference-content h1 a,
+.reference-content h2 a,
+.reference-content h3 a,
+.reference-content h4 a,
+.reference-content h5 a,
+.reference-content h6 a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.reference-content h1 a:hover,
+.reference-content h2 a:hover,
+.reference-content h3 a:hover,
+.reference-content h4 a:hover,
+.reference-content h5 a:hover,
+.reference-content h6 a:hover {
+    color: var(--accent-primary);
+}
 
 /* 테이블 스타일링 */
 .reference-content table {
@@ -220,36 +241,6 @@
     font-weight: 500;
 }
 
-/* 헤딩 스타일링 */
-.reference-content h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    margin: 3rem 0 1.5rem 0;
-    color: var(--text-primary);
-    border-bottom: 2px solid var(--border-color);
-    padding-bottom: 0.5rem;
-}
-
-.reference-content h2 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin: 2.5rem 0 1rem 0;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.reference-content h2::before {
-    font-size: 1.2rem;
-}
-
-.reference-content h3 {
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin: 2rem 0 1rem 0;
-    color: var(--text-secondary);
-}
-
 /* 블록쿼트 스타일링 */
 .reference-content blockquote {
     background: var(--bg-card);
@@ -281,77 +272,10 @@
     color: var(--text-primary);
 }
 
-/* Reference 푸터 */
-.reference-footer {
-    padding: 2rem;
-    background: var(--bg-card);
-    border-radius: 12px;
-    border: 1px solid var(--border-color);
-    text-align: center;
-}
-
-.reference-actions {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.btn-primary,
-.btn-secondary {
-    padding: 0.8rem 2rem;
-    border-radius: 25px;
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 0.95rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: all 0.3s ease;
-    border: 2px solid transparent;
-}
-
-.btn-primary {
-    background: var(--gradient-primary);
-    color: #000;
-}
-
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
-}
-
-.btn-secondary {
-    background: transparent;
-    color: var(--text-primary);
-    border-color: var(--border-color);
-}
-
-.btn-secondary:hover {
-    background: var(--bg-hover);
-    border-color: var(--accent-primary);
-    color: var(--accent-primary);
-}
-
 /* 반응형 디자인 */
 @media (max-width: 768px) {
     .reference-layout {
         padding: 1rem 0.5rem;
-    }
-
-    .reference-header {
-        padding: 1.5rem;
-    }
-
-    .reference-title {
-        font-size: 2rem;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-    }
-
-    .reference-title i {
-        font-size: 1.5rem;
     }
 
     .reference-content {
@@ -359,42 +283,35 @@
     }
 
     .reference-content h1 {
-        font-size: 1.5rem;
+        font-size: 2.2rem;
+    }
+
+    .reference-content h1::before {
+        font-size: 1.8rem;
     }
 
     .reference-content h2 {
-        font-size: 1.3rem;
+        font-size: 1.8rem;
     }
 
-    .reference-content table {
-        font-size: 0.9rem;
+    .reference-content h2::before {
+        font-size: 1.4rem;
     }
 
-    .reference-content th,
-    .reference-content td {
-        padding: 0.8rem 1rem;
+    .reference-content h3 {
+        font-size: 1.4rem;
     }
 
-    .reference-content pre {
-        padding: 1.5rem;
-        font-size: 0.85rem;
+    .reference-content h4 {
+        font-size: 1.2rem;
     }
 
-    .reference-actions {
-        flex-direction: column;
-        align-items: center;
+    .reference-content h5 {
+        font-size: 1.1rem;
     }
 
-    .btn-primary,
-    .btn-secondary {
-        width: 100%;
-        max-width: 250px;
-        justify-content: center;
-    }
-
-    .breadcrumb {
-        flex-wrap: wrap;
-        gap: 0.3rem;
+    .reference-content h6 {
+        font-size: 1rem;
     }
 }
 
@@ -403,18 +320,27 @@
         padding: 1.5rem 1rem;
     }
 
-    .reference-content table {
-        font-size: 0.8rem;
+    .reference-content h1 {
+        font-size: 1.8rem;
     }
 
-    .reference-content th,
-    .reference-content td {
-        padding: 0.6rem 0.8rem;
+    .reference-content h2 {
+        font-size: 1.5rem;
     }
 
-    .reference-meta {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
+    .reference-content h3 {
+        font-size: 1.3rem;
+    }
+
+    .reference-content h4 {
+        font-size: 1.1rem;
+    }
+
+    .reference-content h5 {
+        font-size: 1rem;
+    }
+
+    .reference-content h6 {
+        font-size: 0.95rem;
     }
 }

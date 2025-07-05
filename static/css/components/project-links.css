@@ -6,7 +6,7 @@
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border-radius: 12px;
     text-decoration: none;
-    color: white;
+    color: #000000;
     font-weight: 600;
     transition: all 0.3s ease;
     box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
@@ -33,7 +33,7 @@
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
     text-decoration: none;
-    color: white;
+    color: #000000;
 }
 
 .project-link-card i {
@@ -43,7 +43,7 @@
 
 /* 다크 테마 변형 */
 .project-link-card.dark {
-    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    background: linear-gradient(135deg, #00EBA0 0%, #00ADE8 100%);
     box-shadow: 0 4px 15px rgba(44, 62, 80, 0.3);
 }
 

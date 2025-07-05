@@ -1,5 +1,5 @@
 /* 콘텐츠 스타일 */
-.content h2 {
+.content:not(.reference-content) h1 {
     font-size: 2.5rem;
     font-weight: 600;
     margin: 3rem 0 2rem 0;
@@ -12,11 +12,45 @@
     color: var(--text-primary);
 }
 
-.content h3 {
+.content:not(.reference-content) h2 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin: 3rem 0 2rem 0;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--accent-primary);
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--text-primary);
+}
+
+.content:not(.reference-content) h3 {
     font-size: 1.5rem;
     color: var(--accent-primary);
     margin: 2rem 0 1rem 0;
     font-weight: 600;
+}
+
+.content:not(.reference-content) h4 {
+    font-size: 1.25rem;
+    color: var(--text-primary);
+    margin: 1.5rem 0 1rem 0;
+    font-weight: 600;
+}
+
+.content:not(.reference-content) h5 {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin: 1.25rem 0 0.75rem 0;
+    font-weight: 500;
+}
+
+.content:not(.reference-content) h6 {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin: 1rem 0 0.5rem 0;
+    font-weight: 500;
 }
 
 .content p {
@@ -53,7 +87,6 @@
     padding: 1rem 1.5rem;
     margin: 1rem 0;
     border-radius: 8px;
-    font-family: 'JetBrains Mono', monospace;
     color: var(--text-secondary);
     font-style: normal;
     position: relative;
@@ -243,7 +276,7 @@
 }
 
 .content .project-item::before {
-    content: '';
+    content: '📅';
     position: absolute;
     top: 0;
     left: 0;
@@ -352,7 +385,7 @@ h3:hover span {
 }
 
 .timeline-duration::before {
-    content: '';
+    content: '📅';
     margin-right: 0.5rem;
 }
 

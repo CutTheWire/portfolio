@@ -4,7 +4,6 @@
     align-items: center;
     gap: 1rem;
     font-size: 2.2rem;
-    margin-bottom: 2rem;
     margin-top: 2rem;
 }
 
@@ -90,6 +89,8 @@
 
     .timeline::before {
         display: none;
+    }    .timeline {
+        padding-left: 0rem;
     }
 
     .timeline-item {
@@ -254,7 +255,7 @@
     }
 
     .timeline {
-        padding-left: 1rem;
+        padding-left: 0rem;
     }
 
     .timeline-item {
