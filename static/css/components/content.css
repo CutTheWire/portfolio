@@ -390,14 +390,11 @@ h3:hover span {
 }
 
 .timeline-months {
-    font-size: 0.8rem;
     color: var(--bg-primary);
     background: var(--accent-primary);
     padding: 0.2rem 0.6rem;
     border-radius: 12px;
     margin-left: 0.5rem;
-    font-weight: 500;
-    font-family: 'JetBrains Mono', monospace;
 }
 
 /* 반응형 스타일 */
