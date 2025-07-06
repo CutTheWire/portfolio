@@ -207,24 +207,31 @@ def get_structured_data():
         "@context": "https://schema.org",
         "@type": "Person",
         "name": "서정훈",
-        "jobTitle": "백엔드 개발자",
+        "jobTitle": "FastAPI 백엔드 개발자",
         "description": "Python, FastAPI, Docker, MongoDB를 활용한 백엔드 개발자. AI 챗봇, 학생관리시스템 등 다양한 프로젝트 경험.",
         "url": "https://cutwire.myddns.me",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://cutwire.myddns.me",
+            "name": "FastAPI 포트폴리오 - 서정훈 백엔드 개발자"
+        },
         "sameAs": [
             "https://github.com/CutTheWire",
             "https://github.com/TreeNut-KR",
             "https://treenut.ddns.net"
         ],
         "knowsAbout": [
-            "Python", "FastAPI", "MongoDB", "Docker", "NginX", "Spring Boot", "MySQL", "백엔드 개발", "API 개발", "웹 개발", "서버 개발"
+            "FastAPI 프레임워크", "Python 백엔드 개발", "MongoDB", "Docker", "NginX", "Spring Boot", "MySQL", "백엔드 개발", "API 개발", "웹 개발", "서버 개발"
         ],
         "worksFor": {
             "@type": "Organization",
-            "name": "TreeNut"
+            "name": "TreeNut",
+            "description": "FastAPI 백엔드 개발 전문 팀"
         },
         "alumniOf": {
             "@type": "CollegeOrUniversity",
-            "name": "청운대학교"
+            "name": "청운대학교",
+            "department": "컴퓨터공학과"
         },
         "award": [
             "인천서부소방서장 표창장",
@@ -232,9 +239,9 @@ def get_structured_data():
         ],
         "hasOccupation": {
             "@type": "Occupation",
-            "name": "Backend Developer",
+            "name": "FastAPI Backend Developer",
             "skills": [
-                "Python", "FastAPI", "Docker", "MongoDB", "API 설계", "AI 챗봇"
+                "Python", "FastAPI", "Docker", "MongoDB", "API 설계", "AI 챗봇", "백엔드 아키텍처"
             ]
         }
     }

@@ -20,7 +20,6 @@ load_dotenv(env_file_path)
 
 def generate_meta_tags(title="서정훈 포트폴리오", description="Python 백엔드 개발자 서정훈의 포트폴리오", url="https://cutwire.myddns.me"):
     """SEO 메타 태그 생성"""
-    # 환경변수에서 Google 인증 코드 가져오기
     google_verification = os.getenv("GOOGLE_SITE_VERIFICATION", "")
     
     return {
@@ -35,7 +34,7 @@ def generate_meta_tags(title="서정훈 포트폴리오", description="Python �
         "og_url": url,
         "og_type": "website",
         "og_locale": "ko_KR",
-        "og_site_name": "서정훈 백엔드 개발자 포트폴리오",
+        "og_site_name": "FastAPI 포트폴리오 - 서정훈 백엔드 개발자",  # 변경
         "twitter_card": "summary_large_image",
         "twitter_title": title,
         "twitter_description": description,
