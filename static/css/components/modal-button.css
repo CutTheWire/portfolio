@@ -47,13 +47,13 @@
 .home-floating-button:hover {
     background: linear-gradient(135deg, #ffb703 0%, #fb8500 100%) !important;
     color: #1a1a1a !important;
-    box-shadow: 0 20px 40px rgba(255, 183, 3, 0.4) !important;
+    box-shadow: 0 0px 40px rgba(255, 183, 3, 0.4) !important;
 }
 
 .home-floating-button:focus {
     background: linear-gradient(135deg, #ffb703 0%, #fb8500 100%) !important;
     color: #1a1a1a !important;
-    box-shadow: 0 20px 40px rgba(255, 183, 3, 0.4) !important;
+    box-shadow: 0 0px 40px rgba(255, 183, 3, 0.4) !important;
 }
 
 .home-floating-button:active {
@@ -70,13 +70,13 @@
 .mail-floating-button:hover {
     background: linear-gradient(135deg, #00ff88 0%, #0099ff 100%) !important;
     color: #1a1a1a !important;
-    box-shadow: 0 20px 40px rgba(0, 255, 136, 0.4) !important;
+    box-shadow: 0 0px 40px rgba(0, 255, 136, 0.4) !important;
 }
 
 .mail-floating-button:focus {
     background: linear-gradient(135deg, #00ff88 0%, #0099ff 100%) !important;
     color: #1a1a1a !important;
-    box-shadow: 0 20px 40px rgba(0, 255, 136, 0.4) !important;
+    box-shadow: 0 0px 40px rgba(0, 255, 136, 0.4) !important;
 }
 
 .mail-floating-button:active {

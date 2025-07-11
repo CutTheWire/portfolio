@@ -5,7 +5,7 @@
 | 구성원 | 업무 | 사용 기술 |  
 |--------|--------|------------|  
 | 김준건 (jgkim14) | 백엔드 | Spring Boot, Node.js |  
-| ✅ [서정훈 (CutTheWire)](https://github.com/CutTheWire) | 백엔드 | Spring Boot, FastAPI |  
+| ✅ [서정훈 (CutTheWire)](https://github.com/CutTheWire) | 프로젝트 매니저, 백엔드 | Spring Boot, FastAPI |  
 | 이준호 (qwer9679) | 백엔드 | Spring Boot, FastAPI |  
 | 모현준 (Flattt12) | 백엔드 | Spring Boot |  
 | 권재현 (donismoney) | 백엔드 | Spring Boot |  
@@ -58,4 +58,105 @@
     - 404 에러 페이지 설정
     - 서버 에러 시 일반화된 에러 메시지 반환
 
+## 📅 개발 로드맵 및 버전 릴리즈 일정
+
+### 간트 차트 (ChatBot 버전 릴리즈)
+![Gantt-Chart-ChatBot](/images/Gantt-Chart-ChatBot.webp)
+
+### 주요 마일스톤
+
+| 버전 | 기간 | 주요 성과 | 아키텍처 변화 |
+|------|------|-----------|---------------|
+| **v0.1.x** | 2024.08-2024.09 | FastAPI + MongoDB, 채팅 로그 시스템 | 단일 서비스 아키텍처 |
+| **v0.2.x** | 2024.09-2024.10 | Spring Boot 통합, 캐릭터 관리 | 다중 서비스 아키텍처 |
+| **v0.3.x** | 2024.10-2025.03 | AI API 연동, GitHub Actions | AI 통합 플랫폼 |
+| **v0.4.x** | 2025.03-2025.05 | React 프론트엔드, 소셜 로그인 | 풀스택 웹 플랫폼 |
+| **v0.5.x** | 2025.05 | 클린 아키텍처, DI 패턴 | API 설계 패턴 혁신 |
+| **v1.0.x** | 2025.05-2025.06 | Flyway 마이그레이션, 프로덕션 최적화 | 엔터프라이즈급 완성 |
+| **v1.1.x** | 2025.06-2025.07 | 모바일 UI 최적화, 사용자 경험 개선 | 사용자 중심 설계 |
+
+### 개발 통계
+
+- **총 개발 기간**: 12개월 (2024.07 ~ 2025.07)
+- **메이저 버전**: 7개 (v0.1.x ~ v1.1.x)
+- **릴리즈 횟수**: 27회
+- **주요 기술 전환**: 6회 (단일→다중→AI통합→풀스택→클린→엔터프라이즈→모바일)
+
 ## 🗓️ 버전별 명세
+
+### 📄 v0.1.x
+<div class="project-link-content">
+    <a href="/portfolio/reference/chatbot/version(0.1.x).md" class="project-link-card dark">
+        <i class="fas fa-external-link-alt project-link-icon"></i>
+        <span class="project-link-text">명세 상세보기</span>
+    </a>
+</div>
+
+- `First Commit Days` : 2024-08-27 (화) 15:35:49 (한국 표준시)
+- `Last Commit Days` : 2024-09-03 (화) 17:08:48 (한국 표준시)
+
+### 📄 v0.2.x
+<div class="project-link-content">
+    <a href="/portfolio/reference/chatbot/version(0.2.x).md" class="project-link-card dark">
+        <i class="fas fa-external-link-alt project-link-icon"></i>
+        <span class="project-link-text">명세 상세보기</span>
+    </a>
+</div>
+
+- `First Commit Days` : 2024-09-10 (화) 01:50:24 (한국 표준시)
+- `Last Commit Days` : 2024-10-26 (토) 16:58:55 (한국 표준시)
+
+### 📄 v0.3.x
+<div class="project-link-content">
+    <a href="/portfolio/reference/chatbot/version(0.3.x).md" class="project-link-card dark">
+        <i class="fas fa-external-link-alt project-link-icon"></i>
+        <span class="project-link-text">명세 상세보기</span>
+    </a>
+</div>
+
+- `First Commit Days` : 2024-10-31 (목) 14:10:45 (한국 표준시)
+- `Last Commit Days` : 2025-03-13 (목) 15:58:41 (한국 표준시)
+
+### 📄 v0.4.x
+<div class="project-link-content">
+    <a href="/portfolio/reference/chatbot/version(0.4.x).md" class="project-link-card dark">
+        <i class="fas fa-external-link-alt project-link-icon"></i>
+        <span class="project-link-text">명세 상세보기</span>
+    </a>
+</div>
+
+- `First Commit Days` : 2025-03-15 (토) 17:08:51 (한국 표준시)
+- `Last Commit Days` : 2025-05-10 (토) 09:05:10 (한국 표준시)
+
+### 📄 v0.5.x
+<div class="project-link-content">
+    <a href="/portfolio/reference/chatbot/version(0.5.x).md" class="project-link-card dark">
+        <i class="fas fa-external-link-alt project-link-icon"></i>
+        <span class="project-link-text">명세 상세보기</span>
+    </a>
+</div>
+
+- `First Commit Days` : 2025-05-10 (토) 13:59:33 (한국 표준시)
+- `Last Commit Days` : 2025-05-10 (토) 19:36:21 (한국 표준시)
+
+### 📄 v1.0.x
+<div class="project-link-content">
+    <a href="/portfolio/reference/chatbot/version(1.0.x).md" class="project-link-card dark">
+        <i class="fas fa-external-link-alt project-link-icon"></i>
+        <span class="project-link-text">명세 상세보기</span>
+    </a>
+</div>
+
+- `First Commit Days` : 2025-05-10 (토) 20:44:08 (한국 표준시)
+- `Last Commit Days` : 2025-06-19 (목) 20:20:14 (한국 표준시)
+
+### 📄 v1.1.x
+<div class="project-link-content">
+    <a href="/portfolio/reference/chatbot/version(1.1.x).md" class="project-link-card dark">
+        <i class="fas fa-external-link-alt project-link-icon"></i>
+        <span class="project-link-text">명세 상세보기</span>
+    </a>
+</div>
+
+- `First Commit Days` : 2025-06-19 (목) 21:16:29 (한국 표준시)
+- `Last Commit Days` : 2025-07-10 (목) 13:40:59 (한국 표준시)

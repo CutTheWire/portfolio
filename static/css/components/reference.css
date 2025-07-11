@@ -41,17 +41,6 @@
     font-weight: 500;
 }
 
-/* Reference 컨텐츠 */
-.reference-content {
-    background: var(--bg-secondary);
-    border-radius: 16px;
-    padding: 3rem;
-    margin-bottom: 3rem;
-    border: 1px solid var(--border-color);
-    box-shadow: var(--shadow-lg);
-    position: relative;
-}
-
 /* 헤딩 스타일 - 타이틀, 색상 사각형 이모지, 글자크기, 하얀색만 */
 .reference-content h1 {
     font-size: 2.8rem;

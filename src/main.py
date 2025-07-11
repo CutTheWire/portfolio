@@ -327,82 +327,25 @@ async def favicon():
 @app.get("/sitemap.xml", response_class=Response)
 async def sitemap_xml():
     """
-    동적 사이트맵 생성, ./sitemap.xml은 필요 시에 사용 예정.
+    정적 sitemap.xml 파일 반환
     """
     try:
-        # 기본 URL들
-        urls = [
-            {
-                "loc": "https://cutwire.myddns.me/",
-                "lastmod": "2025-06-08",
-                "changefreq": "weekly",
-                "priority": "1.0"
-            }
-        ]
-        
-        # 주요 포트폴리오 페이지들 (우선순위 높음)
-        main_portfolios = [
-            "chatbot-ai",
-            "chatbot", 
-            "treenut-chatbot",
-            "jmeduserver",
-            "docker-optimization"
-        ]
-        
-        for portfolio in main_portfolios:
-            urls.append({
-                "loc": f"https://cutwire.myddns.me/portfolio/{portfolio}",
-                "lastmod": "2025-06-08",
-                "changefreq": "monthly",
-                "priority": "0.9"
-            })
-        
-        # 마크다운 파일들을 동적으로 추가
-        markdown_dir = SRC_DIR / "markdown"
-        if markdown_dir.exists():
-            for md_file in markdown_dir.glob("*.md"):
-                filename = md_file.stem  # 확장자 제거
-                if filename not in main_portfolios and filename != "main":
-                    urls.append({
-                        "loc": f"https://cutwire.myddns.me/portfolio/{filename}",
-                        "lastmod": "2025-06-08",
-                        "changefreq": "monthly",
-                        "priority": "0.7"
-                    })
-        
-        # XML 생성 (공백 없이 시작)
-        xml_lines = []
-        xml_lines.append('<?xml version="1.0" encoding="UTF-8"?>')
-        xml_lines.append('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
-        
-        for url in urls:
-            xml_lines.append('  <url>')
-            xml_lines.append(f'    <loc>{url["loc"]}</loc>')
-            xml_lines.append(f'    <lastmod>{url["lastmod"]}</lastmod>')
-            xml_lines.append(f'    <changefreq>{url["changefreq"]}</changefreq>')
-            xml_lines.append(f'    <priority>{url["priority"]}</priority>')
-            xml_lines.append('  </url>')
-        
-        xml_lines.append('</urlset>')
-        
-        xml_content = '\n'.join(xml_lines)
-        
-        return Response(
-            content=xml_content,
-            media_type="application/xml",
-            headers={
-                "Cache-Control": "public, max-age=3600",
-                "Access-Control-Allow-Origin": "*"
-            }
-        )
-        
-    except Exception as e:
-        # 정적 파일로 폴백
         sitemap_path = SRC_DIR / "sitemap.xml"
         if sitemap_path.exists():
-            return FileResponse(str(sitemap_path), media_type="application/xml")
+            return FileResponse(
+                str(sitemap_path), 
+                media_type="application/xml",
+                headers={
+                    "Cache-Control": "public, max-age=3600",
+                    "Access-Control-Allow-Origin": "*"
+                }
+            )
         else:
             raise error_tools.NotFoundException("sitemap.xml not found")
+    except error_tools.NotFoundException:
+        raise
+    except Exception as e:
+        raise error_tools.InternalServerErrorException("Sitemap loading error")
 
 app.include_router(
     portfolio_controller.page_router,

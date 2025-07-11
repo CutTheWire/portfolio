@@ -7,7 +7,7 @@
 
 | 구성원 | 업무 | 사용 기술 |  
 |--------|--------|------------|  
-| ✅ [서정훈 (CutTheWire)](https://github.com/CutTheWire) | 백엔드 | FastAPI, Llama CPP CUDA |  
+| ✅ [서정훈 (CutTheWire)](https://github.com/CutTheWire) | 프로젝트 매니저, 백엔드 | FastAPI, Llama CPP CUDA |  
 
 ## 🏗️ 전체 아키텍처
 
