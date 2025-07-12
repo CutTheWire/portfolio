@@ -63,9 +63,6 @@
 
 ---
 
-
-### 🪴
-
 <!-- ### 🏫 JMEDUSERVER-Kiosk
 <div class="project-link-content">
     <a href="/portfolio/jmeduserver-kiosk" class="project-link-card dark">
