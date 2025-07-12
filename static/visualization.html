@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <!-- 폰트 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- 시각화 페이지 전용 CSS -->
+    <link rel="stylesheet" href="/static/css/visualization.css">
+    
+    <!-- 차트 라이브러리 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    
+    <!-- 파비콘 및 외부 리소스 -->
+    <link rel="icon" type="image/x-icon" href="/static/icon/favicon.ico">
+    
+    <!-- 기본 메타 태그들 -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO 메타 태그 -->
+    {% if meta_tags %}
+    <title>{{ meta_tags.title }}</title>
+    <meta name="description" content="{{ meta_tags.description }}">
+    <meta name="keywords" content="{{ meta_tags.keywords }}">
+    <meta name="author" content="{{ meta_tags.author }}">
+    
+    <!-- Google Search Console 인증 메타 태그 -->
+    {% if meta_tags.google_verification %}
+    <meta name="google-site-verification" content="{{ meta_tags.google_verification }}" />
+    {% endif %}
+    
+    <!-- Open Graph 태그 -->
+    <meta property="og:title" content="{{ meta_tags.og_title }}">
+    <meta property="og:description" content="{{ meta_tags.og_description }}">
+    <meta property="og:url" content="{{ meta_tags.og_url }}">
+    <meta property="og:type" content="{{ meta_tags.og_type }}">
+    <meta property="og:locale" content="{{ meta_tags.og_locale }}">
+    
+    <!-- Twitter 카드 -->
+    <meta name="twitter:card" content="{{ meta_tags.twitter_card }}">
+    <meta name="twitter:title" content="{{ meta_tags.twitter_title }}">
+    <meta name="twitter:description" content="{{ meta_tags.twitter_description }}">
+    
+    <!-- 정규 URL -->
+    <link rel="canonical" href="{{ meta_tags.url }}">
+    
+    <!-- 구조화된 데이터 -->
+    {% if meta_tags.structured_data %}
+    <script type="application/ld+json">
+    {{ meta_tags.structured_data | tojson }}
+    </script>
+    {% endif %}
+    {% else %}
+    <title>{{ title if title else 'Character 성능 분석' }} - 서정훈 포트폴리오</title>
+    {% endif %}
+</head>
+<body>
+    <!-- 메인 컨텐츠 -->
+    <main class="main">
+        <div class="container">
+            <!-- 시각화 문서 전용 레이아웃 -->
+            <div class="visualization-layout">
+                <!-- 브레드크럼 네비게이션 -->
+                <nav class="breadcrumb">
+                    <a href="/" class="breadcrumb-link">
+                        <i class="fas fa-home"></i>
+                        홈
+                    </a>
+                    <span class="breadcrumb-separator">/</span>
+                    <a href="/portfolio/{{ csv_filename.replace('.csv', '') if csv_filename else 'portfolio' }}" class="breadcrumb-link">
+                        <i class="fas fa-folder"></i>
+                        {{ csv_filename.replace('.csv', '').replace('_', ' ').replace('-', ' ').title() if csv_filename else '포트폴리오' }}
+                    </a>
+                    <span class="breadcrumb-separator">/</span>
+                    <span class="breadcrumb-current">데이터 시각화</span>
+                </nav>
+
+                <!-- 시각화 컨텐츠 -->
+                <div class="visualization-content">
+                    <h1>{{ title if title else 'Character-Llama 성능 시각화' }}</h1>
+                    
+                    <!-- 통계 정보 -->
+                    <div class="stats-container">
+                        <div class="stats" id="userStats">
+                            <i class="fas fa-chart-line"></i>
+                            데이터를 로드하는 중입니다...
+                        </div>
+                    </div>
+
+                    <!-- 차트 섹션들 -->
+                    <div class="charts-grid">
+                        <div class="chart-item">
+                            <h2>시간별 응답 성능 분석 (Scatter Plot)</h2>
+                            <div class="chart-container">
+                                <canvas id="bubbleChart" width="900" height="400"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="chart-item">
+                            <h2>사용자 결과 분포 (상태코드 기준)</h2>
+                            <div class="chart-container">
+                                <canvas id="userOutcomeChart" width="900" height="300"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="chart-item">
+                            <h2>프로세스 타임 분포 (히스토그램)</h2>
+                            <div class="chart-container">
+                                <canvas id="processTimeHist" width="900" height="300"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="chart-item">
+                            <h2>응답 크기 분포 (히스토그램)</h2>
+                            <div class="chart-container">
+                                <canvas id="responseSizeHist" width="900" height="300"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 실패/재시도 테이블 -->
+                    <div class="table-container" id="failureTableContainer">
+                        <div class="loading">데이터를 로드하는 중입니다...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 모바일 최적화 스크립트 -->
+    <script src="/static/js/mobile-fix.js"></script>
+
+    <script>
+        // Chart.js 기본 설정 - 모든 차트의 텍스트를 하얀색으로 설정
+        Chart.defaults.color = '#ffffff';
+        Chart.defaults.scale.grid.color = 'rgba(255, 255, 255, 0.2)';
+        Chart.defaults.scale.ticks.color = '#ffffff';
+        Chart.defaults.plugins.title.color = '#ffffff';
+        Chart.defaults.plugins.legend.labels.color = '#ffffff';
+
+        // CSV 파일이 지정된 경우 자동 로드
+        {% if csv_filename %}
+        window.addEventListener('DOMContentLoaded', function() {
+            loadCSVFile('{{ csv_filename }}');
+        });
+        {% endif %}
+
+        function loadCSVFile(filename) {
+            const statsContainer = document.getElementById('userStats');
+            statsContainer.innerHTML = '<div class="loading">CSV 파일을 로드하는 중...</div>';
+            
+            fetch(`/csv/${filename}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.text();
+                })
+                .then(csvText => {
+                    const data = parseCSV(csvText);
+                    debugData(data);
+                    drawBubbleChart(data);
+                    drawUserOutcomeChart(data);
+                    drawFailureTable(data);
+                    showUserStats(data);
+                    drawProcessTimeHist(data);
+                    drawResponseSizeHist(data);
+                    
+                    // 성공 메시지 표시
+                    statsContainer.insertAdjacentHTML('afterend', 
+                        '<div class="success-message">데이터가 성공적으로 로드되었습니다!</div>');
+                })
+                .catch(error => {
+                    console.error('CSV 파일 로드 실패:', error);
+                    statsContainer.innerHTML = 
+                        `<div class="error-message">CSV 파일 로드 실패: ${error.message}</div>`;
+                });
+        }
+
+        function parseCSV(text) {
+            const lines = text.trim().split('\n');
+            const headers = lines[0].split(',').map(h => h.trim());
+            
+            return lines.slice(1).map(line => {
+                const values = [];
+                let current = '';
+                let inQuotes = false;
+                
+                for (let i = 0; i < line.length; i++) {
+                    const char = line[i];
+                    if (char === '"') {
+                        inQuotes = !inQuotes;
+                    } else if (char === ',' && !inQuotes) {
+                        values.push(current.trim());
+                        current = '';
+                    } else {
+                        current += char;
+                    }
+                }
+                values.push(current.trim());
+                
+                const obj = {};
+                headers.forEach((h, i) => {
+                    let value = values[i] || '';
+                    
+                    // Boolean 값들 처리
+                    if (['success', 'is_retry_record', 'is_final_failure', 'is_final_success', 'error'].includes(h)) {
+                        if (value === 'True' || value === 'true') {
+                            value = true;
+                        } else if (value === 'False' || value === 'false') {
+                            value = false;
+                        }
+                    }
+                    
+                    // 숫자 값들 처리
+                    if (['response_time', 'retry_count', 'retry_after_seconds', 'response_size', 'process_time'].includes(h)) {
+                        value = value === '' ? 0 : Number(value);
+                    }
+                    
+                    obj[h] = value;
+                });
+                return obj;
+            });
+        }
+
+        function drawBubbleChart(data) {
+            data.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+            
+            // 시작 시간을 기준으로 상대적 10초 단위 계산
+            const startTime = new Date(data[0].timestamp);
+            
+            const chartData = data.map(row => {
+                const currentTime = new Date(row.timestamp);
+                const secondsFromStart = Math.floor((currentTime - startTime) / 1000); // 밀리초를 초로 변환
+                const tenSecondsFromStart = Math.floor(secondsFromStart / 10); // 10초 단위로 변환
+                
+                return {
+                    x: tenSecondsFromStart,
+                    y: Number(row.response_time),
+                    user_id: row.user_id,
+                    status_code: row.status_code,
+                    success: row.success,
+                    original_time: row.timestamp,
+                    actual_seconds: secondsFromStart
+                };
+            });
+            
+            // 기존 차트가 있으면 파괴
+            const existingChart = Chart.getChart('bubbleChart');
+            if (existingChart) {
+                existingChart.destroy();
+            }
+            
+            new Chart(document.getElementById('bubbleChart').getContext('2d'), {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: '응답 시간',
+                        data: chartData,
+                        backgroundColor: chartData.map(d =>
+                            d.status_code === '200' ? '#4caf50' :  // 초록색 (성공)
+                            d.status_code === '429' ? '#2196f3' :  // 파란색 (Rate Limit)
+                            d.status_code === '500' ? '#f44336' :  // 빨간색 (서버 에러)
+                            '#ff9800'  // 주황색 (기타)
+                        ),
+                        pointRadius: 5,
+                        borderColor: '#333'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            titleColor: '#ffffff',
+                            bodyColor: '#ffffff',
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            callbacks: {
+                                label: ctx => {
+                                    const d = ctx.raw;
+                                    return [
+                                        `user_id: ${d.user_id}`,
+                                        `경과시간: ${d.x * 10}초 (${d.x}×10초)`,
+                                        `응답시간: ${d.y}초`,
+                                        `성공: ${d.success}`,
+                                        `상태코드: ${d.status_code}`,
+                                        `실제시간: ${d.original_time}`
+                                    ];
+                                }
+                            }
+                        },
+                        title: { 
+                            display: true, 
+                            text: '시간별 응답 성능 분석 (상태코드별 색상 구분)',
+                            color: '#ffffff'
+                        },
+                        legend: {
+                            display: true,
+                            labels: {
+                                color: '#ffffff',
+                                usePointStyle: true,
+                                generateLabels: function(chart) {
+                                    return [
+                                        { 
+                                            text: '200 (성공)', 
+                                            fillStyle: '#4caf50',
+                                            strokeStyle: '#4caf50',
+                                            fontColor: '#ffffff'
+                                        },
+                                        { 
+                                            text: '429 (Rate Limit)', 
+                                            fillStyle: '#2196f3',
+                                            strokeStyle: '#2196f3',
+                                            fontColor: '#ffffff'
+                                        },
+                                        { 
+                                            text: '500 (서버 에러)', 
+                                            fillStyle: '#f44336',
+                                            strokeStyle: '#f44336',
+                                            fontColor: '#ffffff'
+                                        },
+                                        { 
+                                            text: '기타', 
+                                            fillStyle: '#ff9800',
+                                            strokeStyle: '#ff9800',
+                                            fontColor: '#ffffff'
+                                        }
+                                    ];
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            title: { 
+                                display: true, 
+                                text: '경과 시간 (10초 단위, 1분 기준선)',
+                                color: '#ffffff'
+                            },
+                            ticks: {
+                                color: '#ffffff',
+                                stepSize: 6, // 1분(60초) = 6 × 10초
+                                callback: function(value) {
+                                    // 1분 단위(6의 배수)만 표시
+                                    if (value % 6 === 0) {
+                                        const minutes = Math.floor(value / 6);
+                                        return minutes + '분';
+                                    }
+                                    return '';
+                                }
+                            },
+                            grid: {
+                                color: function(context) {
+                                    // 1분 단위(6의 배수)는 더 진한 선으로 표시
+                                    if (context.tick.value % 6 === 0) {
+                                        return 'rgba(255, 255, 255, 0.5)'; // 더 진한 선
+                                    }
+                                    return 'rgba(255, 255, 255, 0.1)'; // 기본 선
+                                },
+                                lineWidth: function(context) {
+                                    // 1분 단위는 더 두꺼운 선
+                                    if (context.tick.value % 6 === 0) {
+                                        return 2;
+                                    }
+                                    return 1;
+                                }
+                            }
+                        },
+                        y: { 
+                            title: { 
+                                display: true, 
+                                text: '응답 시간(초)',
+                                color: '#ffffff'
+                            },
+                            ticks: {
+                                color: '#ffffff'
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.2)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function drawUserOutcomeChart(data) {
+            const userMap = {};
+            data.forEach(row => {
+                if (!userMap[row.user_id]) userMap[row.user_id] = [];
+                userMap[row.user_id].push(row);
+            });
+
+            let finalFailure = 0, retrySuccess = 0, directSuccess = 0;
+            Object.values(userMap).forEach(logs => {
+                const sorted = logs.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+                const last = sorted[sorted.length - 1];
+                
+                const lastStatusCode = parseInt(last.status_code);
+                
+                if (lastStatusCode >= 500 && lastStatusCode < 600) {
+                    finalFailure++;
+                } else if (sorted.some(r => r.retry_count > 0)) {
+                    retrySuccess++;
+                } else {
+                    directSuccess++;
+                }
+            });
+
+            // 기존 차트가 있으면 파괴
+            const existingChart = Chart.getChart('userOutcomeChart');
+            if (existingChart) {
+                existingChart.destroy();
+            }
+
+            new Chart(document.getElementById('userOutcomeChart').getContext('2d'), {
+                type: 'pie',
+                data: {
+                    labels: ['5xx (서버 오류)', '4xx (재시도 후 성공)', '2xx (바로 성공)'],
+                    datasets: [{
+                        data: [finalFailure, retrySuccess, directSuccess],
+                        backgroundColor: ['#f44336', '#2196f3', '#4caf50']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: { 
+                            display: true, 
+                            text: '사용자별 최종 결과 분포',
+                            color: '#ffffff'
+                        },
+                        legend: {
+                            labels: {
+                                color: '#ffffff'
+                            }
+                        },
+                        tooltip: {
+                            titleColor: '#ffffff',
+                            bodyColor: '#ffffff',
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)'
+                        }
+                    }
+                }
+            });
+
+            document.getElementById('userStats').innerHTML = `
+                <i class="fas fa-users"></i> 전체 유저 수: <b>${Object.keys(userMap).length}</b><br>
+                <i class="fas fa-times-circle" style="color: #f44336;"></i> 5xx (서버 오류): <b>${finalFailure}</b>명<br>
+                <i class="fas fa-redo" style="color: #2196f3;"></i> 4xx (재시도 후 성공): <b>${retrySuccess}</b>명<br>
+                <i class="fas fa-check-circle" style="color: #4caf50;"></i> 2xx (바로 성공): <b>${directSuccess}</b>명
+            `;
+        }
+
+        function drawFailureTable(data) {
+            const cols = [
+                'user_id','test_type','endpoint','character_name','status_code','response_time','success',
+                'failure_reason','retry_count','retry_after_seconds','timestamp','response_size',
+                'is_retry_record','is_final_failure','is_final_success','process_time'
+            ];
+            
+            const failures = data.filter(row => 
+                row.success === false || 
+                Number(row.retry_count) > 0 || 
+                row.is_final_failure === true ||
+                row.error === true
+            );
+            
+            const container = document.getElementById('failureTableContainer');
+            
+            if (failures.length === 0) {
+                container.innerHTML = '<h3>실패/재시도 내역</h3><div class="success-message">실패/재시도 내역이 없습니다. 모든 요청이 성공했습니다!</div>';
+                return;
+            }
+
+            let html = `<h3>실패/재시도 상세 내역 (총 ${failures.length}건)</h3><table><thead><tr>`;
+            cols.forEach(h => html += `<th>${h}</th>`);
+            html += '</tr></thead><tbody>';
+            failures.forEach(row => {
+                html += '<tr>';
+                cols.forEach(h => {
+                    let cellValue = row[h];
+                    if (typeof cellValue === 'boolean') {
+                        cellValue = cellValue.toString();
+                    } else if (cellValue === null) {
+                        cellValue = 'null';
+                    }
+                    html += `<td>${cellValue !== undefined && cellValue !== null ? cellValue : ''}</td>`;
+                });
+                html += '</tr>';
+            });
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        function showUserStats(data) {
+            // 이 함수는 drawUserOutcomeChart에서 처리됩니다.
+        }
+
+        function drawProcessTimeHist(data) {
+            const values = data
+                .filter(row => row.status_code === '200')
+                .map(row => Number(row.process_time))
+                .filter(v => !isNaN(v) && v > 0);
+
+            console.log('Process time values:', values.slice(0, 10));
+
+            // 기존 차트가 있으면 파괴
+            const existingChart = Chart.getChart('processTimeHist');
+            if (existingChart) {
+                existingChart.destroy();
+            }
+
+            new Chart(document.getElementById('processTimeHist').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: getBins(values, 20).labels,
+                    datasets: [{
+                        label: 'Process Time (초) 분포 (200만)',
+                        data: getBins(values, 20).counts,
+                        backgroundColor: '#2196f3'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: { 
+                            display: true, 
+                            text: 'Process Time 분포 (status_code=200, 0초 제외)',
+                            color: '#ffffff'
+                        },
+                        legend: {
+                            labels: {
+                                color: '#ffffff'
+                            }
+                        },
+                        tooltip: {
+                            titleColor: '#ffffff',
+                            bodyColor: '#ffffff',
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)'
+                        }
+                    },
+                    scales: {
+                        x: { 
+                            title: { 
+                                display: true, 
+                                text: 'process_time (초)',
+                                color: '#ffffff'
+                            },
+                            ticks: {
+                                color: '#ffffff'
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.2)'
+                            }
+                        },
+                        y: { 
+                            title: { 
+                                display: true, 
+                                text: '빈도',
+                                color: '#ffffff'
+                            }, 
+                            beginAtZero: true,
+                            ticks: {
+                                color: '#ffffff'
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.2)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function drawResponseSizeHist(data) {
+            const values = data
+                .filter(row => row.status_code === '200')
+                .map(row => Number(row.response_size))
+                .filter(v => !isNaN(v) && v > 0);
+
+            // 기존 차트가 있으면 파괴
+            const existingChart = Chart.getChart('responseSizeHist');
+            if (existingChart) {
+                existingChart.destroy();
+            }
+
+            new Chart(document.getElementById('responseSizeHist').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: getBins(values, 20).labels,
+                    datasets: [{
+                        label: 'Response Size (bytes) 분포 (200만)',
+                        data: getBins(values, 20).counts,
+                        backgroundColor: '#4caf50'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: { 
+                            display: true, 
+                            text: 'Response Size 분포 (status_code=200, 0 제외)',
+                            color: '#ffffff'
+                        },
+                        legend: {
+                            labels: {
+                                color: '#ffffff'
+                            }
+                        },
+                        tooltip: {
+                            titleColor: '#ffffff',
+                            bodyColor: '#ffffff',
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)'
+                        }
+                    },
+                    scales: {
+                        x: { 
+                            title: { 
+                                display: true, 
+                                text: 'response_size (bytes)',
+                                color: '#ffffff'
+                            },
+                            ticks: {
+                                color: '#ffffff'
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.2)'
+                            }
+                        },
+                        y: { 
+                            title: { 
+                                display: true, 
+                                text: '빈도',
+                                color: '#ffffff'
+                            }, 
+                            beginAtZero: true,
+                            ticks: {
+                                color: '#ffffff'
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.2)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function getBins(values, binCount) {
+            if (values.length === 0) return { labels: [], counts: [] };
+            const min = Math.min(...values);
+            const max = Math.max(...values);
+            const step = (max - min) / binCount;
+            const bins = Array(binCount).fill(0);
+            values.forEach(v => {
+                let idx = Math.floor((v - min) / step);
+                if (idx === binCount) idx = binCount - 1;
+                bins[idx]++;
+            });
+            const labels = Array(binCount).fill(0).map((_, i) =>
+                `${(min + i * step).toFixed(1)}~${(min + (i + 1) * step).toFixed(1)}`
+            );
+            return { labels, counts: bins };
+        }
+
+        function debugData(data) {
+            console.log('=== 데이터 디버깅 정보 ===');
+            console.log('총 데이터 수:', data.length);
+            console.log('첫 번째 행:', data[0]);
+            console.log('컬럼명들:', Object.keys(data[0]));
+            
+            const successStats = data.reduce((acc, row) => {
+                if (row.success === true) acc.true++;
+                else if (row.success === false) acc.false++;
+                else acc.other++;
+                return acc;
+            }, { true: 0, false: 0, other: 0 });
+            console.log('Success 통계:', successStats);
+            
+            const errorStats = data.reduce((acc, row) => {
+                if (row.error === true) acc.true++;
+                else if (row.error === false) acc.false++;
+                else if (row.error === null) acc.null++;
+                else acc.other++;
+                return acc;
+            }, { true: 0, false: 0, null: 0, other: 0 });
+            console.log('Error 통계:', errorStats);
+            
+            const statusStats = {};
+            data.forEach(row => {
+                statusStats[row.status_code] = (statusStats[row.status_code] || 0) + 1;
+            });
+            console.log('Status Code 통계:', statusStats);
+            
+            const retryStats = {};
+            data.forEach(row => {
+                const retryCount = Number(row.retry_count);
+                retryStats[retryCount] = (retryStats[retryCount] || 0) + 1;
+            });
+            console.log('Retry Count 통계:', retryStats);
+            
+            const processTimeValues = data
+                .map(row => Number(row.process_time))
+                .filter(v => !isNaN(v) && v > 0);
+            console.log('Process time 유효 값 수:', processTimeValues.length, '/ 전체:', data.length);
+            console.log('Process time 샘플:', processTimeValues.slice(0, 5));
+            
+            const finalFailureCount = data.filter(row => row.is_final_failure === true).length;
+            console.log('최종 실패(is_final_failure=true) 수:', finalFailureCount);
+        }
+    </script>
+</body>
+</html>

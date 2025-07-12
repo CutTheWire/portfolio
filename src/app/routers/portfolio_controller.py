@@ -332,3 +332,139 @@ async def get_image(img: str):
         raise error_tools.InternalServerErrorException("파일 접근 권한이 없습니다.")
     except Exception as e:
         raise error_tools.InternalServerErrorException("이미지 로딩 중 오류가 발생했습니다.")
+
+@page_router.get("/visualization/{csv_filename}", response_class=HTMLResponse)
+async def read_csv_visualization(request: Request, csv_filename: str):
+    """CSV 파일을 visualization.html 템플릿으로 시각화"""
+    try:
+        # 확장자 체크 및 경로 보호
+        if not csv_filename.endswith(".csv"):
+            csv_filename += ".csv"
+        
+        safe_filename = os.path.basename(csv_filename)
+        
+        # 파일명 검증
+        if not safe_filename or safe_filename in [".", ".."]:
+            raise error_tools.BadRequestException("잘못된 파일명입니다.")
+        
+        # CSV 파일 경로 (BASE_DIR 기준으로 csv 폴더 찾기)
+        csv_path_base = Path(__file__).resolve().parents[3] / "csv" / safe_filename  # portfolio/csv/
+        csv_path_src = Path(__file__).resolve().parents[2] / "csv" / safe_filename   # src/csv/
+        
+        csv_path = None
+        if csv_path_base.exists():
+            csv_path = csv_path_base
+        elif csv_path_src.exists():
+            csv_path = csv_path_src
+        
+        if not csv_path or not csv_path.exists():
+            # CSV 파일이 존재하지 않으면 404 페이지로 리다이렉트
+            meta_tags = generate_meta_tags(
+                title="CSV 파일을 찾을 수 없습니다 - 서정훈 포트폴리오",
+                description="요청하신 CSV 파일을 찾을 수 없습니다."
+            )
+            return templates.TemplateResponse(
+                "unauthorized.html",
+                {"request": request, "meta_tags": meta_tags},
+                status_code=404
+            )
+        
+        # CSV 파일 내용 읽기 (첫 몇 줄만 읽어서 미리보기)
+        try:
+            with open(csv_path, encoding="utf-8") as f:
+                csv_preview = []
+                for i, line in enumerate(f):
+                    if i >= 5:  # 처음 5줄만 미리보기
+                        break
+                    csv_preview.append(line.strip())
+        except UnicodeDecodeError:
+            # UTF-8로 읽기 실패 시 다른 인코딩 시도
+            try:
+                with open(csv_path, encoding="cp949") as f:
+                    csv_preview = []
+                    for i, line in enumerate(f):
+                        if i >= 5:
+                            break
+                        csv_preview.append(line.strip())
+            except UnicodeDecodeError:
+                csv_preview = ["파일 인코딩을 읽을 수 없습니다."]
+        
+        # 프로젝트별 SEO 메타 태그
+        csv_title = safe_filename.replace(".csv", "").replace("_", " ").replace("-", " ").title()
+        meta_tags = generate_meta_tags(
+            title=f"{csv_title} 데이터 시각화 - 서정훈 포트폴리오",
+            description=f"서정훈의 {csv_title} 데이터 분석 및 시각화 페이지입니다. 백엔드 개발자의 데이터 분석 역량을 확인해보세요.",
+            url=f"https://cutwire.myddns.me/visualization/{safe_filename.replace('.csv', '')}"
+        )
+        
+        return templates.TemplateResponse(
+            "visualization.html",
+            {
+                "request": request,
+                "title": f"{csv_title} 데이터 시각화",
+                "csv_filename": safe_filename,
+                "csv_preview": csv_preview,
+                "meta_tags": meta_tags
+            }
+        )
+        
+    except error_tools.BadRequestException:
+        # 잘못된 파일명도 unauthorized.html로 처리
+        meta_tags = generate_meta_tags(
+            title="잘못된 요청 - 서정훈 포트폴리오",
+            description="잘못된 요청입니다. 서정훈의 포트폴리오를 확인해보세요."
+        )
+        return templates.TemplateResponse(
+            "unauthorized.html",
+            {"request": request, "meta_tags": meta_tags},
+            status_code=400
+        )
+    except FileNotFoundError:
+        # 템플릿 파일이 없는 경우는 서버 에러로 처리
+        raise error_tools.NotFoundException("템플릿 파일이 존재하지 않습니다.")
+    except Exception as e:
+        # 기타 예외는 서버 에러로 처리
+        raise error_tools.InternalServerErrorException("페이지 로딩 중 오류가 발생했습니다.")
+
+@page_router.get("/csv/{csv_filename}")
+async def get_csv_file(csv_filename: str):
+    """CSV 파일 직접 제공 (AJAX 요청용)"""
+    try:
+        # 경로 정규화 및 보안 검증
+        safe_filename = os.path.basename(csv_filename)
+        
+        if not safe_filename.endswith(".csv"):
+            safe_filename += ".csv"
+        
+        if not safe_filename or safe_filename in [".", ".."] or ".." in safe_filename:
+            raise error_tools.BadRequestException("잘못된 CSV 파일명입니다.")
+        
+        # CSV 파일 경로 찾기
+        csv_path_base = Path(__file__).resolve().parents[3] / "csv" / safe_filename  # portfolio/csv/
+        csv_path_src = Path(__file__).resolve().parents[2] / "csv" / safe_filename   # src/csv/
+        
+        csv_path = None
+        if csv_path_base.exists():
+            csv_path = csv_path_base
+        elif csv_path_src.exists():
+            csv_path = csv_path_src
+        
+        if not csv_path or not csv_path.exists():
+            raise error_tools.NotFoundException("CSV 파일이 존재하지 않습니다.")
+        
+        return FileResponse(
+            str(csv_path),
+            media_type="text/csv",
+            headers={
+                "Content-Disposition": f"inline; filename={safe_filename}",
+                "Cache-Control": "public, max-age=3600",
+                "Access-Control-Allow-Origin": "*"
+            }
+        )
+        
+    except (error_tools.NotFoundException, error_tools.BadRequestException):
+        raise
+    except PermissionError:
+        raise error_tools.InternalServerErrorException("파일 접근 권한이 없습니다.")
+    except Exception as e:
+        raise error_tools.InternalServerErrorException("CSV 파일 로딩 중 오류가 발생했습니다.")

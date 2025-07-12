@@ -29,6 +29,17 @@
 - `/character/` → character 서버(8003)로 프록시
 - 존재하지 않는 경로는 `/404.html` 커스텀 페이지 반환
 
+## 📊 요청 성능
+- **v1.7.4** 버전 기준
+- **측정 일자**: 2025-07-12 (토) 15:08:57 GMT+0900 (한국 표준시)
+
+<div class="project-link-content">
+    <a href="/visualization/chatbot-ai" class="project-link-card dark">
+        <i class="fas fa-external-link-alt project-link-icon"></i>
+        <span class="project-link-text">성능차트 상세보기</span>
+    </a>
+</div>
+
 ## 📅 개발 로드맵 및 버전 릴리즈 일정
 
 ### 간트 차트 (ChatBot AI 버전 릴리즈)

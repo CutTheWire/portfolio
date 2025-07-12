@@ -1,0 +1,540 @@
+/* 시각화 페이지 전용 스타일 */
+
+/* 시각화 레이아웃 */
+.visualization-layout {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+/* 브레드크럼 네비게이션 */
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    font-size: 0.9rem;
+}
+
+.breadcrumb-link {
+    color: var(--accent-primary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.breadcrumb-link:hover {
+    color: var(--accent-secondary);
+}
+
+.breadcrumb-separator {
+    color: var(--text-muted);
+    font-weight: 300;
+}
+
+.breadcrumb-current {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+/* 시각화 컨텐츠 */
+.visualization-content {
+    background: var(--bg-card);
+    border-radius: 16px;
+    padding: 3rem;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-lg);
+    margin-bottom: 2rem;
+}
+
+/* 페이지 제목 */
+.visualization-content h1 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin: 0 0 2rem 0;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    text-align: center;
+    justify-content: center;
+}
+
+.visualization-content h1::before {
+    content: '📊';
+    font-size: 2.5rem;
+}
+
+/* 차트 제목 스타일 추가 */
+.chart-item h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin: 0 0 1.5rem 0;
+    color: var(--accent-primary);
+    text-align: center;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+/* 파일 정보 섹션 */
+.file-info {
+    background: var(--gradient-card);
+    border-radius: 12px;
+    padding: 2rem;
+    margin: 2rem 0;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+}
+
+.file-info:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.file-info h3 {
+    color: var(--accent-primary);
+    margin: 0 0 1rem 0;
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.file-info h3::before {
+    content: '📁';
+    font-size: 1.2rem;
+}
+
+/* CSV 미리보기 */
+.csv-preview {
+    background: var(--bg-secondary);
+    border-left: 4px solid var(--accent-primary);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    overflow-x: auto;
+}
+
+.csv-preview strong {
+    color: var(--accent-secondary);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.csv-preview pre {
+    margin: 0;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    overflow-x: auto;
+    color: var(--text-primary);
+    font-family: 'JetBrains Mono', monospace;
+    background: transparent;
+    border: none;
+    padding: 0;
+}
+
+/* 파일 선택 및 버튼 */
+.file-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.file-input-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.file-input-wrapper input[type="file"] {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.file-input-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--gradient-primary);
+    color: var(--bg-primary);
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    font-size: 0.9rem;
+}
+
+.file-input-button:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    filter: brightness(1.1);
+}
+
+.reload-button {
+    background: var(--accent-secondary);
+    color: var(--bg-primary);
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.reload-button:hover {
+    background: var(--accent-primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* 통계 정보 */
+.stats-container {
+    background: var(--gradient-card);
+    border-radius: 12px;
+    padding: 2rem;
+    margin: 2rem 0;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-md);
+}
+
+.stats-container .stats {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--text-primary);
+}
+
+.stats-container .stats b {
+    color: var(--accent-primary);
+    font-weight: 700;
+}
+
+/* 차트 컨테이너 - 1열 세로 배치로 변경 */
+.chart-section {
+    margin: 3rem 0;
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 2rem;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+}
+
+.chart-section:hover {
+    box-shadow: var(--shadow-lg);
+}
+
+.chart-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem 0;
+    position: relative;
+    min-height: 500px; /* 차트 최소 높이 증가 */
+}
+
+.chart-container canvas {
+    max-width: 100%;
+    height: auto !important;
+    border-radius: 8px;
+    box-shadow: var(--shadow-sm);
+}
+
+/* 차트 그리드 레이아웃 - 1열로 변경 */
+.charts-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    margin: 2rem 0;
+}
+
+.chart-item {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 2.5rem;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.chart-item:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+}
+
+.chart-item .chart-container {
+    min-height: 600px; /* 개별 차트 높이 증가 */
+}
+
+/* 테이블 컨테이너 */
+.table-container {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 2rem;
+    margin: 3rem 0;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-md);
+    max-height: 600px; /* 테이블 높이 증가 */
+    overflow-y: auto;
+}
+
+.table-container h3 {
+    color: var(--accent-primary);
+    margin: 0 0 1.5rem 0;
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.table-container h3::before {
+    content: '📋';
+    font-size: 1.2rem;
+}
+
+.table-container table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem; /* 테이블 폰트 크기 증가 */
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table-container th {
+    background: var(--accent-primary);
+    color: var(--bg-primary);
+    padding: 1.2rem 1rem; /* 패딩 증가 */
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.table-container td {
+    padding: 1rem; /* 패딩 증가 */
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
+    vertical-align: top;
+    word-break: break-word;
+}
+
+.table-container tr:nth-child(even) {
+    background: var(--bg-hover);
+}
+
+.table-container tr:hover {
+    background: rgba(102, 126, 234, 0.1);
+}
+
+/* 테이블 스크롤바 스타일 */
+.table-container::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+.table-container::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+    border-radius: 5px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background: var(--accent-primary);
+    border-radius: 5px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-secondary);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1200px) {
+    .chart-item .chart-container {
+        min-height: 500px;
+    }
+}
+
+@media (max-width: 768px) {
+    .visualization-layout {
+        padding: 1rem 0.5rem;
+    }
+
+    .visualization-content {
+        padding: 2rem 1.5rem;
+    }
+
+    .visualization-content h1 {
+        font-size: 2.2rem;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .visualization-content h1::before {
+        font-size: 2rem;
+    }
+
+    .chart-item h2 {
+        font-size: 1.5rem;
+    }
+
+    .file-info {
+        padding: 1.5rem;
+    }
+
+    .file-controls {
+        align-items: stretch;
+    }
+
+    .file-input-button,
+    .reload-button {
+        justify-content: center;
+        width: 100%;
+    }
+
+    .chart-section {
+        padding: 1.5rem;
+    }
+
+    .chart-item {
+        padding: 1.5rem;
+    }
+
+    .chart-item .chart-container {
+        min-height: 400px;
+    }
+
+    .table-container {
+        padding: 1rem;
+        font-size: 0.8rem;
+        max-height: 400px;
+    }
+
+    .table-container th,
+    .table-container td {
+        padding: 0.8rem 0.6rem;
+        min-width: 80px;
+    }
+}
+
+@media (max-width: 480px) {
+    .visualization-content {
+        padding: 1.5rem 1rem;
+    }
+
+    .visualization-content h1 {
+        font-size: 1.8rem;
+    }
+
+    .chart-item h2 {
+        font-size: 1.3rem;
+    }
+
+    .file-info h3 {
+        font-size: 1.2rem;
+    }
+
+    .csv-preview {
+        padding: 1rem;
+    }
+
+    .csv-preview pre {
+        font-size: 0.75rem;
+    }
+
+    .chart-item .chart-container {
+        min-height: 350px;
+    }
+
+    .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .table-container table {
+        min-width: 800px;
+    }
+}
+
+/* 로딩 상태 */
+.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+}
+
+.loading::after {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid var(--border-color);
+    border-top: 3px solid var(--accent-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-left: 0.5rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 에러 상태 */
+.error-message {
+    background: rgba(244, 67, 54, 0.1);
+    border: 1px solid rgba(244, 67, 54, 0.3);
+    border-radius: 8px;
+    padding: 1rem;
+    color: #f44336;
+    margin: 1rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.error-message::before {
+    content: '⚠️';
+    font-size: 1.2rem;
+}
+
+/* 성공 메시지 */
+.success-message {
+    background: rgba(76, 175, 80, 0.1);
+    border: 1px solid rgba(76, 175, 80, 0.3);
+    border-radius: 8px;
+    padding: 1rem;
+    color: #4caf50;
+    margin: 1rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.success-message::before {
+    content: '✅';
+    font-size: 1.2rem;
+}

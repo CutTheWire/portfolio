@@ -1,0 +1,19 @@
+/* 데이터 시각화 페이지 전용 CSS */
+
+/* Base Styles */
+@import url('base/variables.css');
+@import url('base/reset.css');
+@import url('base/typography.css');
+
+/* Layout */
+@import url('layout/container.css');
+
+/* Components - 시각화 페이지에 필요한 컴포넌트만 */
+@import url('components/content.css');
+@import url('components/code-blocks.css');
+@import url('components/image-overlay.css');
+@import url('components/visualization-page.css');
+
+/* Utils */
+@import url('utils/animations.css');
+@import url('utils/responsive.css');
