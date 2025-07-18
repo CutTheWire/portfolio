@@ -1,10 +1,16 @@
 import os
-from fastapi import APIRouter, Request
+from fastapi import APIRouter
 from fastapi.responses import FileResponse
+from pathlib import Path
+import logging
 
 from app.utils import error_tools
 
 media_router = APIRouter()
+
+BASE_DIR = Path(__file__).resolve().parents[3]
+
+logger = logging.getLogger("media_controller")
 
 @media_router.get("/webp/{img:path}")
 async def get_image(img: str):
@@ -20,17 +26,16 @@ async def get_image(img: str):
         if not safe_img.strip():
             raise error_tools.BadRequestException("이미지 경로가 비어있습니다.")
         
-        image_path = os.path.join("images", safe_img)
-        
-        if not os.path.exists(image_path):
+        image_path = BASE_DIR / "images" / safe_img
+        if not image_path.exists():
             raise error_tools.NotFoundException("이미지 파일이 존재하지 않습니다.")
         
         file_ext = os.path.splitext(safe_img)[1].lower()
         
-        if file_ext not in '.webp':
+        if file_ext not in ['.webp']:
             raise error_tools.BadRequestException("지원되지 않는 이미지 형식입니다.")
         
-        return FileResponse(image_path)
+        return FileResponse(str(image_path))
         
     except (error_tools.NotFoundException, error_tools.BadRequestException):
         raise
@@ -53,17 +58,17 @@ async def get_video(video: str):
         if not safe_video.strip():
             raise error_tools.BadRequestException("비디오 경로가 비어있습니다.")
         
-        video_path = os.path.join("videos", safe_video)
-        
-        if not os.path.exists(video_path):
-            raise error_tools.NotFoundException("비디오 파일이 존재하지 않습니다.")
+        video_path = BASE_DIR / "videos" / safe_video
+        logger.info(f"비디오 파일 경로: {video_path} | 존재 여부: {video_path.exists()}")
+        if not video_path.exists():
+            raise error_tools.NotFoundException(f"비디오 파일이 존재하지 않습니다. 경로: {video_path}")
         
         file_ext = os.path.splitext(safe_video)[1].lower()
         
-        if file_ext not in '.webm':
+        if file_ext not in ['.webm']:
             raise error_tools.BadRequestException("지원되지 않는 비디오 형식입니다.")
         
-        return FileResponse(video_path)
+        return FileResponse(str(video_path))
         
     except (error_tools.NotFoundException, error_tools.BadRequestException):
         raise
