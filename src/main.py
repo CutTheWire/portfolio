@@ -18,6 +18,7 @@ from app import (
     error_tools,
     smtp_controller,
     portfolio_controller,
+    media_controller,
 )
 
 GREEN = "\033[32m"
@@ -358,6 +359,13 @@ app.include_router(
     smtp_controller.smtp_router,
     prefix = "/smtp",
     tags = ["SMTP Router"],
+    responses = {500: {"description": "Internal Server Error"}}
+)
+
+app.include_router(
+    media_controller.media_router,
+    prefix = "/media",
+    tags = ["Media Router"],
     responses = {500: {"description": "Internal Server Error"}}
 )
 

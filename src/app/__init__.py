@@ -4,6 +4,7 @@ from .utils import (
     error_tools,
 )
 from .routers import (
+    media_controller,
     smtp_controller,
     portfolio_controller,
 )
@@ -19,6 +20,7 @@ __all__ = [
     # Routers
     'smtp_controller',
     'portfolio_controller',
+    'media_controller',
     
     # Schemas
     'smtp_schema',

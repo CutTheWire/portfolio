@@ -10,7 +10,6 @@
 
 /* Components - 컴포넌트 */
 @import url('components/content.css');
-@import url('components/code-blocks.css');
 @import url('components/image-overlay.css');
 @import url('components/portfolio-page.css');
 @import url('components/github-link-card.css');
@@ -24,4 +23,5 @@
 /* Utils */
 @import url('utils/animations.css');
 @import url('utils/responsive.css');
+@import url('components/directory-tree.css');
 

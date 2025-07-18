@@ -24,10 +24,6 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Prism.js CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.css">
-    
     <!-- 포트폴리오 페이지 전용 CSS -->
     <link rel="stylesheet" href="/static/css/portfolio.css">
     
@@ -114,36 +110,15 @@
         </main>
     </div>
 
-    <!-- Prism.js 코어 및 플러그인 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
-    <!-- 툴바 플러그인 (복사 버튼의 기반) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.js"></script>
-    <!-- 복사 기능 플러그인만 사용 (언어 라벨 플러그인 제거) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
-    
     <!-- 모바일 최적화 스크립트 -->
     <script src="/static/js/mobile-fix.js"></script>
     <!-- 이메일 기능 스크립트 -->
     <script src="/static/js/modal-module.js"></script>
+    <!-- 디렉토리 트리 변환 스크립트 (VSCode 스타일) -->
+    <script src="/static/js/directory-tree.js"></script>
     
     
 <script>
-    // 언어 라벨을 수동으로 추가하는 함수 (CSS ::before로 표시)
-    function addLanguageLabels() {
-        document.querySelectorAll('pre code[class*="language-"]').forEach((codeElement) => {
-            const pre = codeElement.parentElement;
-            const className = codeElement.className;
-            const match = className.match(/language-(\w+)/);
-            
-            if (match && !pre.hasAttribute('data-language')) {
-                const language = match[1].toUpperCase();
-                pre.setAttribute('data-language', language);
-                pre.classList.add(`language-${match[1]}`);
-            }
-        });
-    }
-
     // GitHub API를 사용한 저장소 정보 가져오기
     async function fetchGitHubRepoInfo(owner, repo) {
         try {
@@ -253,16 +228,9 @@
         // 이메일 컴포넌트 로드
         loadEmailComponent();
         
-        // 언어 라벨 추가
-        addLanguageLabels();
         
         // GitHub 링크 카드 변환
         convertGithubLinks();
-        
-        // Prism.js 하이라이팅 실행
-        if (window.Prism) {
-            Prism.highlightAll();
-        }
         
         // 이미지 오버레이 기능
         const overlayContainer = document.createElement('div');

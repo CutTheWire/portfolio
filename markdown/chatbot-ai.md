@@ -9,6 +9,116 @@
 |--------|--------|------------|  
 | ✅ [서정훈 (CutTheWire)](https://github.com/CutTheWire) | 프로젝트 매니저, 백엔드 | FastAPI, Llama CPP CUDA |  
 
+## 👨‍💻 담당 업무
+- 전체 시스템 아키텍처 설계
+- FastAPI 전체 API 서버 개발
+- OpenAI, Venice API 연동
+- FastAPI Llama 모델 연동
+- 두개의 로컬 GPU(RTX 2080 8GB, RTX 3060 12GB)를 Docker에서 분리, 마이크로 서비스 형태(Office, Character)로 Llama 모델 할당 운용
+- Nginx 8001 포트에서 모든 요청을 받아, /office/ 경로는 Office API 서버(8002)로, /character/ 경로는 Character API 서버(8003)로 처리
+- MongoDB 채팅방 대화 내용 기반 답변 생성 기능
+- 간트 차트, Hybrid ERD, 다이어그램 및 문서화 작업
+
+## 📁 프로젝트 디렉토리 구조
+> 파일을 클릭하면 해당 GitHub에 main 브런치 기준 파일로 이동합니다.
+
+### 📦 루트 디렉토리 구조
+<pre data-owner="TreeNut-KR" data-repo="ChatBot-AI" data-folder=""><code class="language-directory">
+ ┣ 📜[.env](None)
+ ┣ 📜.gitignore
+ ┣ 📜CODE_OF_CONDUCT.md
+ ┣ 📜docker-compose.yml
+ ┣ 📜LICENSE
+ ┣ 📜README.md
+ ┗ 📜rebuild.bat
+</code></pre>
+
+### 📦 fastapi 디렉토리 구조
+<pre data-owner="TreeNut-KR" data-repo="ChatBot-AI" data-folder="fastapi"><code class="language-directory">
+ ┣ 📂ai_model
+ ┃ ┣ 📂QuantFactory
+ ┃ ┃ ┣ 📜[Meta-Llama-3.1-8B-Claude.Q4_0.gguf](https://huggingface.co/QuantFactory/Meta-Llama-3.1-8B-Claude-GGUF/blob/main/Meta-Llama-3.1-8B-Claude.Q4_0.gguf)
+ ┃ ┃ ┗ 📜[Meta-Llama-3.1-8B-Claude.Q4_1.gguf](https://huggingface.co/QuantFactory/Meta-Llama-3.1-8B-Claude-GGUF/blob/main/Meta-Llama-3.1-8B-Claude.Q4_1.gguf)
+ ┃ ┗ 📜README.md
+ ┣ 📂batch
+ ┃ ┣ 📜venv_install.bat
+ ┃ ┗ 📜venv_setup.bat
+ ┣ 📂certificates
+ ┃ ┣ 📜DNS_README.md
+ ┃ ┗ 📜PEM_README.md
+ ┣ 📂logs
+ ┣ 📂prompt
+ ┃ ┣ 📜config-Llama.json
+ ┃ ┣ 📜config-OpenAI.json
+ ┃ ┗ 📜config-Venice.json
+ ┣ 📂src
+ ┃ ┣ 📂api
+ ┃ ┃ ┣ 📂character
+ ┃ ┃ ┃ ┗ 📜llm_controller.py
+ ┃ ┃ ┣ 📂office
+ ┃ ┃ ┃ ┗ 📜llm_controller.py
+ ┃ ┃ ┗ 📜__init__.py
+ ┃ ┣ 📂core
+ ┃ ┃ ┣ 📂character
+ ┃ ┃ ┃ ┗ 📜app_state.py
+ ┃ ┃ ┣ 📂office
+ ┃ ┃ ┃ ┗ 📜app_state.py
+ ┃ ┃ ┗ 📜__init__.py
+ ┃ ┣ 📂docs
+ ┃ ┃ ┗ 📜api_specification.md
+ ┃ ┣ 📂domain
+ ┃ ┃ ┣ 📂character
+ ┃ ┃ ┃ ┣ 📜config.py
+ ┃ ┃ ┃ ┗ 📜schema.py
+ ┃ ┃ ┣ 📂office
+ ┃ ┃ ┃ ┣ 📜config.py
+ ┃ ┃ ┃ ┗ 📜schema.py
+ ┃ ┃ ┣ 📂shared
+ ┃ ┃ ┃ ┣ 📜base_config.py
+ ┃ ┃ ┃ ┣ 📜error_tools.py
+ ┃ ┃ ┃ ┣ 📜mongodb_client.py
+ ┃ ┃ ┃ ┣ 📜queue_tools.py
+ ┃ ┃ ┃ ┗ 📜search_adapter.py
+ ┃ ┃ ┗ 📜__init__.py
+ ┃ ┣ 📂llm
+ ┃ ┃ ┣ 📂llama
+ ┃ ┃ ┃ ┣ 📜character.py
+ ┃ ┃ ┃ ┗ 📜office.py
+ ┃ ┃ ┣ 📂openai
+ ┃ ┃ ┃ ┣ 📜character.py
+ ┃ ┃ ┃ ┗ 📜office.py
+ ┃ ┃ ┣ 📂venice
+ ┃ ┃ ┃ ┗ 📜character.py
+ ┃ ┃ ┗ 📜__init__.py
+ ┃ ┣ 📂server
+ ┃ ┃ ┣ 📂character
+ ┃ ┃ ┃ ┣ 📜Dockerfile
+ ┃ ┃ ┃ ┗ 📜server.py
+ ┃ ┃ ┗ 📂office
+ ┃ ┃ ┃ ┣ 📜Dockerfile
+ ┃ ┃ ┃ ┗ 📜server.py
+ ┃ ┣ 📂test
+ ┃ ┃ ┣ 📂performance_results
+ ┃ ┃ ┃ ┗ 📜visualization.html
+ ┃ ┃ ┣ 📜test.bat
+ ┃ ┃ ┣ 📜test_character_load.py
+ ┃ ┃ ┗ 📜test_office_load.py
+ ┃ ┣ 📜[.env](None)
+ ┃ ┣ 📜bot.yaml
+ ┃ ┣ 📜Dockerfile.base
+ ┃ ┣ 📜Dockerfile.libs
+ ┃ ┗ 📜install_libs.sh
+ ┣ 📜.dockerignore
+ ┣ 📜requirements.txt
+ ┗ 📜requirements_llama.txt
+</code></pre>
+
+### 📦 nginx 디렉토리 설명
+<pre data-owner="TreeNut-KR" data-repo="ChatBot-AI" data-folder="nginx"><code class="language-directory">
+ ┣ 📜404.html
+ ┗ 📜nginx.conf
+</code></pre>
+
 ## 🏗️ 전체 아키텍처
 
 - **office**: 업무용 챗봇 API (FastAPI, 8002)
@@ -17,10 +127,10 @@
 - **python-libs-init**: 공통 Python 라이브러리 볼륨 초기화
 
 ## 📋 시스템 아키텍처 다이어그램
-![System-Architecture-Diagram-ChatBot](/images/System-Architecture-Diagram-ChatBot.webp)
+![System-Architecture-Diagram-ChatBot](/media/webp/System-Architecture-Diagram-ChatBot.webp)
 
 ## 📋 패키지 다이어그램 
-![Package-Diagram-ChatBot(AI)](/images/Package-Diagram-ChatBot(AI).webp)
+![Package-Diagram-ChatBot(AI)](/media/webp/Package-Diagram-ChatBot(AI).webp)
 
 ## 🌐 API Gateway (nginx) 구조
 
@@ -43,7 +153,7 @@
 ## 📅 개발 로드맵 및 버전 릴리즈 일정
 
 ### 간트 차트 (ChatBot AI 버전 릴리즈)
-![Gantt-Chart-ChatBot(AI)](/images/Gantt-Chart-ChatBot(AI).webp)
+![Gantt-Chart-ChatBot(AI)](/media/webp/Gantt-Chart-ChatBot(AI).webp)
 
 ### 주요 마일스톤
 

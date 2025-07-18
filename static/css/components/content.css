@@ -430,3 +430,50 @@ h3:hover span {
         font-size: 0.85rem;
     }
 }
+
+/* 데모 비디오 섹션 스타일링 */
+.demo-video-section {
+    margin: 2.5rem 0;
+    text-align: left; /* 가운데 정렬 → 왼쪽 정렬 */
+}
+
+.demo-video-section h3 {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    color: var(--accent-primary);
+}
+
+.demo-video {
+    width: 100%;           /* 부모(.content)의 너비에 맞춤 */
+    max-width: 100%;       /* 부모 너비까지만 */
+    min-width: 320px;
+    border-radius: 16px;
+    box-shadow: var(--shadow-md);
+    background: var(--bg-card);
+    margin-bottom: 1rem;
+    outline: none;
+    transition: box-shadow 0.3s;
+    display: block;
+}
+
+.demo-video:focus,
+.demo-video:hover {
+    box-shadow: var(--shadow-lg);
+}
+
+.video-toggle-btn {
+    margin-top: 0.5rem;
+    padding: 0.4rem 1.2rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    background: #22262b;
+    color: #7fd6ff;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.video-toggle-btn:hover {
+    background: #7fd6ff;
+    color: #22262b;
+}

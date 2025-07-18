@@ -1,0 +1,96 @@
+.vscode-directory-tree {
+    color: #d4d4d4;
+    font-family: 'JetBrains Mono', 'Inter', 'Noto Sans KR', monospace;
+    border-radius: 8px;
+    padding: 16px 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    width: fit-content; /* 콘텐츠 너비만큼 */
+    min-width: 400px;
+    font-size: 14px;
+    line-height: 1.6;
+    display: inline-block; /* 부모 컨테이너 기준 정렬 가능 */
+    margin: 16px; /* 중앙 제거하고 여백만 */
+}
+
+.vscode-tree-root {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.vscode-tree-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding-left: calc(var(--depth, 0) * 16px);
+    margin-bottom: 2px;
+    transition: background 0.2s;
+}
+
+.vscode-tree-item:hover {
+    border-radius: 4px;
+}
+
+.vscode-tree-item.hovered {
+    border-radius: 4px;
+    z-index: 10;
+    box-shadow: 0 0 0 2px #42f5b3 inset;
+    position: relative;
+}
+
+.vscode-tree-item.folder > .vscode-tree-label {
+    font-weight: 600;
+    color: #42f5b3;
+}
+
+.vscode-tree-item.file > .vscode-tree-label {
+    color: #dcdcdc;
+}
+
+.vscode-tree-label {
+    padding: 2px 0;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* 트리라인 시각화 */
+.vscode-tree-item::before {
+    content: '';
+    position: absolute;
+    left: calc(var(--depth, 0) * 16px - 8px);
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: rgba(255, 255, 255, 0.06);
+    display: var(--has-parent, block);
+}
+
+.vscode-tree-children {
+    margin-left: 16px;
+}
+
+/* 아이콘 */
+.vscode-icon {
+    width: 18px;
+    height: 18px;
+    margin-right: 6px;
+    flex-shrink: 0;
+    opacity: 0.95;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+}
+
+.vscode-icon i {
+    font-size: 16px;
+    color: #90caf9;
+}
+
+.vscode-tree-item.folder > .vscode-icon i {
+    color: #42f5b3;
+}
+
+.vscode-tree-item.file > .vscode-icon i {
+    color: #dcdcdc;
+}

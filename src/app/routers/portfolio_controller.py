@@ -298,40 +298,7 @@ async def read_reference_markdown(request: Request, category: str, filename: str
     except Exception:
         raise error_tools.InternalServerErrorException("페이지 로딩 중 오류가 발생했습니다.")
 
-@page_router.get("/images/{img:path}")
-async def get_image(img: str):
-    """이미지 파일 제공"""
-    try:
-        # 경로 정규화 및 보안 검증
-        safe_img = os.path.normpath(img).replace("\\", "/")
-        
-        if ".." in safe_img or safe_img.startswith("/") or safe_img.startswith("\\"):
-            raise error_tools.BadRequestException("잘못된 이미지 경로입니다.")
-        
-        # 빈 경로 체크
-        if not safe_img.strip():
-            raise error_tools.BadRequestException("이미지 경로가 비어있습니다.")
-        
-        image_path = os.path.join("images", safe_img)
-        
-        if not os.path.exists(image_path):
-            raise error_tools.NotFoundException("이미지 파일이 존재하지 않습니다.")
-        
-        # 파일이 실제로 이미지 파일인지 확인 (확장자 기반)
-        allowed_extensions = {'.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.ico'}
-        file_ext = os.path.splitext(safe_img)[1].lower()
-        
-        if file_ext not in allowed_extensions:
-            raise error_tools.BadRequestException("지원되지 않는 이미지 형식입니다.")
-        
-        return FileResponse(image_path)
-        
-    except (error_tools.NotFoundException, error_tools.BadRequestException):
-        raise
-    except PermissionError:
-        raise error_tools.InternalServerErrorException("파일 접근 권한이 없습니다.")
-    except Exception as e:
-        raise error_tools.InternalServerErrorException("이미지 로딩 중 오류가 발생했습니다.")
+
 
 @page_router.get("/visualization/{csv_filename}", response_class=HTMLResponse)
 async def read_csv_visualization(request: Request, csv_filename: str):

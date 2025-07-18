@@ -1,5 +1,5 @@
-/* 코드 블록 스타일 */
-.content pre {
+/* 코드 블록 스타일 - directory 코드블럭은 제외 */
+.content pre:not([data-language="directory"]) {
     background: var(--bg-secondary);
     border: 1px solid var(--border-color);
     border-radius: 12px;
@@ -11,7 +11,7 @@
     font-family: 'JetBrains Mono', 'Consolas', 'Monaco', monospace;
 }
 
-.content pre code {
+.content pre code:not(.language-directory) {
     display: block;
     padding: 1.5rem;
     overflow-x: auto;
@@ -23,8 +23,8 @@
     border-radius: 0;
 }
 
-/* 언어 라벨 - 왼쪽으로 이동 */
-.content pre::before {
+/* 언어 라벨 - directory 코드블럭은 제외 */
+.content pre:not([data-language="directory"])::before {
     content: attr(data-language);
     position: absolute;
     top: 0;

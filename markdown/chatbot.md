@@ -11,6 +11,105 @@
 | 권재현 (donismoney) | 백엔드 | Spring Boot |  
 | 손유노 (GingGang) | 프론트엔드 | React, TypeScript |
 
+## 👨‍💻 담당 업무
+- 전체 시스템 아키텍처 설계
+- FastAPI 전체 API 서버 개발
+- FastAPI SMTP 연동 및 이메일 인증
+- FastAPI & MongoDB 채팅방 CRUD 기능
+- SpringBoot 오피스(Office) & 케릭터(Character) 채팅방에 관한 MySQL의 유저와 MongoDB CRUD 기능
+- SpringBoot 채팅방 API를 AI서버 API 연동
+- 간트 차트, Hybrid ERD, 다이어그램 및 문서화 작업
+
+
+## 📁 프로젝트 디렉토리 구조
+> 파일을 클릭하면 해당 GitHub에 main 브런치 기준 파일로 이동합니다.
+> 해당 디렉토리 구조는 서정훈이 개발한 파일들만 표기되어 있습니다.
+ 
+### 📦 루트 디렉토리 구조
+<pre data-owner="TreeNut-KR" data-repo="ChatBot" data-folder=""><code class="language-directory">
+ ┣ 📜[.env](None)
+ ┣ 📜CODE_OF_CONDUCT.md
+ ┣ 📜docker-compose.yml
+ ┣ 📜LICENSE
+ ┣ 📜readme.md
+ ┣ 📜react_build.bat
+ ┗ 📜rebuild.bat
+</code></pre>
+
+### 📦 fastapi 디렉토리 구조
+<pre data-owner="TreeNut-KR" data-repo="ChatBot" data-folder="fastapi"><code class="language-directory">
+📦fastapi
+ ┣ 📂batch
+ ┃ ┣ 📜venv_install.bat
+ ┃ ┗ 📜venv_setup.bat
+ ┣ 📂src
+ ┃ ┣ 📂api
+ ┃ ┃ ┣ 📂mongo_controller
+ ┃ ┃ ┃ ┣ 📜character_controller.py
+ ┃ ┃ ┃ ┣ 📜office_controller.py
+ ┃ ┃ ┃ ┗ 📜__init__.py
+ ┃ ┃ ┣ 📜smtp_controller.py
+ ┃ ┃ ┗ 📜__init__.py
+ ┃ ┣ 📂core
+ ┃ ┃ ┣ 📜app_state.py
+ ┃ ┃ ┣ 📜dependencies.py
+ ┃ ┃ ┗ 📜__init__.py
+ ┃ ┣ 📂docs
+ ┃ ┃ ┗ 📜api_specification.md
+ ┃ ┣ 📂logs
+ ┃ ┣ 📂schemas
+ ┃ ┃ ┣ 📜schema.py
+ ┃ ┃ ┗ 📜__init__.py
+ ┃ ┣ 📂server
+ ┃ ┃ ┣ 📜Dockerfile
+ ┃ ┃ ┗ 📜server.py
+ ┃ ┣ 📂services
+ ┃ ┃ ┣ 📜email_client.py
+ ┃ ┃ ┣ 📜mongodb_client.py
+ ┃ ┃ ┣ 📜mysql_client.py
+ ┃ ┃ ┗ 📜__init__.py
+ ┃ ┣ 📂utils
+ ┃ ┃ ┣ 📜error_tools.py
+ ┃ ┃ ┗ 📜__init__.py
+ ┃ ┗ 📜[.env](None)
+ ┣ 📜.dockerignore
+ ┣ 📜requirements.txt
+ ┗ 📜wait-for-it.sh
+</code></pre>
+
+### 📦 mysql 디렉토리 구조
+<pre data-owner="TreeNut-KR" data-repo="ChatBot" data-folder="mysql"><code class="language-directory">
+ ┣ 📂logs
+ ┣ 📂migrations
+ ┃ ┣ 📜V1.1.0__init.sql
+ ┃ ┣ 📜V1.1.1__init.sql
+ ┃ ┗ 📜V1.1.5__init.sql
+ ┣ 📜Dockerfile
+ ┣ 📜flyway-migrate.sh
+ ┣ 📜init.sql
+</code></pre>
+
+### 📦 springboot 디렉토리 구조
+- **./springboot**
+<pre data-owner="TreeNut-KR" data-repo="ChatBot" data-folder="springboot"><code class="language-directory">
+ ┣ 📂src
+ ┃ ┣ 📂docs
+ ┃ ┃ ┣ 📜RoomController.md
+ ┗ 📜wait-for-it.sh
+</code></pre>
+
+- **./springboot/src/main/java/com/TreeNut**
+<pre data-owner="TreeNut-KR" data-repo="ChatBot" data-folder="springboot/src/main/java/com/TreeNut"><code class="language-directory">
+ ┗ 📂ChatBot_Backend
+ ┃ ┣ 📂controller
+ ┃ ┃ ┣ 📜RoomController.kt
+ ┃ ┣ 📂repository
+ ┃ ┃ ┣ 📜ChatroomRepository.kt
+ ┃ ┃ ┣ 📜OfficeroomRepository.kt
+ ┃ ┣ 📂service
+ ┃ ┃ ┣ 📜RoomService.kt
+</code></pre>
+
 ## 🏗️ 전체 아키텍처
 
 - **nginx**: API Gateway 및 웹 서버 (443 포트, HTTPS 지원)
@@ -33,10 +132,10 @@
     - MySQL 스키마 버전 관리
 
 ## 📋 시스템 아키텍처 다이어그램
-![System-Architecture-Diagram-ChatBot](/images/System-Architecture-Diagram-ChatBot.webp)
+![System-Architecture-Diagram-ChatBot](/media/webp/System-Architecture-Diagram-ChatBot.webp)
 
 ## 📋 Hybrid ERD
-![Hybrid-ERD-ChatBot](/images/Hybrid-ERD-ChatBot.webp)
+![Hybrid-ERD-ChatBot](/media/webp/Hybrid-ERD-ChatBot.webp)
 
 ## 🌐 API Gateway (nginx) 구조
 
@@ -58,10 +157,45 @@
     - 404 에러 페이지 설정
     - 서버 에러 시 일반화된 에러 메시지 반환
 
+## 🖼️ 시연 영상
+<div class="demo-video-section">
+    <h3>SMTP 연동</h3>
+    <video id="video-smtp" class="demo-video" src="/media/webm/ChatBot_SMTP.webm"
+        controls
+        muted
+        preload="metadata"
+        poster="/media/webp/ChatBot_SMTP.webp"
+        autoplay
+        loop>
+    </video>
+</div>
+<div class="demo-video-section">
+    <h3>케릭터 채팅</h3>
+    <video id="video-character" class="demo-video" src="/media/webm/ChatBot_Character.webm"
+        controls
+        muted
+        preload="metadata"
+        poster="/media/webp/ChatBot_Character.webp"
+        autoplay
+        loop>
+    </video>
+</div>
+<div class="demo-video-section">
+    <h3>오피스 채팅</h3>
+    <video id="video-office" class="demo-video" src="/media/webm/ChatBot_Office.webm"
+        controls
+        muted
+        preload="metadata"
+        poster="/media/webp/ChatBot_Office.webp"
+        autoplay
+        loop>
+    </video>
+</div>
+
 ## 📅 개발 로드맵 및 버전 릴리즈 일정
 
 ### 간트 차트 (ChatBot 버전 릴리즈)
-![Gantt-Chart-ChatBot](/images/Gantt-Chart-ChatBot.webp)
+![Gantt-Chart-ChatBot](/media/webp/Gantt-Chart-ChatBot.webp)
 
 ### 주요 마일스톤
 
