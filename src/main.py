@@ -208,8 +208,8 @@ def get_structured_data():
         "@context": "https://schema.org",
         "@type": "Person",
         "name": "서정훈",
-        "jobTitle": "FastAPI 백엔드 개발자",
-        "description": "Python, FastAPI, Docker, MongoDB를 활용한 백엔드 개발자. AI 챗봇, 학생관리시스템 등 다양한 프로젝트 경험.",
+        "jobTitle": "FastAPI 백엔드",
+        "description": "Python, FastAPI, Docker, MongoDB를 활용한 백엔드 개발자. AI 챗봇, 페르소나 기반 케릭터 챗봇, 학생관리시스템 등 다양한 프로젝트 경험.",
         "url": "https://cutwire.myddns.me",
         "mainEntityOfPage": {
             "@type": "WebPage",
