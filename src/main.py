@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse, Response, FileResponse
+from fastapi.responses import PlainTextResponse, Response, FileResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.types import Scope, Receive, Send
 
@@ -324,6 +324,14 @@ async def favicon():
         raise
     except Exception as e:
         raise error_tools.InternalServerErrorException("Favicon loading error")
+
+@app.get("/robots.txt", response_class=PlainTextResponse)
+def robots_txt():
+    return (
+        "User-agent: *\n"
+        "Allow: /\n"
+        "Sitemap: https://cutwire.myddns.me/sitemap.xml\n"
+    )
 
 @app.get("/sitemap.xml", response_class=Response)
 async def sitemap_xml():
