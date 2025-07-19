@@ -38,7 +38,6 @@
 
 ### 📦 fastapi 디렉토리 구조
 <pre data-owner="TreeNut-KR" data-repo="ChatBot" data-folder="fastapi"><code class="language-directory">
-📦fastapi
  ┣ 📂batch
  ┃ ┣ 📜venv_install.bat
  ┃ ┗ 📜venv_setup.bat

@@ -8,7 +8,13 @@ document.addEventListener('DOMContentLoaded', function () {
         const container = document.createElement('div');
         container.className = 'vscode-directory-tree';
         container.innerHTML = renderDirectoryTree(treeData, 0, owner, repo, folder);
-        pre.replaceWith(container);
+
+        // 래퍼 추가
+        const wrapper = document.createElement('div');
+        wrapper.className = 'directory-tree-wrapper';
+        wrapper.appendChild(container);
+
+        pre.replaceWith(wrapper);
         addTreeInteractivity(container);
     });
 });
