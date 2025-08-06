@@ -20,6 +20,7 @@ from app import (
     portfolio_controller,
     media_controller,
 )
+from app.routers import github_controller  # GitHub 컨트롤러 추가
 
 GREEN = "\033[32m"
 RED = "\033[31m"
@@ -375,6 +376,13 @@ app.include_router(
     prefix = "/media",
     tags = ["Media Router"],
     responses = {500: {"description": "Internal Server Error"}}
+)
+
+app.include_router(
+    github_controller.github_router,
+    prefix="/github",
+    tags=["GitHub API Router"],
+    responses={500: {"description": "Internal Server Error"}}
 )
 
 if __name__ == "__main__":

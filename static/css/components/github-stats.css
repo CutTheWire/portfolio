@@ -1,0 +1,324 @@
+/* GitHub 통계 섹션 스타일 */
+.github-stats-section {
+    margin: 4rem 0;
+    padding: 2rem 0;
+}
+
+.github-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 반반 크기로 변경 */
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+/* GitHub Contributions 스타일 - 단순화 */
+.github-contributions {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+    overflow: hidden;
+}
+
+.contributions-container {
+    margin-bottom: 1rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+/* 기여도 요약 */
+.contributions-summary {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    text-align: center;
+}
+
+/* 통합 잔디밭 그리드 */
+.contributions-unified-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 1rem 0;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-color) transparent;
+}
+
+/* 기여도 날짜 블록 */
+.contribution-day {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.contribution-day:hover {
+    transform: scale(1.2);
+    outline: 1px solid var(--text-primary);
+}
+
+/* GitHub 실제 기여도 색상 */
+.contribution-day[data-level="0"] {
+    background-color: #000000; /* 기여도 없음 */
+}
+
+.contribution-day[data-level="1"] {
+    background-color: #004c1a; /* 낮은 기여도 */
+}
+
+.contribution-day[data-level="2"] {
+    background-color: #39d353; /* 보통 기여도 */
+}
+
+.contribution-day[data-level="3"] {
+    background-color: #7fff00; /* 높은 기여도 */
+}
+
+.contribution-day[data-level="4"] {
+    background-color: #00ff44; /* 매우 높은 기여도 */
+}
+
+/* 범례 스타일 */
+.contributions-legend {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 1rem;
+}
+
+.legend-colors {
+    display: flex;
+    gap: 2px;
+}
+
+.legend-color {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+}
+
+.legend-color[data-level="0"] { background-color: #000000; }
+.legend-color[data-level="1"] { background-color: #004c1a; }
+.legend-color[data-level="2"] { background-color: #39d353; }
+.legend-color[data-level="3"] { background-color: #7fff00; }
+.legend-color[data-level="4"] { background-color: #00ff44; }
+
+/* 스크롤바 스타일링 */
+.contributions-unified-grid::-webkit-scrollbar {
+    height: 6px;
+}
+
+.contributions-unified-grid::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+    border-radius: 3px;
+}
+
+.contributions-unified-grid::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 3px;
+}
+
+.contributions-unified-grid::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+}
+
+/* Activity Overview 스타일 추가 */
+.github-activity {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+}
+
+.activity-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    flex-grow: 1;
+}
+
+.activity-stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+}
+
+.activity-stat-item:hover {
+    background: var(--bg-primary);
+    transform: translateY(-1px);
+}
+
+.activity-stat-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.activity-stat-label i {
+    width: 16px;
+    text-align: center;
+}
+
+.activity-stat-value {
+    font-weight: 600;
+    color: var(--accent-primary);
+    font-size: 1rem;
+}
+
+.activity-languages {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.language-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    padding: 0.5rem;
+    background: var(--bg-secondary);
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+}
+
+.language-name {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    min-width: 80px;
+    flex-shrink: 0;
+}
+
+.language-progress {
+    flex: 1;
+    height: 8px;
+    background: var(--bg-primary);
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+.language-progress-bar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.language-percentage {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    min-width: 40px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+/* 로딩 및 오류 상태 */
+.activity-loading,
+.activity-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    color: var(--text-muted);
+    min-height: 200px;
+}
+
+.contributions-loading,
+.contributions-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    color: var(--text-muted);
+    min-height: 200px;
+}
+
+/* 반응형 디자인 개선 */
+@media (max-width: 1024px) {
+    .github-stats-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .github-activity {
+        min-height: 300px;
+    }
+}
+
+@media (max-width: 768px) {
+    .github-stats-section {
+        margin: 2rem 0;
+        padding: 1rem 0;
+    }
+    
+    .github-contributions,
+    .github-activity {
+        padding: 1rem;
+    }
+    
+    .activity-stat-item {
+        padding: 0.5rem;
+    }
+    
+    .activity-stat-label {
+        font-size: 0.8rem;
+    }
+    
+    .activity-stat-value {
+        font-size: 0.9rem;
+    }
+    
+    .language-bar {
+        gap: 0.5rem;
+        padding: 0.4rem;
+    }
+    
+    .language-name {
+        min-width: 60px;
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .activity-stat-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .activity-stat-value {
+        align-self: flex-end;
+    }
+    
+    .language-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.4rem;
+    }
+    
+    .language-name,
+    .language-percentage {
+        text-align: left;
+    }
+}

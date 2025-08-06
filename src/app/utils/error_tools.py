@@ -72,9 +72,10 @@ class BaseCustomException(HTTPException):
     def __init__(self, status_code: int, detail: str):
         super().__init__(status_code=status_code, detail=detail)
 
-class NotFoundException(BaseCustomException):
-    def __init__(self, detail="Resource not found"):
-        super().__init__(404, detail)
+class NotFoundException(HTTPException):
+    """리소스를 찾을 수 없음 예외"""
+    def __init__(self, detail: str = "요청한 리소스를 찾을 수 없습니다."):
+        super().__init__(status_code=404, detail=detail)
 
 class BadRequestException(BaseCustomException):
     def __init__(self, detail="Bad request"):
@@ -112,6 +113,11 @@ class MethodNotAllowedException(BaseCustomException):
 class RouteNotFoundException(BaseCustomException):
     def __init__(self, detail="Route not found"):
         super().__init__(404, detail)
+
+class ExternalServiceException(HTTPException):
+    """외부 서비스 연동 실패 예외"""
+    def __init__(self, detail: str = "외부 서비스 연동에 실패했습니다."):
+        super().__init__(status_code=502, detail=detail)
 
 
 # ==========================

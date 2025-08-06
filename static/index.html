@@ -312,7 +312,72 @@
             <p>체계적인 백엔드 아키텍처 설계부터 Docker 컨테이너화, MongoDB 데이터베이스 최적화까지 전반적인 백엔드 개발 역량을 담은 포트폴리오입니다.</p>
         </section>
 
+        <!-- SEO를 위한 키워드 관련 섹션 -->
         <main class="content">
+            <!-- GitHub 통계 섹션 -->
+            <section class="github-stats-section">
+                <h2 class="section-title">
+                    <i class="fab fa-github"></i>
+                    GitHub 활동 통계
+                </h2>
+                
+                <div class="github-stats-grid">
+                    <!-- 좌측: GitHub Contributions (잔디) -->
+                    <div class="github-contributions">
+                        <h3 class="stats-subtitle">
+                            <i class="fas fa-calendar-alt"></i>
+                            Contributions (2023-2025)
+                        </h3>
+                        <div class="contributions-container" id="contributions-container">
+                            <div class="contributions-loading">
+                                <div class="loading-spinner"></div>
+                                <p>GitHub 기여도를 불러오는 중...</p>
+                            </div>
+                        </div>
+                        <div class="contributions-legend">
+                            <span class="legend-text">Less</span>
+                            <div class="legend-colors">
+                                <div class="legend-color" data-level="0"></div>
+                                <div class="legend-color" data-level="1"></div>
+                                <div class="legend-color" data-level="2"></div>
+                                <div class="legend-color" data-level="3"></div>
+                                <div class="legend-color" data-level="4"></div>
+                            </div>
+                            <span class="legend-text">More</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 우측: Activity Overview -->
+                    <div class="github-activity">
+                        <h3 class="stats-subtitle">
+                            <i class="fas fa-chart-line"></i>
+                            Activity Overview
+                        </h3>
+                        <div class="activity-container" id="activity-container">
+                            <div class="activity-loading">
+                                <div class="loading-spinner"></div>
+                                <p>활동 통계를 불러오는 중...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 개인 GitHub 리포지토리 섹션 -->
+            <section class="repositories-section">
+                <h2 class="section-title">
+                    <i class="fab fa-github"></i>
+                    GitHub 리포지토리
+                </h2>
+                <div class="repositories-grid" id="repositories-grid">
+                    <!-- 로딩 상태 표시 -->
+                    <div class="repositories-loading">
+                        <div class="loading-spinner"></div>
+                        <p>리포지토리 정보를 불러오는 중...</p>
+                    </div>
+                </div>
+            </section>
+
             {{ content|safe }}
             
             <!-- 추가 SEO 콘텐츠 -->
@@ -330,13 +395,17 @@
                 <h3>백엔드 기술 스택</h3>
                 <p>이 <strong>개발자 포트폴리오</strong>에서는 Python, FastAPI, Docker, MongoDB 등을 활용한 실제 프로젝트 경험과 성과를 확인하실 수 있습니다.</p>
             </>
-        </main>
+        </main>        
     </div>
 
     <!-- 모바일 최적화 스크립트 -->
     <script src="/static/js/mobile-fix.js"></script>
     <!-- 이메일 기능 스크립트 -->
     <script src="/static/js/modal-module.js"></script>
+    <!-- 리포지토리 모듈 스크립트 -->
+    <script src="/static/js/repositories-module.js"></script>
+    <!-- GitHub 통계 모듈 스크립트 -->
+    <script src="/static/js/github-stats-module.js"></script>
     <script>
         // 페이지 로드 시 이메일 컴포넌트 로드
         document.addEventListener('DOMContentLoaded', function() {
