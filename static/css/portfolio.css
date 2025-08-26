@@ -19,6 +19,7 @@
 @import url('components/social-links.css');
 @import url('components/content.css');
 @import url('components/project-links.css');
+@import url('components/code-blocks.css'); /* 추가: 코드블록 하이라이트 */
 
 /* Utils */
 @import url('utils/animations.css');

@@ -1,3 +1,97 @@
+/* Prism 기반 코드블록 커스텀 (VS Code 다크 감성) */
+pre[class*="language-"],
+code[class*="language-"] {
+    background: var(--bg-card, #0f111a);
+    color: var(--text-primary, #e6e6e6);
+    text-shadow: none;
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    direction: ltr;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    tab-size: 4;
+    hyphens: none;
+}
+
+pre[class*="language-"] {
+    padding: 1rem 1.25rem;
+    margin: 1rem 0 1.5rem;
+    border: 1px solid var(--border-color, #2a2e35);
+    border-radius: 10px;
+    overflow: auto;
+    box-shadow: var(--shadow-md, 0 4px 16px rgba(0,0,0,.2));
+}
+
+code[class*="language-"] {
+    border-radius: 6px;
+}
+
+/* 공통 토큰 색상 */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+    color: #6a737d;
+    font-style: italic;
+}
+
+.token.punctuation { color: #c5c8d4; }
+.token.operator { color: #c5c8d4; }
+.token.keyword { color: #c792ea; } /* if, for, def, class 등 */
+.token.boolean,
+.token.number { color: #f78c6c; }
+.token.string { color: #ecc48d; }
+.token.char { color: #ecc48d; }
+.token.regex { color: #89ddff; }
+.token.url { color: #80cbc4; }
+.token.constant { color: #82aaff; }
+
+/* 식별자 계열: 변수/파라미터/프로퍼티/함수/클래스 */
+.token.variable { color: #b2ccd6; }        /* 변수명 */
+.token.parameter { color: #f07178; }       /* 함수 파라미터 */
+.token.property { color: #c3e88d; }        /* obj.prop */
+.token.function { color: #82aaff; }        /* 함수명 */
+.token.method { color: #82aaff; }
+.token.class-name { color: #ffcb6b; }      /* 클래스명 */
+.token.namespace { color: #ffcb6b; }
+
+/* JSX/TSX 추가 */
+.token.tag { color: #f07178; }
+.token.attr-name { color: #c792ea; }
+.token.attr-value { color: #ecc48d; }
+
+/* Shell/Dockerfile 등 */
+.language-bash .token.function,
+.language-shell .token.function { color: #82aaff; }
+
+/* 인라인 코드 */
+:not(pre) > code[class*="language-"] {
+    padding: .15rem .35rem;
+    border: 1px solid var(--border-color, #2a2e35);
+    background: var(--bg-secondary, #151821);
+    border-radius: 6px;
+}
+
+/* 스크롤바(코드블럭 내부) */
+pre[class*="language-"]::-webkit-scrollbar {
+    height: 8px;
+}
+pre[class*="language-"]::-webkit-scrollbar-thumb {
+    background: var(--border-color, #2a2e35);
+    border-radius: 4px;
+}
+pre[class*="language-"]::-webkit-scrollbar-track {
+    background: var(--bg-secondary, #151821);
+}
+
+/* 줄번호 플러그인 사용 시 */
+.line-numbers .line-numbers-rows {
+    border-right: 1px solid var(--border-color, #2a2e35);
+}
+
 /* 코드 블록 스타일 - directory 코드블럭은 제외 */
 .content pre:not([data-language="directory"]) {
     background: var(--bg-secondary);

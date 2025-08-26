@@ -9,9 +9,34 @@
 ### 📦 ETC
 > git
 
-
 ## 📁 Projects
+### 🤖 Dogi
+<div class="project-link-content">
+    <a href="/portfolio/dogi" class="project-link-card dark">
+        <i class="fas fa-external-link-alt project-link-icon"></i>
+        <span class="project-link-text">프로젝트 상세보기</span>
+    </a>
+</div>
+
+> 반려견 의료 데이터셋 기반의 인공지능 대화 웹사이트 리포지토리입니다.
+
+<div class="project-timeline">
+    <span class="timeline-duration">2025.08 - 2025.08
+        <span class="timeline-months">1개월</span>
+    </span>
+</div>
+
+#### 🛠️ 담당
+- 프로젝트 매니저, 백엔드 개발 
+- FastAPI를 REST-Like API 구성
+- FastAPI에서 MongoDB, MySQL, ChromaDB 관리
+- Llama CPP CUDA 모델 연동 및 LangChin을 통한 반려동물 의료 데이터셋 기반의 VectorDB(ChromaDB) 답변 생성
+
+---
+
 ### 🤖 ChatBot-AI 
+
+
 <div class="project-link-content">
     <a href="/portfolio/chatbot-ai" class="project-link-card dark">
         <i class="fas fa-external-link-alt project-link-icon"></i>
@@ -62,6 +87,7 @@
 - git tags 기능을 통한 github actions 동작, API 명세서 및 Docker Containers 자동 업로드하여 릴리스로 버전 관리
 
 ---
+
 
 <!-- ### 🏫 JMEDUSERVER-Kiosk
 <div class="project-link-content">
