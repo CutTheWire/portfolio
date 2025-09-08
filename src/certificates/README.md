@@ -104,3 +104,12 @@ D:\github\portfolio\.well-known\acme-challenge
    - `SSL_PW`: SSL 인증서에 비밀번호가 설정된 경우 해당 비밀번호를 입력합니다. 비밀번호가 없다면 비워둡니다.
    - `KEY_PEM`: 개인 키 파일 이름입니다. 기본적으로 `YOUR_DOMIN-key.pem`으로 설정됩니다.
    - `CRT_PEM`: 인증서 파일 이름입니다. 기본적으로 `YOUR_DOMIN-crt.pem`으로 설정됩니다.
+
+### 8. cutwire.myddns.me-fullchain.pem 만드는 방법
+
+cutwire.myddns.me-crt.pem 와 cutwire.myddns.me-chain-only.pem를 합침.
+
+```pem
+# cutwire.myddns.me-crt.pem를 붙여넣음
+# cutwire.myddns.me-chain-only.pem를 붙여넣음
+```
