@@ -43,7 +43,7 @@ async def get_repositories(request: Request, limit: int = 50):
         if limit < 1 or limit > 100:
             raise error_tools.BadRequestException("리포지토리 개수는 1-100 사이여야 합니다.")
         
-        repositories = await github_api.fetch_repositories(max_repos=limit)
+        repositories = await github_api.get_repositories_cached(max_repos=limit)
         
         print(f"📦 GitHub API 응답: {len(repositories) if repositories else 0}개 리포지토리")
         
@@ -85,7 +85,7 @@ async def get_user_info(request: Request):
     GitHub 사용자 정보 조회
     """
     try:
-        user_info = await github_api.fetch_user_info()
+        user_info = await github_api.get_user_info_cached()
         
         if user_info is None:
             raise error_tools.ExternalServiceException("GitHub 사용자 정보를 가져올 수 없습니다.")
@@ -123,13 +123,13 @@ async def get_repository_details(request: Request, repo_name: str):
         if not repo_name or len(repo_name) > 100:
             raise error_tools.BadRequestException("유효하지 않은 리포지토리명입니다.")
         
-        repository = await github_api.fetch_repository_details(repo_name)
+        repository = await github_api.get_repository_details_cached(repo_name)
         
         if repository is None:
             raise error_tools.NotFoundException("리포지토리를 찾을 수 없습니다.")
         
         # 언어 통계도 함께 조회
-        languages = await github_api.fetch_repository_languages(repo_name)
+        languages = await github_api.get_repository_languages_cached(repo_name)
         repository["languages"] = languages
         
         return JSONResponse(
@@ -166,8 +166,8 @@ async def get_github_stats(request: Request):
         # 병렬로 사용자 정보와 리포지토리 정보 조회
         import asyncio
         
-        user_task = github_api.fetch_user_info()
-        repos_task = github_api.fetch_repositories(max_repos=10)
+        user_task = github_api.get_user_info_cached()
+        repos_task = github_api.get_repositories_cached(max_repos=10)
         
         user_info, repositories = await asyncio.gather(user_task, repos_task)
         
@@ -232,7 +232,7 @@ async def get_user_contributions(request: Request, years: str = "2023,2024,2025"
         if not year_list or len(year_list) > 5:
             raise error_tools.BadRequestException("년도는 1-5개까지만 지정할 수 있습니다.")
         
-        contributions = await github_api.fetch_user_contributions(years=year_list)
+        contributions = await github_api.get_user_contributions_cached(years=year_list)
         
         if contributions is None:
             raise error_tools.ExternalServiceException("GitHub 기여도 정보를 가져올 수 없습니다.")
@@ -271,7 +271,7 @@ async def get_user_activity_overview(request: Request):
     try:
         print(f"📈 GitHub Activity Overview API 요청")
         
-        activity = await github_api.fetch_user_activity_overview()
+        activity = await github_api.get_activity_overview_cached()
         
         if activity is None:
             raise error_tools.ExternalServiceException("GitHub 활동 개요를 가져올 수 없습니다.")

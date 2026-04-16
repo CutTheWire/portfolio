@@ -4,6 +4,7 @@ import asyncio
 import logging
 import hypercorn.asyncio
 from hypercorn.config import Config
+from contextlib import asynccontextmanager
 
 from pathlib import Path
 from dotenv import load_dotenv
@@ -21,6 +22,7 @@ from app import (
     media_controller,
 )
 from app.routers import github_controller  # GitHub 컨트롤러 추가
+from app.utils.github_tools import github_api
 
 GREEN = "\033[32m"
 RED = "\033[31m"
@@ -51,12 +53,31 @@ class CachedStaticFiles(StaticFiles):
         
         return response
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """
+    FastAPI 애플리케이션 생명주기 관리
+    - Startup: GitHub 캐시 초기화
+    - Shutdown: 정리 작업 수행
+    """
+    # Startup
+    try:
+        await github_api.initialize_cache()
+    except Exception as e:
+        print(f"⚠️ GitHub 캐시 초기화 실패: {e}")
+    
+    yield
+    
+    # Shutdown
+    pass
+
 app = FastAPI(
     title="서정훈 포트폴리오 - 백엔드 개발자",
     description="Python, FastAPI를 활용한 백엔드 개발자 서정훈의 포트폴리오입니다.",
     version="1.0.0",
     docs_url=None,
     redoc_url=None,
+    lifespan=lifespan,
 )
 
 # error_tools 등록

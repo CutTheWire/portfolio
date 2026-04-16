@@ -1,6 +1,8 @@
+import json
 import os
 import aiohttp
 import asyncio
+from pathlib import Path
 from typing import List, Dict, Optional
 from datetime import datetime, timezone, timedelta
 from dotenv import load_dotenv
@@ -19,6 +21,19 @@ class GitHubAPI:
             "Accept": "application/vnd.github.v3+json",
             "User-Agent": "Portfolio-Backend/1.0"
         }
+        self.cache_dir = Path(__file__).resolve().parents[1] / "cache"
+        self.cache_file = self.cache_dir / "github_cache.json"
+        self.cache_expiration = timedelta(hours=24)
+        self._lock = asyncio.Lock()
+        self.last_refresh: Optional[datetime] = None
+        self.cache = {
+            "repositories": None,
+            "user_info": None,
+            "repository_details": {},
+            "repository_languages": {},
+            "contributions": {},
+            "activity_overview": None
+        }
         
         if self.token:
             self.headers["Authorization"] = f"token {self.token}"
@@ -30,6 +45,172 @@ class GitHubAPI:
             print(f"✅ TreeNut-KR 조직 토큰 설정됨: {self.treenut_token[:8]}...")
         else:
             print("⚠️ TreeNut-KR 조직 토큰이 설정되지 않았습니다.")
+
+    async def initialize_cache(self):
+        """서버 시작 시 캐시를 초기화합니다."""
+        self.cache_dir.mkdir(parents=True, exist_ok=True)
+        cache_loaded = await self._load_cache_from_disk()
+
+        if cache_loaded and not self._is_cache_expired():
+            print("✅ GitHub 캐시가 디스크에서 로드되었습니다.")
+            return
+
+        print("🔄 GitHub 캐시가 없거나 만료되어 새로 로드합니다.")
+        await self.refresh_cache()
+
+    def _is_cache_expired(self) -> bool:
+        if not self.last_refresh:
+            return True
+        return datetime.now(timezone.utc) - self.last_refresh >= self.cache_expiration
+
+    async def _load_cache_from_disk(self) -> bool:
+        if not self.cache_file.exists():
+            return False
+
+        try:
+            data = await asyncio.to_thread(self._read_cache_file)
+
+            if not isinstance(data, dict):
+                return False
+
+            self.cache = data.get("cache", self.cache)
+            last_refresh = data.get("last_refresh")
+
+            if last_refresh:
+                self.last_refresh = datetime.fromisoformat(last_refresh)
+            return True
+        except Exception as e:
+            print(f"❌ 캐시 파일 로드 실패: {str(e)}")
+            return False
+
+    def _read_cache_file(self):
+        with open(self.cache_file, "r", encoding="utf-8") as f:
+            return json.load(f)
+
+    async def _save_cache_to_disk(self):
+        try:
+            await asyncio.to_thread(self._write_cache_file)
+        except Exception as e:
+            print(f"❌ 캐시 파일 저장 실패: {str(e)}")
+
+    def _write_cache_file(self):
+        with open(self.cache_file, "w", encoding="utf-8") as f:
+            json.dump(
+                {
+                    "last_refresh": self.last_refresh.isoformat() if self.last_refresh else None,
+                    "cache": self.cache
+                },
+                f,
+                ensure_ascii=False,
+                indent=2,
+            )
+
+    async def refresh_cache(self):
+        """서버에 저장된 캐시가 만료되었을 때 데이터를 갱신합니다."""
+        async with self._lock:
+            if not self._is_cache_expired():
+                return
+
+            try:
+                user_info_task = self.fetch_user_info()
+                repos_task = self.fetch_repositories(max_repos=100)
+                user_info, repositories = await asyncio.gather(user_info_task, repos_task)
+
+                if user_info:
+                    self.cache["user_info"] = user_info
+                if repositories is not None:
+                    self.cache["repositories"] = repositories
+
+                self.last_refresh = datetime.now(timezone.utc)
+                await self._save_cache_to_disk()
+                print("✅ GitHub 캐시가 갱신되었습니다.")
+            except Exception as e:
+                print(f"❌ GitHub 캐시 갱신 실패: {str(e)}")
+
+    async def get_repositories_cached(self, max_repos: int = 100) -> Optional[List[Dict]]:
+        if self._is_cache_expired():
+            await self.refresh_cache()
+
+        if self.cache["repositories"] is None:
+            self.cache["repositories"] = await self.fetch_repositories(max_repos=100)
+            if self.cache["repositories"] is not None:
+                self.last_refresh = datetime.now(timezone.utc)
+                await self._save_cache_to_disk()
+
+        if self.cache["repositories"] is None:
+            return None
+
+        return self.cache["repositories"][:max_repos]
+
+    async def get_user_info_cached(self) -> Optional[Dict]:
+        if self._is_cache_expired():
+            await self.refresh_cache()
+
+        if self.cache["user_info"] is None:
+            self.cache["user_info"] = await self.fetch_user_info()
+            if self.cache["user_info"] is not None:
+                self.last_refresh = datetime.now(timezone.utc)
+                await self._save_cache_to_disk()
+
+        return self.cache["user_info"]
+
+    async def get_repository_details_cached(self, repo_name: str) -> Optional[Dict]:
+        if self._is_cache_expired():
+            await self.refresh_cache()
+
+        cached = self.cache["repository_details"].get(repo_name)
+        if cached:
+            return cached
+
+        repository = await self.fetch_repository_details(repo_name)
+        if repository:
+            self.cache["repository_details"][repo_name] = repository
+            await self._save_cache_to_disk()
+
+        return repository
+
+    async def get_repository_languages_cached(self, repo_name: str) -> Optional[Dict]:
+        if self._is_cache_expired():
+            await self.refresh_cache()
+
+        cached = self.cache["repository_languages"].get(repo_name)
+        if cached is not None:
+            return cached
+
+        languages = await self.fetch_repository_languages(repo_name)
+        if languages is not None:
+            self.cache["repository_languages"][repo_name] = languages
+            await self._save_cache_to_disk()
+
+        return languages
+
+    async def get_user_contributions_cached(self, years: List[int]) -> Optional[Dict]:
+        if self._is_cache_expired():
+            await self.refresh_cache()
+
+        key = ",".join(str(year) for year in sorted(years))
+        cached = self.cache["contributions"].get(key)
+        if cached is not None:
+            return cached
+
+        contributions = await self.fetch_user_contributions(years=years)
+        if contributions is not None:
+            self.cache["contributions"][key] = contributions
+            await self._save_cache_to_disk()
+
+        return contributions
+
+    async def get_activity_overview_cached(self) -> Optional[Dict]:
+        if self._is_cache_expired():
+            await self.refresh_cache()
+
+        if self.cache["activity_overview"] is None:
+            self.cache["activity_overview"] = await self.fetch_user_activity_overview()
+            if self.cache["activity_overview"] is not None:
+                self.last_refresh = datetime.now(timezone.utc)
+                await self._save_cache_to_disk()
+
+        return self.cache["activity_overview"]
 
     async def fetch_repositories(self, max_repos: int = 100) -> Optional[List[Dict]]:
         """
