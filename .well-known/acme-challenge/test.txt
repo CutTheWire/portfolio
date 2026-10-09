@@ -1,3 +1,1 @@
-This is a test file for the ACME challenge directory.
-This file is used for domain verification during the SSL certificate issuance process.
-The actual challenge file would contain a unique token provided by the Certificate Authority.
+test-ok

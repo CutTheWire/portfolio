@@ -1,0 +1,1 @@
+- Target server IP is 192.168.0.104. Never use 192.168.0.4 for connection or task commands.

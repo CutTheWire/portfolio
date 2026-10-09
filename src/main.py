@@ -408,39 +408,57 @@ app.include_router(
 
 if __name__ == "__main__":
     load_dotenv()
-    # uvicorn.run("main:app", host="0.0.0.0", port=80, reload=True) # 개발 모드에서 실행
+    
     logging.basicConfig(level=logging.INFO, format=f"{GREEN}INFO{RESET}:     %(asctime)s - %(levelname)s - %(message)s")
     logger = logging.getLogger("hypercorn")
 
+    # 환경 변수에서 설정 읽기
+    use_ssl = os.getenv("USE_SSL", "true").lower() == "true"
+    port = int(os.getenv("PORT", "8000"))
+    host = os.getenv("HOST", "0.0.0.0")
+    
     key_pem = os.getenv("KEY_PEM")
     crt_pem = os.getenv("CRT_PEM")
     
-    # pathlib를 사용하여 certificates 디렉토리 경로 설정 (src/certificates 확인)
+    # pathlib를 사용하여 certificates 디렉토리 경로 설정
     certificates_dir_src = SRC_DIR / "certificates"
     certificates_dir_base = BASE_DIR / "certificates"
+    certificates_dir_docker = Path("/app/certificates")
     
-    if certificates_dir_src.exists():
+    if certificates_dir_docker.exists():
+        certificates_dir = certificates_dir_docker
+    elif certificates_dir_src.exists():
         certificates_dir = certificates_dir_src
     elif certificates_dir_base.exists():
         certificates_dir = certificates_dir_base
     else:
         certificates_dir = certificates_dir_src  # 기본값
     
-    ssl_keyfile = certificates_dir / key_pem
-    ssl_certfile = certificates_dir / crt_pem  # 반드시 체인 포함 PEM 지정
-
-    if not ssl_keyfile.is_file() or not ssl_certfile.is_file():
-        raise FileNotFoundError("SSL 인증서 파일을 찾을 수 없습니다. 경로를 확인하세요.")
-    
     config = Config()
-    config.bind = ["0.0.0.0:443"]
-    config.certfile = str(ssl_certfile)
-    config.keyfile = str(ssl_keyfile)
+    config.bind = [f"{host}:{port}"]
     config.alpn_protocols = ["h2", "http/1.1"]  # HTTP/2 활성화
     config.accesslog = "-"  # 요청 로그 활성화
+    config.access_log_format = '%(h)s %(l)s %(u)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"'
+    
+    # SSL 설정 (USE_SSL=true이고 인증서 파일이 있을 때만)
+    if use_ssl and key_pem and crt_pem:
+        ssl_keyfile = certificates_dir / key_pem
+        ssl_certfile = certificates_dir / crt_pem
+        
+        if ssl_keyfile.is_file() and ssl_certfile.is_file():
+            config.certfile = str(ssl_certfile)
+            config.keyfile = str(ssl_keyfile)
+            logger.info(f"SSL enabled: {ssl_certfile}")
+        else:
+            logger.warning(f"SSL certificate files not found: {ssl_keyfile}, {ssl_certfile}. Running without SSL.")
+            use_ssl = False
+    else:
+        logger.info("Running without SSL (USE_SSL=false or certificates not configured)")
+        use_ssl = False
 
     async def serve():
-        logger.info("Starting Hypercorn server...")
+        protocol = "https" if use_ssl else "http"
+        logger.info(f"Starting Hypercorn server on {protocol}://{host}:{port}...")
         await hypercorn.asyncio.serve(app, config)
         
     asyncio.run(serve())

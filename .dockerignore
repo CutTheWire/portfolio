@@ -1,0 +1,71 @@
+# Docker ignore file
+# Exclude files not needed in the Docker image
+
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Virtual environments
+batch/
+*.bat
+*.sh
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Docker
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# Documentation
+README.md
+# markdown/
+# *.md
+
+# Test/Development
+tests/
+*.test.py
+coverage/
+htmlcov/
+.pytest_cache/
+.tox/
+
+# Certificates (will be copied explicitly in Dockerfile)
+# src/certificates/
+
+# Data files (optional - include if needed)
+# csv/
+# videos/
+
+# Nginx config (for nginx service only)
+nginx/
