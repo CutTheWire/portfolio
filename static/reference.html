@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Prism.js CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.css">
     
     <!-- 레퍼런스 페이지 전용 CSS -->
@@ -70,8 +70,8 @@
     <meta name="twitter:image" content="https://cutwire.myddns.me/media/webp/portfolio-preview.webp">
     
     <!-- 추가 메타 태그들 -->
-    <meta name="theme-color" content="#1a1a1a">
-    <meta name="msapplication-navbutton-color" content="#000000">
+    <meta name="theme-color" content="#f5f5f5">
+    <meta name="msapplication-navbutton-color" content="#f5f5f5">
     
     <!-- 구조화된 데이터 (JSON-LD) -->
     {% if meta_tags.structured_data %}
@@ -146,9 +146,10 @@
         }
     </style>
 </head>
-<body>
+<body class="reference-page">
+    {% include 'components/site-header.html' %}
     <!-- 메인 컨텐츠 -->
-    <main class="main">
+    <main id="main-content" class="main">
         <div class="container">
             <!-- Reference 문서 전용 레이아웃 -->
             <div class="reference-layout">
@@ -164,34 +165,24 @@
                             const currentPath = window.location.pathname;
                             const breadcrumbNav = document.querySelector('.breadcrumb');
                             
-                            // /reference/를 기준으로 경로 분할
+                            // /reference/ 앞의 프로젝트 경로를 breadcrumb 링크로 사용
                             const referenceSplit = currentPath.split('/reference/');
                             
                             if (referenceSplit.length === 2) {
-                                const prefix = referenceSplit[0].replace(/^\//, ''); // 앞의 / 제거
-                                const suffix = referenceSplit[1].split('/')[0]; // 첫 번째 폴더명만
+                                const projectPath = referenceSplit[0];
+                                const projectName = projectPath.split('/').pop();
+                                const projectLinkElement = document.createElement('a');
+                                projectLinkElement.href = projectPath;
+                                projectLinkElement.className = 'breadcrumb-link';
+                                projectLinkElement.textContent = projectName;
                                 
-                                const projectLink = `/${prefix}/${suffix}`;
+                                const separator = document.createElement('span');
+                                separator.className = 'breadcrumb-separator';
+                                separator.textContent = '/';
                                 
-                                // 기존 "프로젝트" 링크 찾아서 업데이트하거나 새로 생성
-                                const existingLink = breadcrumbNav.querySelector('.breadcrumb-link:last-of-type');
-                                if (existingLink && existingLink.textContent.trim() === suffix) {
-                                    existingLink.href = projectLink;
-                                } else {
-                                    // 새 링크 생성
-                                    const projectLinkElement = document.createElement('a');
-                                    projectLinkElement.href = projectLink;
-                                    projectLinkElement.className = 'breadcrumb-link';
-                                    projectLinkElement.textContent = suffix;
-                                    
-                                    const separator = document.createElement('span');
-                                    separator.className = 'breadcrumb-separator';
-                                    separator.textContent = '/';
-                                    
-                                    const currentSpan = breadcrumbNav.querySelector('.breadcrumb-current');
-                                    breadcrumbNav.insertBefore(projectLinkElement, currentSpan);
-                                    breadcrumbNav.insertBefore(separator, currentSpan);
-                                }
+                                const currentSpan = breadcrumbNav.querySelector('.breadcrumb-current');
+                                breadcrumbNav.insertBefore(projectLinkElement, currentSpan);
+                                breadcrumbNav.insertBefore(separator, currentSpan);
                             }
 
                           // URL에서 파일명 추출하여 breadcrumb-current 업데이트
@@ -225,8 +216,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
     
-    <!-- 모바일 최적화 스크립트 -->
-    <script src="/static/js/mobile-fix.js"></script>
     
     <!-- TOC 모듈 -->
     <script src="/static/js/toc-module.js"></script>
@@ -445,5 +434,7 @@
             }
         });
     </script>
+    <script src="/static/js/modal-module.js" defer></script>
+    {% include 'components/site-footer.html' %}
 </body>
 </html>

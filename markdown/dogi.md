@@ -256,14 +256,14 @@ volumes:
  - 모델: llama-3-Korean-Bllossom-8B
   
 <div class="project-link-content">
-    <a href="/portfolio/reference/dogi/basic_test_results.md" class="project-link-card dark">
+    <a href="/portfolio/dogi/reference/basic_test_results.md" class="project-link-card dark">
         <i class="fas fa-external-link-alt project-link-icon"></i>
         <span class="project-link-text">LangChain 미연동</span>
     </a>
 </div>
 
 <div class="project-link-content">
-    <a href="/portfolio/reference/dogi/langchain_test_results.md" class="project-link-card dark">
+    <a href="/portfolio/dogi/reference/langchain_test_results.md" class="project-link-card dark">
         <i class="fas fa-external-link-alt project-link-icon"></i>
         <span class="project-link-text">LangChain 연동</span>
     </a>

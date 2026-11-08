@@ -125,6 +125,15 @@ USE_SSL=false python main.py
 | `CRT_PEM` | - | SSL 인증서 파일명 |
 | `GOOGLE_SITE_VERIFICATION` | - | Google Search Console 인증 코드 |
 
+## UI 구성
+
+- 밝은 Fluent 스타일: 중립 배경, 흰색 카드, 파란색 강조색, 작은 모서리 반경을 사용합니다.
+- 홈은 프로필 → 대표 프로젝트 3개 → 경력 → 연락 순서로 구성됩니다. GitHub 저장소 자동 목록과 통계, 플로팅 버튼은 표시하지 않습니다.
+- 공통 스타일은 `static/css/fluent.css`, 공통 탐색 메뉴와 푸터는 `static/components/site-header.html`, `site-footer.html`에서 관리합니다.
+- 홈의 프로젝트 요약은 `static/index.html`에서 편집하고, 프로젝트 상세·레퍼런스 문서는 기존 `markdown/` 콘텐츠를 사용합니다.
+- 문서 목차는 접기/펼치기로 제공하며, 시각화·문서 이미지 확대·이메일 전송 기능은 유지됩니다.
+- 연락 양식은 기존 `/smtp/email` API를 사용합니다. 실제 이메일 발송 없이 테스트하려면 브라우저에서 해당 요청을 모의 응답으로 처리하세요.
+
 ## 📝 라이선스
 
 MIT License

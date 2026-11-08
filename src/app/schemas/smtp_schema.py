@@ -14,24 +14,28 @@ class Validators:
 
 class CommonFields:
     sender_name = Field(
-        example="홍길동",
+        ...,
+        examples=["홍길동"],
         title="발신자 이름",
         min_length=1,
         description="이메일을 보내는 사람의 이름"
     )
     sender_email = Field(
-        example="example@email.com",
+        ...,
+        examples=["example@email.com"],
         title="발신자 이메일",
         description="이메일을 보내는 사람의 이메일 주소",
     )
     subject = Field(
-        example="문의 사항",
+        ...,
+        examples=["문의 사항"],
         title="이메일 제목",
         min_length=1,
         description="이메일의 제목"
     )
     message = Field(
-        example="안녕하세요, 문의 사항이 있습니다.",
+        ...,
+        examples=["안녕하세요, 문의 사항이 있습니다."],
         title="이메일 본문",
         min_length=1,
         description="이메일의 본문 내용"

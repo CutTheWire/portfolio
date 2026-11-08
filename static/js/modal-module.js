@@ -1,52 +1,73 @@
-// 전역 변수
 let lastFormData = null;
 let retryCount = 0;
 const MAX_RETRY = 3;
-let isFormDirty = false; // 폼이 수정되었는지 확인하는 플래그
+let isFormDirty = false;
+let isSending = false;
+let emailComponentPromise = null;
+let emailOpenPromise = null;
+let emailReturnFocus = null;
+let emailPreviousOverflow = '';
+let emailKeyboardInitialized = false;
 
-// 이메일 모달 관련 함수들
-function openEmailModal() {
-    document.getElementById('mailOverlay').classList.add('active');
-    document.body.style.overflow = 'hidden';
-    resetEmailForm();
+async function openEmailModal() {
+    if (emailOpenPromise) return emailOpenPromise;
+    const existing = document.getElementById('mailOverlay');
+    if (existing?.classList.contains('active')) return existing;
+    emailReturnFocus = document.activeElement;
+    emailOpenPromise = (async () => {
+        const overlay = await loadEmailComponent() || createEmailFallback();
+        resetEmailForm();
+        emailPreviousOverflow = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        overlay.classList.remove('mail-container-hidden');
+        overlay.hidden = false;
+        overlay.classList.add('active');
+        (overlay.querySelector('#senderName') || overlay.querySelector('.mail-modal')).focus();
+        return overlay;
+    })();
+    try {
+        return await emailOpenPromise;
+    } finally {
+        emailOpenPromise = null;
+    }
 }
 
 function closeEmailModal() {
-    // 폼이 수정된 상태에서 닫으려고 하면 확인 요청
-    if (isFormDirty && !confirm('작성 중인 내용이 있습니다. 정말 닫으시겠습니까?')) {
-        return;
-    }
-    
-    document.getElementById('mailOverlay').classList.remove('active');
-    document.body.style.overflow = '';
+    const overlay = document.getElementById('mailOverlay');
+    if (!overlay?.classList.contains('active') || isSending) return;
+    if (isFormDirty && !confirm('작성 중인 내용을 삭제하고 닫으시겠습니까?')) return;
+    overlay.classList.remove('active');
+    overlay.classList.add('mail-container-hidden');
+    overlay.hidden = true;
+    document.body.style.overflow = emailPreviousOverflow;
     resetEmailForm();
+    if (emailReturnFocus?.isConnected) emailReturnFocus.focus();
+    emailReturnFocus = null;
+}
+
+function setEmailView(view) {
+    ['Form', 'Success', 'Error'].forEach(name => {
+        const container = document.getElementById(`mail${name}Container`);
+        if (!container) return;
+        const hidden = name !== view;
+        container.hidden = hidden;
+        container.classList.toggle('mail-container-hidden', hidden);
+        container.style.removeProperty('display');
+    });
 }
 
 function resetEmailForm() {
-    // 폼 초기화
-    const form = document.querySelector('.mail-form');
+    const form = document.querySelector('#mailOverlay .mail-form');
     if (form) form.reset();
-    
-    // 컨테이너 표시 상태 초기화
-    document.getElementById('mailFormContainer').style.display = 'block';
-    document.getElementById('mailSuccessContainer').style.display = 'none';
-    document.getElementById('mailErrorContainer').style.display = 'none';
-    
-    // 버튼 상태 초기화
-    const submitBtn = document.getElementById('mailSubmitButton');
-    if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.classList.remove('loading');
-    }
-    
-    // 오류 상태 초기화
+    setEmailView('Form');
+    setEmailSending(false);
     clearFormErrors();
     hideNetworkError();
-    
-    // 재시도 카운트 초기화
     retryCount = 0;
     lastFormData = null;
-    isFormDirty = false; // 더티 플래그 초기화
+    isFormDirty = false;
+    const status = document.getElementById('mailStatus');
+    if (status) status.textContent = '';
 }
 
 // 폼 더티 상태 체크 함수
@@ -105,6 +126,7 @@ function showFieldError(fieldId, errorId, message) {
     
     if (field && error) {
         field.classList.add('error');
+        field.setAttribute('aria-invalid', 'true');
         error.textContent = message;
         error.classList.add('visible');
     }
@@ -117,238 +139,242 @@ function clearFormErrors() {
     
     fields.forEach(fieldId => {
         const field = document.getElementById(fieldId);
-        if (field) field.classList.remove('error');
+        if (field) {
+            field.classList.remove('error');
+            field.removeAttribute('aria-invalid');
+        }
     });
     
     errors.forEach(errorId => {
         const error = document.getElementById(errorId);
-        if (error) error.classList.remove('visible');
+        if (error) {
+            error.classList.remove('visible');
+            error.textContent = '';
+        }
     });
 }
 
 // 네트워크 오류 표시/숨김
 function showNetworkError() {
     const errorElement = document.getElementById('mailNetworkError');
-    if (errorElement) errorElement.classList.add('visible');
+    if (errorElement) {
+        errorElement.hidden = false;
+        errorElement.classList.add('visible');
+    }
 }
 
 function hideNetworkError() {
     const errorElement = document.getElementById('mailNetworkError');
-    if (errorElement) errorElement.classList.remove('visible');
+    if (errorElement) {
+        errorElement.hidden = true;
+        errorElement.classList.remove('visible');
+    }
 }
 
 // 오류 메시지 업데이트
 function updateErrorMessage(message) {
     const errorText = document.getElementById('mailErrorText');
-    if (errorText) errorText.innerHTML = message;
+    if (errorText) errorText.textContent = message;
 }
 
-// 이메일 전송 함수 (JSON으로 수정)
 async function sendEmail(event) {
     event.preventDefault();
-    
-    const submitBtn = document.getElementById('mailSubmitButton');
+    if (isSending) return;
     const form = event.target;
-    
-    // FormData 대신 JSON 객체로 생성
     const formData = {
-        sender_name: form.sender_name.value,
-        sender_email: form.sender_email.value,
-        subject: form.subject.value,
-        message: form.message.value
+        sender_name: form.elements.namedItem('sender_name').value.trim(),
+        sender_email: form.elements.namedItem('sender_email').value.trim(),
+        subject: form.elements.namedItem('subject').value.trim(),
+        message: form.elements.namedItem('message').value.trim()
     };
-    
-    // 폼 유효성 검사
     if (!validateForm(formData)) {
+        form.querySelector('[aria-invalid="true"]')?.focus();
         return;
     }
-
-    // 마지막 폼 데이터 저장 (재시도용)
     lastFormData = formData;
-    
-    // 로딩 상태
-    if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.classList.add('loading');
-    }
+    retryCount = 0;
+    isFormDirty = true;
+    await submitEmailData(formData);
+}
+
+function setEmailSending(sending) {
+    isSending = sending;
+    const overlay = document.getElementById('mailOverlay');
+    if (!overlay) return;
+    overlay.querySelector('.mail-modal').setAttribute('aria-busy', String(sending));
+    overlay.querySelectorAll('button, input, textarea').forEach(control => {
+        control.disabled = sending;
+    });
+    overlay.querySelectorAll('.mail-form-submit, .mail-retry-button').forEach(button => {
+        button.classList.toggle('loading', sending);
+    });
+    const retryButton = overlay.querySelector('.mail-retry-button');
+    if (retryButton) retryButton.disabled = sending || retryCount >= MAX_RETRY;
+    const status = document.getElementById('mailStatus');
+    if (status) status.textContent = sending ? '전송 중입니다. 완료 후 닫을 수 있습니다.' : '';
+}
+
+async function submitEmailData(formData) {
+    setEmailSending(true);
     hideNetworkError();
-    
+    document.querySelector('#mailOverlay .mail-modal').focus();
     try {
         const response = await fetch('/smtp/email', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(formData)
         });
-        
         const result = await response.json();
-        
-        if (result.success) {
-            // 성공 시
+        if (response.ok && result?.success) {
             showSuccessMessage();
-            retryCount = 0;
-            isFormDirty = false; // 전송 성공 시 더티 상태 해제
         } else {
-            // 서버 오류 시
-            const errorMessage = result.message || '서버에서 오류가 발생했습니다.';
-            showErrorMessage(errorMessage);
+            showErrorMessage(typeof result?.message === 'string'
+                ? result.message : '서버에서 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
         }
     } catch (error) {
-        console.error('Email send error:', error);
-        
-        // 네트워크 오류 시
-        if (error.name === 'TypeError' || error.message.includes('fetch')) {
+        if (error instanceof TypeError) {
             showNetworkError();
             showErrorMessage('네트워크 연결을 확인하고 다시 시도해주세요.');
         } else {
-            showErrorMessage('예상치 못한 오류가 발생했습니다.<br>잠시 후 다시 시도해주세요.');
+            showErrorMessage('응답을 확인하지 못했습니다. 잠시 후 다시 시도해주세요.');
         }
     } finally {
-        // 로딩 상태 해제
-        if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.classList.remove('loading');
-        }
+        setEmailSending(false);
     }
 }
 
-// 성공 메시지 표시
 function showSuccessMessage() {
-    document.getElementById('mailFormContainer').style.display = 'none';
-    document.getElementById('mailErrorContainer').style.display = 'none';
-    document.getElementById('mailSuccessContainer').style.display = 'block';
-    
-    // 5초 후 자동으로 닫기 (성공 메시지를 충분히 읽을 수 있도록)
-    setTimeout(() => {
-        isFormDirty = false; // 성공 후에는 더티 상태 해제
-        closeEmailModal();
-    }, 5000);
+    isFormDirty = false;
+    retryCount = 0;
+    lastFormData = null;
+    setEmailView('Success');
+    document.querySelector('#mailOverlay .mail-success-title').focus();
 }
 
-// 오류 메시지 표시
 function showErrorMessage(message) {
-    updateErrorMessage(message);
-    document.getElementById('mailFormContainer').style.display = 'none';
-    document.getElementById('mailSuccessContainer').style.display = 'none';
-    document.getElementById('mailErrorContainer').style.display = 'block';
-    
     retryCount++;
+    updateErrorMessage(retryCount >= MAX_RETRY
+        ? `${message} 전송 시도 횟수를 초과했습니다. sjmbee04@gmail.com으로 직접 연락해주세요.`
+        : message);
+    setEmailView('Error');
+    document.querySelector('#mailOverlay .mail-error-title').focus();
 }
 
-// 재시도 함수 (JSON 데이터로 수정)
 async function retryEmail() {
-    if (!lastFormData) {
-        closeEmailModal();
-        return;
-    }
-
-    if (retryCount >= MAX_RETRY) {
-        updateErrorMessage(
-            '최대 재시도 횟수를 초과했습니다.<br>' +
-            '나중에 다시 시도하시거나 직접 연락해주세요.<br>' +
-            '<strong>직접 연락: sjmbee04@gmail.com</strong>'
-        );
-        return;
-    }
-
-    // 폼으로 돌아가기
-    document.getElementById('mailFormContainer').style.display = 'block';
-    document.getElementById('mailErrorContainer').style.display = 'none';
-    hideNetworkError();
-    
-    // 로딩 상태
-    const retryBtn = document.querySelector('.mail-retry-button');
-    if (retryBtn) {
-        retryBtn.disabled = true;
-        retryBtn.classList.add('loading');
-    }
-    
-    try {
-        const response = await fetch('/smtp/email', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(lastFormData)
-        });
-        
-        const result = await response.json();
-        
-        if (result.success) {
-            showSuccessMessage();
-            retryCount = 0;
-            isFormDirty = false; // 재시도 성공 시 더티 상태 해제
-        } else {
-            const errorMessage = result.message || '서버에서 오류가 발생했습니다.';
-            showErrorMessage(errorMessage);
-        }
-    } catch (error) {
-        console.error('Retry email error:', error);
-        showErrorMessage('재시도 중 오류가 발생했습니다.<br>잠시 후 다시 시도해주세요.');
-    } finally {
-        if (retryBtn) {
-            retryBtn.disabled = false;
-            retryBtn.classList.remove('loading');
-        }
-    }
+    if (isSending || !lastFormData || retryCount >= MAX_RETRY) return;
+    await submitEmailData(lastFormData);
 }
 
-// 이메일 모듈 초기화 함수
-function initEmailModule() {
-    // ESC 키로 모달 닫기 (더티 상태 확인)
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && document.getElementById('mailOverlay')?.classList.contains('active')) {
-            closeEmailModal();
-        }
-    });
-    
-    // 오버레이 배경 클릭시 닫기 방지 (더이상 닫히지 않음)
-    const mailOverlay = document.getElementById('mailOverlay');
-    if (mailOverlay) {
-        mailOverlay.addEventListener('click', function(e) {
-            // 배경 클릭으로는 닫히지 않도록 주석 처리
-            // if (e.target === this) closeEmailModal();
-        });
-    }
+function editEmail() {
+    if (isSending) return;
+    setEmailView('Form');
+    hideNetworkError();
+    document.getElementById('senderName')?.focus();
+}
 
-    // 입력 필드 포커스 시 오류 상태 제거 및 더티 플래그 설정
-    const fields = ['senderName', 'senderEmail', 'subject', 'message'];
-    fields.forEach(fieldId => {
-        const field = document.getElementById(fieldId);
-        
-        if (field) {
-            // 포커스 시 오류 상태 제거
-            field.addEventListener('focus', function() {
-                this.classList.remove('error');
-                const errorId = fieldId === 'senderName' ? 'nameError' :
-                                fieldId === 'senderEmail' ? 'emailError' :
-                                fieldId === 'subject' ? 'subjectError' : 'messageError';
-                const errorElement = document.getElementById(errorId);
-                if (errorElement) errorElement.classList.remove('visible');
-            });
-            
-            // 입력 시 더티 플래그 설정
+function emailFocusableElements(overlay) {
+    return Array.from(overlay.querySelectorAll('a[href], button, input, textarea, [tabindex]'))
+        .filter(element => !element.disabled && element.tabIndex >= 0 &&
+            !element.closest('[hidden], .mail-container-hidden') && element.getClientRects().length);
+}
+
+function initEmailModule() {
+    const overlay = document.getElementById('mailOverlay');
+    if (!overlay) return;
+    if (!overlay.dataset.initialized) {
+        overlay.dataset.initialized = 'true';
+        overlay.querySelectorAll('input, textarea').forEach(field => {
             field.addEventListener('input', markFormDirty);
             field.addEventListener('change', markFormDirty);
+        });
+    }
+    if (emailKeyboardInitialized) return;
+    emailKeyboardInitialized = true;
+    document.addEventListener('keydown', event => {
+        const activeOverlay = document.getElementById('mailOverlay');
+        if (!activeOverlay?.classList.contains('active')) return;
+        if (event.key === 'Escape') {
+            event.preventDefault();
+            closeEmailModal();
+        } else if (event.key === 'Tab') {
+            const elements = emailFocusableElements(activeOverlay);
+            const first = elements[0];
+            const last = elements[elements.length - 1];
+            if (!first) {
+                event.preventDefault();
+                activeOverlay.querySelector('.mail-modal').focus();
+            } else if (!elements.includes(document.activeElement) ||
+                (event.shiftKey && document.activeElement === first) ||
+                (!event.shiftKey && document.activeElement === last)) {
+                event.preventDefault();
+                (event.shiftKey ? last : first).focus();
+            }
+        }
+    });
+    document.addEventListener('focusin', event => {
+        const activeOverlay = document.getElementById('mailOverlay');
+        if (activeOverlay?.classList.contains('active') && !activeOverlay.contains(event.target)) {
+            activeOverlay.querySelector('.mail-modal').focus();
         }
     });
 }
 
-// 이메일 HTML 로드 함수
+function createEmailFallback() {
+    const existing = document.getElementById('mailOverlay');
+    if (existing) return existing;
+    const overlay = document.createElement('div');
+    overlay.id = 'mailOverlay';
+    overlay.className = 'mail-overlay';
+    overlay.hidden = true;
+    overlay.dataset.fallback = 'true';
+    overlay.innerHTML = `
+        <div class="mail-modal" role="dialog" aria-modal="true" aria-labelledby="mailModalTitle" tabindex="-1">
+            <div class="mail-modal-header">
+                <h2 class="mail-modal-title" id="mailModalTitle">이메일 문의</h2>
+                <button type="button" class="mail-modal-close" aria-label="문의 창 닫기">×</button>
+            </div>
+            <p>문의 양식을 불러오지 못했습니다. 이메일로 직접 연락해주세요.</p>
+            <p class="mail-direct-contact"><a href="mailto:sjmbee04@gmail.com">sjmbee04@gmail.com</a></p>
+        </div>`;
+    overlay.querySelector('button').addEventListener('click', closeEmailModal);
+    document.body.appendChild(overlay);
+    initEmailModule();
+    return overlay;
+}
+
 async function loadEmailComponent() {
-    try {
-        const response = await fetch('/static/components/modal.html');
-        const html = await response.text();
-        
-        // body 끝에 추가
-        document.body.insertAdjacentHTML('beforeend', html);
-        
-        // 이메일 모듈 초기화
+    const existing = document.getElementById('mailOverlay');
+    if (existing && (!existing.dataset.fallback || existing.classList.contains('active'))) {
         initEmailModule();
-        
-        console.log('Email component loaded successfully');
-    } catch (error) {
-        console.error('Failed to load email component:', error);
+        return existing;
+    }
+    if (emailComponentPromise) return emailComponentPromise;
+    emailComponentPromise = (async () => {
+        try {
+            const response = await fetch('/static/components/modal.html');
+            if (!response.ok) throw new Error('Contact component unavailable');
+            const template = document.createElement('template');
+            template.innerHTML = await response.text();
+            const overlay = template.content.querySelector('#mailOverlay');
+            if (!overlay?.querySelector('.mail-form') || !overlay.querySelector('[role="dialog"]')) {
+                throw new Error('Invalid contact component');
+            }
+            const current = document.getElementById('mailOverlay');
+            if (current && !current.dataset.fallback) return current;
+            if (current?.classList.contains('active')) return current;
+            if (current) current.remove();
+            overlay.hidden = true;
+            document.body.appendChild(overlay);
+            initEmailModule();
+            return overlay;
+        } catch (error) {
+            console.error('Failed to load email component:', error);
+            return null;
+        }
+    })();
+    try {
+        return await emailComponentPromise;
+    } finally {
+        emailComponentPromise = null;
     }
 }

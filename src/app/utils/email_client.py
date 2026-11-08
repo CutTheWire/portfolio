@@ -1,11 +1,14 @@
 import os
 import smtplib
+import logging
 
 from pathlib import Path
 from datetime import datetime
 from dotenv import load_dotenv
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+
+logger = logging.getLogger(__name__)
 
 class SMTPHandler:
     """
@@ -81,13 +84,14 @@ class SMTPHandler:
             msg.attach(MIMEText(email_body, 'plain', 'utf-8'))
             
             # SMTP 서버 연결 및 전송
-            with smtplib.SMTP(self.server, self.port) as server:
+            with smtplib.SMTP(self.server, self.port, timeout=20) as server:
                 server.starttls()  # TLS 암호화 시작
                 server.login(self.user, self.password)
                 server.send_message(msg)
             return True
             
-        except Exception as e:
+        except Exception:
+            logger.exception("Failed to send portfolio inquiry email")
             return False
         
     async def acknowledge_inquiry_smtp(self, sender_name: str, sender_email: str, subject: str, message: str) -> bool:
@@ -188,11 +192,12 @@ class SMTPHandler:
             msg.attach(MIMEText(html_body, "html", "utf-8"))
 
             # SMTP 서버 연결 및 전송
-            with smtplib.SMTP(self.server, self.port) as server:
+            with smtplib.SMTP(self.server, self.port, timeout=20) as server:
                 server.starttls()
                 server.login(self.user, self.password)
                 server.send_message(msg)
             return True
 
-        except Exception as e:
+        except Exception:
+            logger.exception("Failed to send inquiry acknowledgement email")
             return False

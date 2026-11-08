@@ -219,7 +219,7 @@
 
 ### 📄 v0.1.x
 <div class="project-link-content">
-    <a href="/portfolio/reference/chatbot/version(0.1.x).md" class="project-link-card dark">
+    <a href="/portfolio/chatbot/reference/version(0.1.x).md" class="project-link-card dark">
         <i class="fas fa-external-link-alt project-link-icon"></i>
         <span class="project-link-text">명세 상세보기</span>
     </a>
@@ -230,7 +230,7 @@
 
 ### 📄 v0.2.x
 <div class="project-link-content">
-    <a href="/portfolio/reference/chatbot/version(0.2.x).md" class="project-link-card dark">
+    <a href="/portfolio/chatbot/reference/version(0.2.x).md" class="project-link-card dark">
         <i class="fas fa-external-link-alt project-link-icon"></i>
         <span class="project-link-text">명세 상세보기</span>
     </a>
@@ -241,7 +241,7 @@
 
 ### 📄 v0.3.x
 <div class="project-link-content">
-    <a href="/portfolio/reference/chatbot/version(0.3.x).md" class="project-link-card dark">
+    <a href="/portfolio/chatbot/reference/version(0.3.x).md" class="project-link-card dark">
         <i class="fas fa-external-link-alt project-link-icon"></i>
         <span class="project-link-text">명세 상세보기</span>
     </a>
@@ -252,7 +252,7 @@
 
 ### 📄 v0.4.x
 <div class="project-link-content">
-    <a href="/portfolio/reference/chatbot/version(0.4.x).md" class="project-link-card dark">
+    <a href="/portfolio/chatbot/reference/version(0.4.x).md" class="project-link-card dark">
         <i class="fas fa-external-link-alt project-link-icon"></i>
         <span class="project-link-text">명세 상세보기</span>
     </a>
@@ -263,7 +263,7 @@
 
 ### 📄 v0.5.x
 <div class="project-link-content">
-    <a href="/portfolio/reference/chatbot/version(0.5.x).md" class="project-link-card dark">
+    <a href="/portfolio/chatbot/reference/version(0.5.x).md" class="project-link-card dark">
         <i class="fas fa-external-link-alt project-link-icon"></i>
         <span class="project-link-text">명세 상세보기</span>
     </a>
@@ -274,7 +274,7 @@
 
 ### 📄 v1.0.x
 <div class="project-link-content">
-    <a href="/portfolio/reference/chatbot/version(1.0.x).md" class="project-link-card dark">
+    <a href="/portfolio/chatbot/reference/version(1.0.x).md" class="project-link-card dark">
         <i class="fas fa-external-link-alt project-link-icon"></i>
         <span class="project-link-text">명세 상세보기</span>
     </a>
@@ -285,7 +285,7 @@
 
 ### 📄 v1.1.x
 <div class="project-link-content">
-    <a href="/portfolio/reference/chatbot/version(1.1.x).md" class="project-link-card dark">
+    <a href="/portfolio/chatbot/reference/version(1.1.x).md" class="project-link-card dark">
         <i class="fas fa-external-link-alt project-link-icon"></i>
         <span class="project-link-text">명세 상세보기</span>
     </a>

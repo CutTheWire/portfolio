@@ -229,11 +229,11 @@ async def read_markdown(request: Request, filename: str):
         # 기타 예외는 서버 에러로 처리
         raise error_tools.InternalServerErrorException("페이지 로딩 중 오류가 발생했습니다.")
 
-@page_router.get("/portfolio/reference/{category}/{filename}", response_class=HTMLResponse)
+@page_router.get("/portfolio/{category}/reference/{filename}", response_class=HTMLResponse)
 async def read_reference_markdown(request: Request, category: str, filename: str):
     """
     reference/ 하위 폴더의 마크다운 파일을 웹페이지로 렌더링
-    예: /portfolio/reference/chatbot-ai/version(1.1.x)
+    예: /portfolio/chatbot-ai/reference/version(1.1.x)
     """
     try:
         # 확장자 자동 처리
@@ -262,7 +262,7 @@ async def read_reference_markdown(request: Request, category: str, filename: str
         meta_tags = generate_meta_tags(
             title=f"{page_title} - 서정훈 포트폴리오",
             description=f"reference/{safe_category}의 {safe_filename} 문서입니다.",
-            url=f"https://cutwire.myddns.me/portfolio/reference/{safe_category}/{safe_filename.replace('.md','')}"
+            url=f"https://cutwire.myddns.me/portfolio/{safe_category}/reference/{safe_filename.replace('.md','')}"
         )
         return templates.TemplateResponse(
             "reference.html",
@@ -300,11 +300,12 @@ async def read_reference_markdown(request: Request, category: str, filename: str
 
 
 
-@page_router.get("/visualization/{csv_filename}", response_class=HTMLResponse)
-async def read_csv_visualization(request: Request, csv_filename: str):
+@page_router.get("/portfolio/{project}/visualization", response_class=HTMLResponse)
+async def read_csv_visualization(request: Request, project: str):
     """CSV 파일을 visualization.html 템플릿으로 시각화"""
     try:
         # 확장자 체크 및 경로 보호
+        csv_filename = project
         if not csv_filename.endswith(".csv"):
             csv_filename += ".csv"
         
@@ -361,7 +362,7 @@ async def read_csv_visualization(request: Request, csv_filename: str):
         meta_tags = generate_meta_tags(
             title=f"{csv_title} 데이터 시각화 - 서정훈 포트폴리오",
             description=f"서정훈의 {csv_title} 데이터 분석 및 시각화 페이지입니다. 백엔드 개발자의 데이터 분석 역량을 확인해보세요.",
-            url=f"https://cutwire.myddns.me/visualization/{safe_filename.replace('.csv', '')}"
+            url=f"https://cutwire.myddns.me/portfolio/{safe_filename.replace('.csv', '')}/visualization"
         )
         
         return templates.TemplateResponse(

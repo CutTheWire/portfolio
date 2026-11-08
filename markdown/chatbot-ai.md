@@ -144,7 +144,7 @@
 - **측정 일자**: 2025-07-12 (토) 15:08:57 GMT+0900 (한국 표준시)
 
 <div class="project-link-content">
-    <a href="/visualization/chatbot-ai" class="project-link-card dark">
+    <a href="/portfolio/chatbot-ai/visualization" class="project-link-card dark">
         <i class="fas fa-external-link-alt project-link-icon"></i>
         <span class="project-link-text">성능차트 상세보기</span>
     </a>
@@ -177,7 +177,7 @@
 
 ### 📄 v1.0.x
 <div class="project-link-content">
-    <a href="/portfolio/reference/chatbot-ai/version(1.0.x).md" class="project-link-card dark">
+    <a href="/portfolio/chatbot-ai/reference/version(1.0.x).md" class="project-link-card dark">
         <i class="fas fa-external-link-alt project-link-icon"></i>
         <span class="project-link-text">명세 상세보기</span>
     </a>
@@ -188,7 +188,7 @@
 
 ### 📄 v1.1.x
 <div class="project-link-content">
-    <a href="/portfolio/reference/chatbot-ai/version(1.1.x).md" class="project-link-card dark">
+    <a href="/portfolio/chatbot-ai/reference/version(1.1.x).md" class="project-link-card dark">
         <i class="fas fa-external-link-alt project-link-icon"></i>
         <span class="project-link-text">명세 상세보기</span>
     </a>
@@ -198,7 +198,7 @@
 
 ### 📄 v1.2.x
 <div class="project-link-content">
-    <a href="/portfolio/reference/chatbot-ai/version(1.2.x).md" class="project-link-card dark">
+    <a href="/portfolio/chatbot-ai/reference/version(1.2.x).md" class="project-link-card dark">
         <i class="fas fa-external-link-alt project-link-icon"></i>
         <span class="project-link-text">명세 상세보기</span>
     </a>
@@ -208,7 +208,7 @@
 
 ### 📄 v1.3.x
 <div class="project-link-content">
-    <a href="/portfolio/reference/chatbot-ai/version(1.3.x).md" class="project-link-card dark">
+    <a href="/portfolio/chatbot-ai/reference/version(1.3.x).md" class="project-link-card dark">
         <i class="fas fa-external-link-alt project-link-icon"></i>
         <span class="project-link-text">명세 상세보기</span>
     </a>
@@ -219,7 +219,7 @@
 
 ### 📄 v1.4.x
 <div class="project-link-content">
-    <a href="/portfolio/reference/chatbot-ai/version(1.4.x).md" class="project-link-card dark">
+    <a href="/portfolio/chatbot-ai/reference/version(1.4.x).md" class="project-link-card dark">
         <i class="fas fa-external-link-alt project-link-icon"></i>
         <span class="project-link-text">명세 상세보기</span>
     </a>
@@ -230,7 +230,7 @@
 
 ### 📄 v1.5.x
 <div class="project-link-content">
-    <a href="/portfolio/reference/chatbot-ai/version(1.5.x).md" class="project-link-card dark">
+    <a href="/portfolio/chatbot-ai/reference/version(1.5.x).md" class="project-link-card dark">
         <i class="fas fa-external-link-alt project-link-icon"></i>
         <span class="project-link-text">명세 상세보기</span>
     </a>
@@ -241,7 +241,7 @@
 
 ### 📄 v1.6.x
 <div class="project-link-content">
-    <a href="/portfolio/reference/chatbot-ai/version(1.6.x).md" class="project-link-card dark">
+    <a href="/portfolio/chatbot-ai/reference/version(1.6.x).md" class="project-link-card dark">
         <i class="fas fa-external-link-alt project-link-icon"></i>
         <span class="project-link-text">명세 상세보기</span>
     </a>
@@ -252,7 +252,7 @@
 
 ### 📄 v1.7.x
 <div class="project-link-content">
-    <a href="/portfolio/reference/chatbot-ai/version(1.7.x).md" class="project-link-card dark">
+    <a href="/portfolio/chatbot-ai/reference/version(1.7.x).md" class="project-link-card dark">
         <i class="fas fa-external-link-alt project-link-icon"></i>
         <span class="project-link-text">명세 상세보기</span>
     </a>

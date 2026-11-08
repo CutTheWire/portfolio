@@ -28,7 +28,7 @@
     <link rel="stylesheet" href="/static/css/portfolio.css">
 
     <!-- Prism.js (코드 하이라이트) -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1/themes/prism-tomorrow.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1/themes/prism.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-core.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1/plugins/autoloader/prism-autoloader.min.js"></script>
     <script>
@@ -104,7 +104,8 @@
     }
     </script>
 </head>
-<body>
+<body class="portfolio-page">
+    {% include 'components/site-header.html' %}
     <!-- SEO 네비게이션 -->
     <nav class="seo-nav" aria-hidden="true" style="display:none;">
         <a href="/">백엔드 개발자 포트폴리오 홈</a> > 
@@ -112,22 +113,18 @@
     </nav>
 
     <div class="container">
-        <main class="content">
+        <main id="main-content" class="content">
             <!-- 프로젝트 헤더 -->
             <header class="project-header">
-                <h1>{{ title }} - 백엔드 프로젝트</h1>
+                <a class="back-link" href="/#projects">← 프로젝트 목록</a>
+                <p class="eyebrow">PROJECT OVERVIEW</p>
+                <h1>{{ title }}</h1>
             </header>
             
-            <div>
-                <br>
-                <br>
-            </div>
             {{ content|safe }}
         </main>
     </div>
 
-    <!-- 모바일 최적화 스크립트 -->
-    <script src="/static/js/mobile-fix.js"></script>
     <!-- 이메일 기능 스크립트 -->
     <script src="/static/js/modal-module.js"></script>
     <!-- 디렉토리 트리 변환 스크립트 (VSCode 스타일) -->
@@ -391,5 +388,6 @@
         }
     });
 </script>
+    {% include 'components/site-footer.html' %}
 </body>
 </html>
