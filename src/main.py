@@ -3,7 +3,9 @@ import uvicorn
 import asyncio
 import logging
 import hypercorn.asyncio
+from typing import cast
 from hypercorn.config import Config
+from hypercorn.typing import ASGIFramework
 from contextlib import asynccontextmanager
 
 from pathlib import Path
@@ -160,39 +162,23 @@ async def google_verification():
     return Response(content="google-site-verification: googlec0f02607421c3396.html", media_type="text/html")
 
 # SEO 관련 엔드포인트들
-@app.get("/robots.txt", response_class=Response)
-async def robots_txt():
+@app.get("/robots.txt", response_class=PlainTextResponse)
+async def robots_txt() -> PlainTextResponse:
     """
-    검색 엔진 크롤러를 위한 robots.txt
+    검색 엔진 크롤러를 위한 robots.txt를 반환합니다.
     """
-    content = """User-agent: *
-    Allow: /
-    Allow: /portfolio/
-    Allow: /static/
-    Allow: /images/
+    content: str = (
+        "User-agent: *\n"
+        "Allow: /\n"
+        "\n"
+        "Sitemap: https://cutwire.myddns.me/sitemap.xml\n"
+    )
 
-    # 백엔드 개발자 포트폴리오 사이트맵
-    Sitemap: https://cutwire.myddns.me/sitemap.xml
+    return PlainTextResponse(
+        content=content,
+        media_type="text/plain",
+    )
 
-    # 검색 엔진 최적화
-    Crawl-delay: 1
-
-    # 중요 페이지 우선순위
-    User-agent: Googlebot
-    Allow: /
-    Allow: /portfolio/chatbot-ai
-    Allow: /portfolio/chatbot
-    Allow: /portfolio/
-
-    User-agent: Bingbot
-    Allow: /
-    Allow: /portfolio/
-
-    User-agent: NaverBot
-    Allow: /
-    Allow: /portfolio/
-    """
-    return Response(content=content, media_type="text/plain")
 
 @app.get("/manifest.json", response_class=Response)
 async def manifest_json():
@@ -347,15 +333,7 @@ async def favicon():
     except Exception as e:
         raise error_tools.InternalServerErrorException("Favicon loading error")
 
-@app.get("/robots.txt", response_class=PlainTextResponse)
-def robots_txt():
-    return (
-        "User-agent: *\n"
-        "Allow: /\n"
-        "Sitemap: https://cutwire.myddns.me/sitemap.xml\n"
-    )
-
-@app.get("/sitemap.xml", response_class=Response)
+@app.api_route("/sitemap.xml", methods=["GET", "HEAD"], response_class=Response)
 async def sitemap_xml():
     """
     정적 sitemap.xml 파일 반환
@@ -459,6 +437,6 @@ if __name__ == "__main__":
     async def serve():
         protocol = "https" if use_ssl else "http"
         logger.info(f"Starting Hypercorn server on {protocol}://{host}:{port}...")
-        await hypercorn.asyncio.serve(app, config)
+        await hypercorn.asyncio.serve(cast(ASGIFramework, app), config)
         
     asyncio.run(serve())
