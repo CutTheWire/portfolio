@@ -91,7 +91,11 @@ button:disabled { cursor: wait; opacity: .65; }
 .work-card > p { color: var(--text-secondary); font-size: 14px; line-height: 1.8; }
 .work-details { margin: 20px 0; padding-left: 16px; font-size: 12px; color: var(--text-muted); line-height: 1.9; }
 .work-stack { margin-top: auto; color: var(--text-muted); font-size: 11px; padding-bottom: 20px; }
-.work-link { border-top: 1px solid #ebebeb; padding-top: 16px; display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; }
+.work-link { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 8px; padding: 9px 12px; border: 1px solid var(--border-color); border-radius: 6px; background: #fafafa; color: var(--text-secondary); font-size: 13px; font-weight: 600; transition: background-color .16s, border-color .16s, color .16s; }
+.work-link:empty { display: none; }
+.work-link:hover { border-color: #b7d4ee; background: #f0f7fd; color: var(--accent-primary); text-decoration: none; }
+.work-link span { transition: transform .16s; }
+.work-link:hover span { transform: translate(2px, -2px); }
 .career-section { display: grid; grid-template-columns: 1fr 1.7fr; gap: 72px; }
 .career-intro > p:not(.eyebrow) { color: var(--text-muted); font-size: 14px; margin: 20px 0; }
 .career-intro > a { font-size: 13px; }
