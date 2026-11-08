@@ -351,7 +351,7 @@ async function loadEmailComponent() {
     if (emailComponentPromise) return emailComponentPromise;
     emailComponentPromise = (async () => {
         try {
-            const response = await fetch('/static/components/modal.html');
+            const response = await fetch('/static/components/modal.html', { cache: 'no-cache' });
             if (!response.ok) throw new Error('Contact component unavailable');
             const template = document.createElement('template');
             template.innerHTML = await response.text();

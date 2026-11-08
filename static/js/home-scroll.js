@@ -1,90 +1,178 @@
+
 (() => {
     const header = document.querySelector('.site-header');
-    const sections = [
-        { element: document.querySelector('.home-main .hero'), id: null },
-        { element: document.querySelector('.home-main #projects'), id: 'projects' },
-        { element: document.querySelector('.home-main #career'), id: 'career' },
-        { element: document.querySelector('.home-main #contact'), id: 'contact' }
-    ];
-    if (!header || sections.some(section => !section.element)) return;
 
+    const sections = [
+        document.querySelector('.home-main .hero'),
+        document.querySelector('.home-main #projects'),
+        document.querySelector('.home-main #repository'),
+        document.querySelector('.home-main #career'),
+        document.querySelector('.home-main #contact')
+    ];
+
+    if (!header || sections.some(section => !section)) return;
+
+    const sectionIds = [
+        null,
+        'projects',
+        'repository',
+        'career',
+        'contact'
+    ];
+
+    const CONFIG = {
+        threshold: 55,
+        gestureResetDelay: 180,
+        navigationCooldown: 650,
+        animationFallback: 1400,
+        maxQueuedNavigation: 1
+    };
+
+    let currentIndex = 0;
     let isNavigating = false;
-    let wheelGestureTriggered = false;
     let wheelDelta = 0;
     let wheelDirection = 0;
-    let wheelGestureTimer;
-    let navigationFallbackTimer;
+    let gestureTimer = null;
+    let navigationTimer = null;
+    let queuedDirection = 0;
 
-    function finishNavigation() {
-        isNavigating = false;
-        window.clearTimeout(navigationFallbackTimer);
-    }
+    const prefersReducedMotion = window.matchMedia(
+        '(prefers-reduced-motion: reduce)'
+    );
 
     function getCurrentSectionIndex() {
-        const hash = window.location.hash.slice(1);
-        const hashIndex = sections.findIndex(section => section.id === hash);
-        if (hashIndex >= 0) return hashIndex;
-
         const headerBottom = header.getBoundingClientRect().bottom;
-        return sections.reduce((closestIndex, section, index) => {
-            const closestDistance = Math.abs(
-                sections[closestIndex].element.getBoundingClientRect().top - headerBottom
+
+        let closestIndex = 0;
+        let closestDistance = Infinity;
+
+        sections.forEach((section, index) => {
+            const distance = Math.abs(
+                section.getBoundingClientRect().top - headerBottom
             );
-            const distance = Math.abs(section.element.getBoundingClientRect().top - headerBottom);
-            return distance < closestDistance ? index : closestIndex;
-        }, 0);
+
+            if (distance < closestDistance) {
+                closestDistance = distance;
+                closestIndex = index;
+            }
+        });
+
+        return closestIndex;
+    }
+
+    function finishNavigation() {
+        if (!isNavigating) return;
+
+        window.clearTimeout(navigationTimer);
+
+        isNavigating = false;
+        currentIndex = getCurrentSectionIndex();
+
+        if (queuedDirection !== 0) {
+            const direction = queuedDirection;
+            queuedDirection = 0;
+
+            requestAnimationFrame(() => {
+                navigate(direction);
+            });
+        }
     }
 
     function navigateToSection(index) {
-        const section = sections[index];
-        const url = section.id
-            ? `${window.location.pathname}${window.location.search}#${section.id}`
-            : `${window.location.pathname}${window.location.search}`;
+        index = Math.max(0, Math.min(index, sections.length - 1));
 
-        window.history.replaceState(window.history.state, '', url);
+        if (index === currentIndex) return;
+
+        currentIndex = index;
         isNavigating = true;
-        section.element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        window.clearTimeout(navigationFallbackTimer);
-        navigationFallbackTimer = window.setTimeout(() => {
+
+        const id = sectionIds[index];
+        const url = id
+            ? `${location.pathname}${location.search}#${id}`
+            : `${location.pathname}${location.search}`;
+
+        history.replaceState(history.state, '', url);
+
+        sections[index].scrollIntoView({
+            behavior: prefersReducedMotion.matches ? 'instant' : 'smooth',
+            block: 'start'
+        });
+
+        window.clearTimeout(navigationTimer);
+
+        navigationTimer = window.setTimeout(() => {
             finishNavigation();
-        }, 1000);
+        }, CONFIG.animationFallback);
     }
 
-    window.addEventListener('scrollend', finishNavigation);
+    function navigate(direction) {
+        if (isNavigating) {
+            queuedDirection = direction;
+            return;
+        }
+
+        const nextIndex = Math.max(
+            0,
+            Math.min(currentIndex + direction, sections.length - 1)
+        );
+
+        navigateToSection(nextIndex);
+    }
+
+    function resetGesture() {
+        wheelDelta = 0;
+        wheelDirection = 0;
+    }
 
     document.addEventListener('wheel', event => {
-        const target = event.target instanceof Element ? event.target : null;
-        if (event.ctrlKey || Math.abs(event.deltaY) < Math.abs(event.deltaX) ||
-            window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
-            target?.closest('.mail-modal, input, textarea, select, [contenteditable="true"]')) {
+        const target = event.target instanceof Element
+            ? event.target
+            : null;
+
+        if (
+            event.ctrlKey ||
+            Math.abs(event.deltaY) < Math.abs(event.deltaX) ||
+            prefersReducedMotion.matches ||
+            target?.closest(
+                '.mail-modal, input, textarea, select, [contenteditable="true"]'
+            )
+        ) {
             return;
         }
 
         event.preventDefault();
-        window.clearTimeout(wheelGestureTimer);
-        wheelGestureTimer = window.setTimeout(() => {
-            wheelGestureTriggered = false;
-            wheelDelta = 0;
-            wheelDirection = 0;
-        }, 280);
-        if (isNavigating || wheelGestureTriggered) return;
+
+        if (isNavigating) {
+            return;
+        }
 
         const direction = Math.sign(event.deltaY);
-        if (!direction) return;
-        if (direction !== wheelDirection) wheelDelta = 0;
-        wheelDirection = direction;
-        wheelDelta += Math.abs(event.deltaY);
-        if (wheelDelta < 40) return;
-        wheelDelta = 0;
-        wheelDirection = 0;
-        wheelGestureTriggered = true;
 
-        const currentIndex = getCurrentSectionIndex();
-        const nextIndex = direction > 0
-            ? Math.min(currentIndex + 1, sections.length - 1)
-            : currentIndex === sections.length - 1
-                ? 1
-                : Math.max(currentIndex - 1, 0);
-        if (nextIndex !== currentIndex) navigateToSection(nextIndex);
+        if (!direction) return;
+
+        if (direction !== wheelDirection) {
+            resetGesture();
+            wheelDirection = direction;
+        }
+
+        wheelDelta += Math.abs(event.deltaY);
+
+        window.clearTimeout(gestureTimer);
+
+        gestureTimer = window.setTimeout(
+            resetGesture,
+            CONFIG.gestureResetDelay
+        );
+
+        if (wheelDelta < CONFIG.threshold) return;
+
+        resetGesture();
+        navigate(direction);
+
     }, { passive: false });
+
+    window.addEventListener('scrollend', finishNavigation);
+
+    currentIndex = getCurrentSectionIndex();
+
 })();

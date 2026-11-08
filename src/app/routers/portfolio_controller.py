@@ -18,14 +18,20 @@ if not os.path.exists(env_file_path):
 
 load_dotenv(env_file_path)
 
-def generate_meta_tags(title="서정훈 포트폴리오", description="Python 백엔드 개발자 서정훈의 포트폴리오", url="https://cutwire.myddns.me"):
+def generate_meta_tags(
+    title="서정훈 포트폴리오",
+    description="Python 백엔드 개발자 서정훈의 포트폴리오",
+    url="https://cutwire.myddns.me",
+    keywords=None,
+    structured_data=None,
+):
     """SEO 메타 태그 생성"""
     google_verification = os.getenv("GOOGLE_SITE_VERIFICATION", "")
     
     return {
         "title": title,
         "description": description,
-        "keywords": "백엔드 개발자 포트폴리오, 백엔드 포트폴리오, 개발자 포트폴리오, fastapi 포트폴리오, python 포트폴리오, 백엔드 개발자, Python 개발자, FastAPI 개발자, 웹 개발자, API 개발자, 서버 개발자, Docker 개발자, MongoDB 개발자, 포트폴리오, portfolio, backend developer, Python, FastAPI, 웹 개발, API 개발, 서정훈, 백엔드 프로젝트, AI 챗봇 개발, 키오스크 개발, 학생관리시스템",
+        "keywords": keywords or "백엔드 개발자 포트폴리오, Python 백엔드 개발자, FastAPI 개발자, REST API 개발, Docker, MongoDB, AI 챗봇 백엔드, LLM 서비스 개발, 서정훈",
         "author": "서정훈",
         "url": url,
         "google_verification": google_verification,
@@ -40,8 +46,42 @@ def generate_meta_tags(title="서정훈 포트폴리오", description="Python �
         "twitter_description": description,
         "twitter_site": "@cutwire_dev",
         "canonical_url": url,
-        "structured_data": get_structured_data()  # 구조화된 데이터 추가
+        "structured_data": structured_data or get_structured_data()
     }
+
+
+def get_chatbot_ai_structured_data():
+    """ChatBot-AI 프로젝트의 기술과 공개 소스 저장소를 명시합니다."""
+    return {
+        "@context": "https://schema.org",
+        "@type": "SoftwareSourceCode",
+        "name": "ChatBot-AI - FastAPI LLM 챗봇 API 백엔드",
+        "description": "FastAPI로 Office 및 Character 챗봇 API를 구성하고, Llama.cpp GGUF 모델과 OpenAI·Venice API, Docker GPU 마이크로서비스, Nginx API Gateway, MongoDB 대화 기록을 연동한 프로젝트입니다.",
+        "url": "https://cutwire.myddns.me/portfolio/chatbot-ai",
+        "codeRepository": "https://github.com/TreeNut-KR/ChatBot-AI",
+        "programmingLanguage": "Python",
+        "runtimePlatform": ["FastAPI", "Docker", "Nginx", "NVIDIA GPU"],
+        "keywords": [
+            "FastAPI AI chatbot backend",
+            "Python LLM API",
+            "Llama.cpp",
+            "GGUF",
+            "OpenAI API",
+            "Venice API",
+            "Docker GPU inference",
+            "Nginx API Gateway",
+            "MongoDB chat history",
+            "Office chatbot",
+            "Character chatbot",
+        ],
+        "author": {
+            "@type": "Person",
+            "name": "서정훈",
+            "url": "https://github.com/CutTheWire",
+        },
+        "inLanguage": "ko-KR",
+    }
+
 
 def get_structured_data():
     """검색 엔진을 위한 구조화된 데이터"""
@@ -128,7 +168,7 @@ async def read_index(request: Request):
             html_content = md.markdown(md_content, extensions=["fenced_code", "tables"])
 
         meta_tags = generate_meta_tags(
-            title="백엔드 개발자 서정훈 포트폴리오 | Python FastAPI 개발자",
+            title="Python FastAPI 백엔드 | 개발자 서정훈 포트폴리오",
             description="Python, FastAPI, Docker를 활용한 백엔드 개발자 서정훈의 포트폴리오입니다. AI 챗봇, 키오스크 시스템 등 다양한 백엔드 프로젝트와 개발 경험을 확인해보세요. 백엔드 포트폴리오의 모든 것을 여기서 만나보세요.",
             url="https://cutwire.myddns.me/"
         )
@@ -184,11 +224,34 @@ async def read_markdown(request: Request, filename: str):
         html_content = md.markdown(md_content, extensions=["fenced_code", "tables"])
         
         # 프로젝트별 SEO 메타 태그
-        project_title = safe_filename.replace(".md", "").replace("_", " ").title()
+        project_slug = safe_filename.replace(".md", "")
+        project_title = project_slug.replace("_", " ").title()
+        project_description = (
+            f"서정훈의 {project_title} 프로젝트입니다. 백엔드 개발, Python, FastAPI를 활용한 프로젝트를 확인해보세요."
+        )
+        project_keywords = None
+        project_structured_data = None
+        if project_slug == "chatbot-ai":
+            project_title = "ChatBot-AI | FastAPI LLM 챗봇 API 백엔드"
+            project_description = (
+                "FastAPI 기반 AI 챗봇 백엔드 프로젝트입니다. Office·Character 챗봇 API, "
+                "Llama.cpp GGUF 및 OpenAI·Venice 연동, Docker GPU 마이크로서비스, "
+                "Nginx API Gateway, MongoDB 대화 기록 처리 구조를 확인할 수 있습니다."
+            )
+            project_keywords = (
+                "FastAPI AI 챗봇 백엔드, Python LLM API, 생성형 AI 챗봇 서버, "
+                "Llama.cpp, GGUF 모델, OpenAI API 연동, Venice API 연동, "
+                "Docker GPU 추론, Nginx API Gateway, MongoDB 대화 기록, "
+                "Office 챗봇, 캐릭터 챗봇, AI 마이크로서비스, 서정훈"
+            )
+            project_structured_data = get_chatbot_ai_structured_data()
+
         meta_tags = generate_meta_tags(
             title=f"{project_title} - 서정훈 포트폴리오",
-            description=f"서정훈의 {project_title} 프로젝트입니다. 백엔드 개발, Python, FastAPI를 활용한 프로젝트를 확인해보세요.",
-            url=f"https://cutwire.myddns.me/portfolio/{safe_filename.replace('.md', '')}"
+            description=project_description,
+            url=f"https://cutwire.myddns.me/portfolio/{project_slug}",
+            keywords=project_keywords,
+            structured_data=project_structured_data,
         )
         
         return templates.TemplateResponse(

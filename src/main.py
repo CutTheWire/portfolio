@@ -171,13 +171,69 @@ async def robots_txt() -> PlainTextResponse:
         "User-agent: *\n"
         "Allow: /\n"
         "\n"
+        "User-agent: GPTBot\n"
+        "Allow: /\n"
+        "\n"
+        "User-agent: OAI-SearchBot\n"
+        "Allow: /\n"
+        "\n"
+        "User-agent: ChatGPT-User\n"
+        "Allow: /\n"
+        "\n"
+        "User-agent: ClaudeBot\n"
+        "Allow: /\n"
+        "\n"
+        "User-agent: Claude-SearchBot\n"
+        "Allow: /\n"
+        "\n"
+        "User-agent: PerplexityBot\n"
+        "Allow: /\n"
+        "\n"
+        "User-agent: Google-Extended\n"
+        "Allow: /\n"
+        "\n"
         "Sitemap: https://cutwire.myddns.me/sitemap.xml\n"
+        "# AI-readable project overview: https://cutwire.myddns.me/llms.txt\n"
     )
 
     return PlainTextResponse(
         content=content,
         media_type="text/plain",
     )
+
+
+@app.get("/llms.txt", response_class=PlainTextResponse)
+async def llms_txt() -> PlainTextResponse:
+    """AI systems용 포트폴리오 및 프로젝트 탐색 요약을 반환합니다."""
+    content = """# Python FastAPI 백엔드 개발자 서정훈 포트폴리오서정훈 백엔드 개발자 포트폴리오
+
+> Python과 FastAPI를 사용해 API, AI 챗봇 백엔드, Docker 기반 서비스를 개발한 프로젝트 포트폴리오입니다.
+
+## 주요 페이지
+- [포트폴리오 홈](https://cutwire.myddns.me/): 기술 스택과 대표 프로젝트 요약
+- [ChatBot-AI 프로젝트](https://cutwire.myddns.me/portfolio/chatbot-ai): FastAPI 기반 LLM 챗봇 아키텍처, API 서버의 구성과 담당 업무 
+- [ChatBot-AI 성능 시각화](https://cutwire.myddns.me/portfolio/chatbot-ai/visualization): 프로젝트 성능 데이터 시각화
+- [ChatBot-AI 소스 코드](https://github.com/TreeNut-KR/ChatBot-AI): 소스 코드와 프로젝트 문서
+- [ChatBot 프로젝트](https://cutwire.myddns.me/portfolio/chatbot): 챗봇 웹 서비스 백엔드
+- [Dogi 프로젝트](https://cutwire.myddns.me/portfolio/dogi): 반려견 의료 데이터 기반 AI 대화 프로젝트
+- [사이트맵](https://cutwire.myddns.me/sitemap.xml): 크롤링 가능한 사이트 페이지
+
+## ChatBot-AI: FastAPI LLM 챗봇 백엔드
+- Python과 FastAPI로 Office 챗봇 API와 Character 챗봇 API를 분리해 구현했습니다.
+- Llama.cpp 기반 GGUF 모델, OpenAI API, Venice API 연동 사례를 다룹니다.
+- Docker에서 GPU 자원을 사용하는 두 서비스를 독립적으로 운영하고, Nginx API Gateway가 `/office/`와 `/character/` 요청을 각 서비스로 전달합니다.
+- MongoDB 대화 내용을 활용하며, GPU 추론 요청을 대기열로 처리하는 구조와 API 문서·릴리스 자동화 경험을 소개합니다.
+- 이 포트폴리오 페이지는 프로젝트 설명과 공개 저장소를 안내합니다. 실제 배포 API 주소나 비밀 키를 제공하지 않습니다.
+
+## 기술 및 주제
+Python, FastAPI, REST API, AI 챗봇 백엔드, LLM inference, Llama.cpp, GGUF, OpenAI API, Venice API, Docker, NVIDIA GPU, Nginx reverse proxy, MongoDB, API Gateway, 마이크로서비스, 백엔드 아키텍처
+
+## 작성자
+- 이름: 서정훈 (CutTheWire)
+- 역할: 백엔드 개발자, ChatBot-AI 프로젝트 매니저
+- GitHub: https://github.com/CutTheWire
+"""
+    return PlainTextResponse(content=content, media_type="text/plain; charset=utf-8")
 
 
 @app.get("/manifest.json", response_class=Response)
@@ -266,7 +322,7 @@ def generate_meta_tags(title="서정훈 포트폴리오", description="Python �
     return {
         "title": title,
         "description": description,
-        "keywords": "포트폴리오, portfolio, 백엔드 개발자, backend developer, Python, FastAPI, 웹 개발, API 개발, 서정훈",
+        "keywords": "Python, FastAPI, 챗봇 아키텍처, 포트폴리오, portfolio, 백엔드 개발자, backend developer, 웹 개발, API 개발, 서정훈",
         "author": "서정훈",
         "url": url,
         "google_verification": google_verification,  # 환경변수에서 가져온 Google 인증 메타 태그

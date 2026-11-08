@@ -63,6 +63,13 @@ chmod +x deploy.sh
 - **FastAPI (Hypercorn)**: 백엔드 API 서버, 동적 라우팅 처리
 - **Docker Compose**: 멀티 컨테이너 오케스트레이션
 
+## 검색 및 AI 크롤러
+
+- `/robots.txt`에서 일반 검색 엔진과 주요 AI 크롤러의 사이트 접근을 허용하고 사이트맵을 안내합니다.
+- `/sitemap.xml`은 크롤링 가능한 페이지 목록을 제공합니다.
+- `/llms.txt`는 포트폴리오와 FastAPI 기반 ChatBot-AI 프로젝트의 기술 요약 및 공개 소스 링크를 제공합니다.
+- 크롤러 접근 허용은 방문을 보장하지 않습니다. 검색 노출이나 AI 답변 인용은 각 서비스의 수집 정책과 색인에 따라 달라집니다.
+
 ## 🔒 SSL/HTTPS 설정
 
 ### 인증서 갱신 (Let's Encrypt)

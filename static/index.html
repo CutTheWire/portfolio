@@ -49,6 +49,7 @@
     
     <!-- 정규 URL -->
     <link rel="canonical" href="{{ meta_tags.canonical_url }}">
+    <link rel="alternate" type="text/plain" href="https://cutwire.myddns.me/llms.txt" title="AI-readable site overview">
     
     <!-- Open Graph 메타 태그들 -->
     <meta property="og:title" content="{{ meta_tags.og_title }}">
@@ -200,6 +201,37 @@
             </div>
         </section>
 
+        <section id="repository" class="home-section" aria-labelledby="repository-title">
+            <div class="section-heading"><div><p class="eyebrow">GITHUB REPOSITORIES</p><h2 id="repository-title">GitHub 저장소</h2></div><p>개인 및 팀 프로젝트의 코드 저장소입니다.</p></div>
+            <div class="project-grid">
+                <article class="work-card">
+                    <div class="work-top"><span class="work-icon work-icon-blue" aria-hidden="true">GH</span><span class="work-category">CUTTHEWIRE</span></div>
+                    <h3>ESP-NvidiaNIM</h3>
+                    <a class="work-link" href="https://github.com/CutTheWire/ESP-NvidiaNIM" target="_blank" rel="noopener noreferrer">GitHub에서 보기 <span aria-hidden="true">↗</span></a>
+                </article>
+                <article class="work-card">
+                    <div class="work-top"><span class="work-icon work-icon-purple" aria-hidden="true">GH</span><span class="work-category">CUTTHEWIRE</span></div>
+                    <h3>kopo-incheon-PLC</h3>
+                    <a class="work-link" href="https://github.com/CutTheWire/kopo-incheon-PLC" target="_blank" rel="noopener noreferrer">GitHub에서 보기 <span aria-hidden="true">↗</span></a>
+                </article>
+                <article class="work-card">
+                    <div class="work-top"><span class="work-icon work-icon-teal" aria-hidden="true">GH</span><span class="work-category">CUTTHEWIRE</span></div>
+                    <h3>Isekai_Cult</h3>
+                    <a class="work-link" href="https://github.com/CutTheWire/Isekai_Cult" target="_blank" rel="noopener noreferrer">GitHub에서 보기 <span aria-hidden="true">↗</span></a>
+                </article>
+                <article class="work-card">
+                    <div class="work-top"><span class="work-icon work-icon-blue" aria-hidden="true">GH</span><span class="work-category">TREENUT-KR</span></div>
+                    <h3>JMEDUSERVER</h3>
+                    <a class="work-link" href="https://github.com/TreeNut-KR/JMEDUSERVER" target="_blank" rel="noopener noreferrer">GitHub에서 보기 <span aria-hidden="true">↗</span></a>
+                </article>
+                <article class="work-card">
+                    <div class="work-top"><span class="work-icon work-icon-purple" aria-hidden="true">GH</span><span class="work-category">TREENUT-KR</span></div>
+                    <h3>SmartFarm-HardWare</h3>
+                    <a class="work-link" href="https://github.com/TreeNut-KR/SmartFarm-HardWare" target="_blank" rel="noopener noreferrer">GitHub에서 보기 <span aria-hidden="true">↗</span></a>
+                </article>
+            </div>
+        </section>
+
         <section id="career" class="home-section career-section" aria-labelledby="career-title">
             <div class="career-intro"><p class="eyebrow">EXPERIENCE &amp; LEARNING</p><h2 id="career-title">함께 만들며,<br>계속 배웁니다.</h2><p>백엔드 개발과 AI 서비스 운영,<br>팀 프로젝트를 통해 경험을 쌓고 있습니다.</p><a href="https://github.com/TreeNut-KR" target="_blank" rel="noopener noreferrer">TreeNut 팀 살펴보기 <span aria-hidden="true">↗</span></a></div>
             <ol class="career-list">
@@ -220,7 +252,7 @@
         </section>
     </main>
     {% include 'components/site-footer.html' %}
-    <script src="/static/js/modal-module.js" defer></script>
+    <script src="/static/js/modal-module.js?v=20261109" defer></script>
     <script src="/static/js/home-scroll.js" defer></script>
 </body>
 </html>
