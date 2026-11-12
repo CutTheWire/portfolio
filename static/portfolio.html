@@ -35,6 +35,8 @@
         // Autoloader 설정: 언어별 스크립트를 CDN에서 자동 로드
         window.Prism = window.Prism || {};
         Prism.plugins.autoloader.languages_path = 'https://cdn.jsdelivr.net/npm/prismjs@1/components/';
+        // directory 코드는 directory-tree.js가 렌더링하므로 Prism 자동 로드를 건너뜀
+        Prism.languages.directory = {};
         document.addEventListener('DOMContentLoaded', function () {
             // 동적으로 주입된 콘텐츠에도 적용하려면 필요 시 MutationObserver로 확장 가능
             if (window.Prism && Prism.highlightAll) {
